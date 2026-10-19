@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>야장 결함 마킹</title>
-<!--IPAD-V25-PWA: 홈 화면에 추가(앱처럼 설치)용. pwa/index.html 머리와 같음-->
+<!--IPAD-V26-PWA: 홈 화면에 추가(앱처럼 설치)용. pwa/index.html 머리와 같음-->
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-title" content="야장">
@@ -545,7 +545,7 @@ function renderDraft(){
   }else if(g.kind==='line'&&g.seg){
     s+=`<line x1="${g.anchor[0]}" y1="${g.anchor[1]}" x2="${g.seg.end[0]}" y2="${g.seg.end[1]}" stroke="${HEX.line}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${sw*3} ${sw*2}"/>`;
   }else if(g.kind==='free'&&g.pts.length>1){ /*V25-FREE*/
-    s+=`<polyline points="${g.pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ')}" fill="none" stroke="${HEX.line}" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".75"/>`;
+    s+=`<polyline points="${(g.shape?g.shape.pts:g.pts)/*V26-SHAPE*/.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ')}" fill="none" stroke="${HEX.line}" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".75"/>`;
   }else if(g.kind==='area'){
     const x=Math.min(g.a[0],g.b[0]),y=Math.min(g.a[1],g.b[1]),w=Math.abs(g.a[0]-g.b[0]),h=Math.abs(g.a[1]-g.b[1]);
     s+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${HEX.area}" fill-opacity=".12" stroke="${HEX.area}" stroke-width="${sw}" stroke-dasharray="${sw*3} ${sw*2}"/>`;
@@ -757,13 +757,16 @@ stage.addEventListener('pointermove',e=>{
   else if(g.kind==='line'){g.seg=snapSeg(g.anchor,p,g.prevDir);renderDraft();}
   else if(g.kind==='free'){ /*V25-FREE: 펜슬은 한 프레임에 여러 점(coalesced)을 보냄 → 모두 받음, 화면 1.5px보다 가까운 점은 버림*/
     const evs=e.getCoalescedEvents?e.getCoalescedEvents():[];const list=evs.length?evs.map(toImg):[p];
-    for(const q of list){const l=g.pts[g.pts.length-1];if(dist(l,q)*view.s>=1.5)g.pts.push(q);}renderDraft();}
+    if(g.shape)return; /*V26-SHAPE: 바뀐 뒤에는 손을 뗄 때까지 그대로*/
+    for(const q of list){const l=g.pts[g.pts.length-1];if(dist(l,q)*view.s>=1.5)g.pts.push(q);}
+    v26Hold(g,p);renderDraft();}
   else if(g.kind==='area'){g.b=p;renderDraft();}
 });
 function endPointer(e){
   ptrs.delete(e.pointerId);
   const g=gesture;
   if(g&&g.kind==='pinch'){if(ptrs.size<2)gesture=null;return;}
+  if(g&&g.holdT)clearTimeout(g.holdT); /*V26-SHAPE*/
   if(e.type==='pointercancel'){gesture=null;renderDraft();return;}
   if(!g)return;
   gesture=null;
@@ -777,7 +780,10 @@ function endPointer(e){
     }
   }else if(g.kind==='free'){ /*V25-FREE*/
     const pts=v25Smooth(g.pts,view.s);
-    if(pts.length>=2&&polyLen(pts)*view.s>=10){pushUndo(d);const def=newDef(d,'line',pts);def.free=true;v25PlaceFree(d,def);save();renderOverlay();renderPanel();}
+    clearTimeout(g.holdT); /*V26-SHAPE*/
+    if(pts.length>=2&&polyLen(pts)*view.s>=10){pushUndo(d);const def=newDef(d,'line',pts);def.free=true;v25PlaceFree(d,def);
+      if(g.shape){pushUndo(d);def.pts=g.shape.pts;def.shape=g.shape.kind;v25PlaceFree(d,def);} /*V26-SHAPE: 두 번째 되돌리기 지점 → 실행 취소 한 번이면 위 자유선*/
+      save();renderOverlay();renderPanel();}
   }else if(g.kind==='area'){
     if(Math.abs(g.a[0]-g.b[0])*view.s>=10&&Math.abs(g.a[1]-g.b[1])*view.s>=10){pushUndo(d);newDef(d,'area',[g.a,g.b]);}
   }else if(g.kind==='label'){if(g.moved)save();}
@@ -1320,7 +1326,7 @@ function buildCadMulti(items,site,logo,formS){ // V14: formS = 시설물 공통 
     for(const def of [...d.defects].sort((a,b)=>a.no-b.no)){
       const col=/^#80808/i.test(def.color||'')?8:null;
       if(def.type==='point'){const c=WP(def.pts[0][0],def.pts[0][1]);lwp([[c[0]+DD/2,c[1]],[c[0]-DD/2,c[1]]],true,DD,col,true);}
-      else if(def.type==='line'){lwp(def.pts.map(p=>WP(p[0],p[1])),false,LW,col,false);}
+      else if(def.type==='line'){lwp(def.pts.map(p=>WP(p[0],p[1])),v26Closed(def.pts),LW,col,false);} /*V26-SHAPE*/
       else{const [a,b]=def.pts,p1=WP(Math.min(a[0],b[0]),Math.max(a[1],b[1])),p2=WP(Math.max(a[0],b[0]),Math.min(a[1],b[1]));
         const rc=[[p1[0],p1[1]],[p2[0],p1[1]],[p2[0],p2[1]],[p1[0],p2[1]]];
         lwp(rc,true,RW,col,false);
@@ -1446,7 +1452,7 @@ function v21Ents(E,H,d,list,WP,owner){
   for(const def of [...list].sort((a,b)=>a.no-b.no)){
     const col=/^#80808/i.test(def.color||'')?8:null;
     if(def.type==='point'){const c=WP(def.pts[0][0],def.pts[0][1]);lwp([[c[0]+DD/2,c[1]],[c[0]-DD/2,c[1]]],true,DD,col,true);}
-    else if(def.type==='line'){lwp(def.pts.map(p=>WP(p[0],p[1])),false,LW,col,false);}
+    else if(def.type==='line'){lwp(def.pts.map(p=>WP(p[0],p[1])),v26Closed(def.pts),LW,col,false);} /*V26-SHAPE*/
     else{const [a,b]=def.pts,p1=WP(Math.min(a[0],b[0]),Math.min(a[1],b[1])),p2=WP(Math.max(a[0],b[0]),Math.max(a[1],b[1]));
       const rc=[[p1[0],p1[1]],[p2[0],p1[1]],[p2[0],p2[1]],[p1[0],p2[1]]];
       lwp(rc,true,RW,col,false);
@@ -1719,7 +1725,8 @@ function importDxfDoc(doc){
         if(w>=dia*IMP.pointMinWidthRatio)geoms.push({type:'point',pts:[[(W[0][0]+W[1][0])/2,(W[0][1]+W[1][1])/2]],color:col,w,src:sh}); // V11: 도넛 폭(w) 보관 → 도면 CAD 크기
         continue;
       }
-      if(closed&&W.length>=3){const xs=W.map(p=>p[0]),ys=W.map(p=>p[1]);geoms.push({type:'area',pts:[[Math.min(...xs),Math.min(...ys)],[Math.max(...xs),Math.max(...ys)]],color:col,w,src:sh});}
+      if(closed&&v26Closed(W))geoms.push({type:'line',pts:W,color:col,w,src:sh}); /*V26-SHAPE: 앱이 그린 타원·사각형*/
+      else if(closed&&W.length>=3){const xs=W.map(p=>p[0]),ys=W.map(p=>p[1]);geoms.push({type:'area',pts:[[Math.min(...xs),Math.min(...ys)],[Math.max(...xs),Math.max(...ys)]],color:col,w,src:sh});}
       else if(W.length>=2)geoms.push({type:'line',pts:W,color:col,w,src:sh}); /*V12: 선 폭(w) 보관 → 도면 CAD 선 폭*/
     }else if(e.type==='POLYLINE'){
       const W=(e.verts||[]).map(v=>tf([+gv(v.g,10),+gv(v.g,20)]));const closed=(parseInt(gv(e.g,70)||'0',10)&1)===1;
@@ -1820,7 +1827,7 @@ function dp(pts,tol){if(pts.length<3)return pts;let idx=0,dm=-1;for(let k=1;k<pt
 /*V25-FREE: 자유선 평활화. 1) 끝점은 그대로 두고 앞뒤 2점씩(5점) 이동 평균을 2번 2) 점 줄이기(dp)를 바뀌지 않을 때까지 되풀이.
   허용치 = max(1.8, 화면 1.5px) 도면 px. 불러오기(importDxfDoc→buildDrawings)는 균열선을 dp(1.5)로 줄이는데, 1.8에서 더 줄지 않는 점들은
   1.5에서도 그대로라(모든 남은 점이 자기 구간 현에서 1.8보다 멂) 다시 불러와도 같은 점이 나옴*/
-const V25_HINT='자유선: 펜슬이 지나간 대로 그려지고 손을 떼면 부드럽게 다듬어져요. 직선으로 돌아가려면 위의 "자유선 켜짐"을 누르세요.';
+const V25_HINT='자유선: 펜슬이 지나간 대로 그려지고 손을 떼면 부드럽게 다듬어져요. 타원·사각형을 그리고 떼지 않고 꾹 누르면 반듯해져요(V26-SHAPE). 직선으로 돌아가려면 위의 "자유선 켜짐"을 누르세요.';
 function v25Smooth(raw,scale){let p=raw.map(q=>[q[0],q[1]]);if(p.length<3)return p;
   for(let it=0;it<2;it++){const o=[p[0]];for(let i=1;i<p.length-1;i++){const a=Math.max(0,i-2),b=Math.min(p.length-1,i+2);let x=0,y=0;for(let j=a;j<=b;j++){x+=p[j][0];y+=p[j][1];}o.push([x/(b-a+1),y/(b-a+1)]);}o.push(p[p.length-1]);p=o;}
   const tol=Math.max(1.8,1.5/(scale||1));for(let k=0;k<20;k++){const q=dp(p,tol);if(q.length===p.length)break;p=q;}
@@ -1839,12 +1846,41 @@ function v25PlaceFree(d,def){const L=d.labelSize,r=Math.max(0.75*L,d.cadR>0&&d.s
   const crosses=(c)=>{for(let i=1;i<P.length;i++){if(i===bi)continue;const p=P[i-1],q=P[i];if(cr(c,a,p)*cr(c,a,q)<0&&cr(p,q,c)*cr(p,q,a)<0)return true;}return false;};
   const lineD=c=>{let m=Infinity;for(let i=1;i<P.length;i++)m=Math.min(m,segDist(c,P[i-1],P[i]));return m;};
   let best=null,bs=-1;
-  for(let k=0;k<=12;k++)for(const s of [1,-1]){const t=(2+k*0.5)*L,c=[a[0]+s*n[0]*t,a[1]+s*n[1]*t];
+  for(let k=0;k<=12;k++)for(const s of v26Side(def,a,n)/*V26-SHAPE*/){const t=(2+k*0.5)*L,c=[a[0]+s*n[0]*t,a[1]+s*n[1]*t];
     if(c[0]<0||c[1]<0||c[0]>d.w||c[1]>d.h)continue;
     const md=lineD(c),ok=md>1.8*r&&!crosses(c)&&segDist(P[0],c,a)>0.9*r&&segDist(P[P.length-1],c,a)>0.9*r;
     if(ok){def.lx=c[0]-a[0];def.ly=c[1]-a[1];def.lblMoved=true;return true;}
     if(md>bs){bs=md;best=c;}}
   if(best){def.lx=best[0]-a[0];def.ly=best[1]-a[1];def.lblMoved=true;}return false;}
+/*V26-SHAPE: 자유선을 그리다 펜이 화면 V26_TOL px 안에서 V26_MS ms 멈추면, 닫힌 모양(시작·끝 거리 ≤ 길이의 15%)일 때만 타원·사각형을 맞춰 봄.
+  축: 타원 = 점들의 주축(PCA), 사각형 = 1°씩 돌려 넓이가 가장 작은 둘레 사각형. 오차 = 정규화 반지름 |r-1|의 평균(타원은 유클리드, 사각형은 체비셰프).
+  더 작은 쪽이 V26_ERR 이하이고 한 바퀴(320° 이상) 돌았으면 바꿈. 도형 점 = 첫 점을 마지막에 한 번 더(닫힘 표시) + v25와 같은 점 줄이기(1.8)*/
+const V26_MS=500,V26_TOL=6,V26_ERR=0.1;
+function v26Closed(P){return P.length>=4&&Math.hypot(P[0][0]-P[P.length-1][0],P[0][1]-P[P.length-1][1])<1e-6;}
+function v26Hold(g,p){if(g.hp&&dist(g.hp,p)*view.s<=V26_TOL)return;g.hp=p;clearTimeout(g.holdT);
+  g.holdT=setTimeout(()=>{if(gesture!==g||g.shape)return;const sh=v26Fit(g.pts,view.s);if(sh){g.shape=sh;renderDraft();toast(sh.kind==='ellipse'?'타원으로 바꿨어요':'사각형으로 바꿨어요');}},V26_MS);}
+function v26Fit(raw,scale){if(raw.length<8)return null;const Lp=polyLen(raw);
+  if(Lp*scale<60||dist(raw[0],raw[raw.length-1])>0.15*Lp)return null;
+  const N=96,P=[];let acc=0,j=1;for(let k=0;k<N;k++){const t=k*Lp/N;while(j<raw.length-1&&acc+dist(raw[j-1],raw[j])<t){acc+=dist(raw[j-1],raw[j]);j++;}
+    const sl=dist(raw[j-1],raw[j])||1,u=Math.min(1,(t-acc)/sl);P.push([raw[j-1][0]+(raw[j][0]-raw[j-1][0])*u,raw[j-1][1]+(raw[j][1]-raw[j-1][1])*u]);}
+  const fr=th=>{const c=Math.cos(th),s_=Math.sin(th),q=P.map(p=>[p[0]*c+p[1]*s_,-p[0]*s_+p[1]*c]),xs=q.map(v=>v[0]),ys=q.map(v=>v[1]);
+    const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);return {th,q,cx:(x0+x1)/2,cy:(y0+y1)/2,a:(x1-x0)/2,b:(y1-y0)/2};};
+  const back=(f,x,y)=>{const c=Math.cos(f.th),s_=Math.sin(f.th);return [x*c-y*s_,x*s_+y*c];};
+  let mx=0,my=0;P.forEach(p=>{mx+=p[0]/N;my+=p[1]/N;});let sxx=0,syy=0,sxy=0;P.forEach(p=>{const x=p[0]-mx,y=p[1]-my;sxx+=x*x;syy+=y*y;sxy+=x*y;});
+  const fe=fr(0.5*Math.atan2(2*sxy,sxx-syy));let fq=null;for(let d_=0;d_<90;d_++){const f=fr(d_*Math.PI/180);if(!fq||f.a*f.b<fq.a*fq.b)fq=f;}
+  if(Math.min(fe.a,fe.b,fq.a,fq.b)*scale<8)return null;
+  let wind=0;for(let k=1;k<N;k++){const a=Math.atan2(fe.q[k-1][1]-fe.cy,fe.q[k-1][0]-fe.cx),b=Math.atan2(fe.q[k][1]-fe.cy,fe.q[k][0]-fe.cx);let da=b-a;if(da>Math.PI)da-=2*Math.PI;if(da<-Math.PI)da+=2*Math.PI;wind+=da;}
+  if(Math.abs(wind)<320*Math.PI/180)return null;
+  const eE=fe.q.reduce((s_,v)=>s_+Math.abs(Math.hypot((v[0]-fe.cx)/fe.a,(v[1]-fe.cy)/fe.b)-1),0)/N;
+  const qE=fq.q.reduce((s_,v)=>s_+Math.abs(Math.max(Math.abs(v[0]-fq.cx)/fq.a,Math.abs(v[1]-fq.cy)/fq.b)-1),0)/N;
+  if(Math.min(eE,qE)>V26_ERR)return null;let pts,kind;
+  if(eE<=qE){kind='ellipse';pts=[];for(let k=0;k<128;k++){const t=2*Math.PI*k/128;pts.push(back(fe,fe.cx+fe.a*Math.cos(t),fe.cy+fe.b*Math.sin(t)));}}
+  else{kind='rect';pts=[[1,1],[-1,1],[-1,-1],[1,-1]].map(([u,v])=>back(fq,fq.cx+u*fq.a,fq.cy+v*fq.b));}
+  pts.push(pts[0]);const tol=Math.max(1.8,1.5/(scale||1));for(let k=0;k<20;k++){const q=dp(pts,tol);if(q.length===pts.length)break;pts=q;}
+  pts=pts.map(q=>[Math.round(q[0]*100)/100,Math.round(q[1]*100)/100]);pts[pts.length-1]=pts[0].slice();
+  return {kind,pts,err:Math.min(eE,qE)};}
+/*V26-SHAPE: 타원·사각형이면 번호 원을 도형 바깥쪽부터 찾음*/
+function v26Side(def,a,n){if(!def.shape)return [1,-1];let cx=0,cy=0;const P=def.pts;P.forEach(p=>{cx+=p[0]/P.length;cy+=p[1]/P.length;});return n[0]*(a[0]-cx)+n[1]*(a[1]-cy)>=0?[1,-1]:[-1,1];}
 /*V16-LEADER: 두 꺾은선이 서로 교차하는지*/
 function polyCross(A,B){const cr=(o,a,b)=>(a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]);
   for(let i=1;i<A.length;i++)for(let j=1;j<B.length;j++){const p=A[i-1],q=A[i],r=B[j-1],t=B[j];
@@ -1999,7 +2035,7 @@ async function importCadFile(file){
 })();
 })();
 </script>
-<script>/*IPAD-V25-PWA: 오프라인 캐시(sw.js). https(깃허브 Pages)에서만*/
+<script>/*IPAD-V26-PWA: 오프라인 캐시(sw.js). https(깃허브 Pages)에서만*/
 if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostname==='localhost')){
   navigator.serviceWorker.register('./sw.js').catch(function(){});
   if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(function(){});
