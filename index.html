@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>야장 결함 마킹</title>
-<!--IPAD-V26-PWA: 홈 화면에 추가(앱처럼 설치)용. pwa/index.html 머리와 같음-->
+<!--IPAD-V27-PWA: 홈 화면에 추가(앱처럼 설치)용. pwa/index.html 머리와 같음-->
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-title" content="야장">
@@ -531,6 +531,7 @@ function renderOverlay(){
       s+=`<circle cx="${e[0]}" cy="${e[1]}" r="${L*0.5}" fill="rgba(255,255,255,.7)" stroke="var(--sel)" stroke-width="${sw}" stroke-dasharray="${sw*2} ${sw*1.5}"/>`;
     }
   }
+  {const sd=selDef();if(sd&&v27Show(sd))s+=v27Handles(sd);} /*V27-EDIT: 선택한 균열선의 틀·손잡이*/
   gDefs.innerHTML=s;
   const tab=document.querySelector(`.tab[data-draw="${d.id}"] .n`);if(tab)tab.textContent=d.defects.length;
 }
@@ -671,8 +672,8 @@ function snapSeg(anchor,p,prevDir){
 function pushUndo(d){undoStack.push({did:d.id,defs:JSON.stringify(d.defects)});if(undoStack.length>80)undoStack.shift();}
 function undo(){
   const u=undoStack.pop();if(!u){toast('되돌릴 작업이 없어요');return;}
-  for(const f of S.facilities)for(const d of f.drawings)if(d.id===u.did){d.defects=JSON.parse(u.defs);S.curF=f.id;S.curD=d.id;}
-  sel=null;save();renderAll();
+  let keep=false;for(const f of S.facilities)for(const d of f.drawings)if(d.id===u.did){d.defects=JSON.parse(u.defs);S.curF=f.id;S.curD=d.id;keep=d.defects.some(x=>x.id===sel);}
+  if(!keep)sel=null;save();renderAll(); /*V27-EDIT: 되돌린 뒤에도 그 결함이 있으면 선택 그대로(이어서 고치기)*/
 }
 function placeLineLabel(def,L){
   let bi=1,bl=-1;for(let i=1;i<def.pts.length;i++){const l=dist(def.pts[i-1],def.pts[i]);if(l>bl){bl=l;bi=i;}}
@@ -704,6 +705,7 @@ stage.addEventListener('pointerdown',e=>{
   try{stage.setPointerCapture(e.pointerId);}catch(_){}
   ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY,type:e.pointerType});
   if(ptrs.size>=2){gesture=null;renderDraft();startPinch();return;}
+  if(v27Down(e))return; /*V27-EDIT*/
   const panOnly=tool!=='select'&&S.prefs.penOnly&&e.pointerType==='touch';
   if(panOnly){gesture={kind:'pan',sx:e.clientX,sy:e.clientY,tx:view.tx,ty:view.ty,moved:false};return;}
   const p=toImg(e);
@@ -749,6 +751,7 @@ stage.addEventListener('pointermove',e=>{
     view.tx=g.tx+dx;view.ty=g.ty+dy;applyView();return;
   }
   const p=toImg(e);
+  if(g.kind==='v27'){v27Apply(g,p);return;} /*V27-EDIT*/
   if(g.kind==='label'){
     const def=D().defects.find(x=>x.id===g.id);if(!def)return;
     if(!g.moved){pushUndo(D());g.moved=true;}
@@ -782,10 +785,11 @@ function endPointer(e){
     const pts=v25Smooth(g.pts,view.s);
     clearTimeout(g.holdT); /*V26-SHAPE*/
     if(pts.length>=2&&polyLen(pts)*view.s>=10){pushUndo(d);const def=newDef(d,'line',pts);def.free=true;v25PlaceFree(d,def);
-      if(g.shape){pushUndo(d);def.pts=g.shape.pts;def.shape=g.shape.kind;v25PlaceFree(d,def);} /*V26-SHAPE: 두 번째 되돌리기 지점 → 실행 취소 한 번이면 위 자유선*/
+      if(g.shape){pushUndo(d);def.pts=g.shape.pts;def.shape=g.shape.kind;def.rot=g.shape.th;v25PlaceFree(d,def);toast('도형을 끌어서 옮기고, 손잡이로 돌리거나 크기를 바꿀 수 있어요');/*V27-EDIT: 바로 선택(손잡이 보임)*/} /*V26-SHAPE: 두 번째 되돌리기 지점 → 실행 취소 한 번이면 위 자유선*/
       save();renderOverlay();renderPanel();}
   }else if(g.kind==='area'){
     if(Math.abs(g.a[0]-g.b[0])*view.s>=10&&Math.abs(g.a[1]-g.b[1])*view.s>=10){pushUndo(d);newDef(d,'area',[g.a,g.b]);}
+  }else if(g.kind==='v27'){v27End(d,g); /*V27-EDIT*/
   }else if(g.kind==='label'){if(g.moved)save();}
   else if(g.kind==='pan'){if(!g.moved&&g.clearSel&&sel){sel=null;renderOverlay();renderPanel();}}
   renderDraft();
@@ -1339,7 +1343,7 @@ function buildCadMulti(items,site,logo,formS){ // V14: formS = 시설물 공통 
       if(def.hideLabel){ /*V16-HIDDENLEADER: 같은 번호 추가 위치에서 가장 가까운 번호 원이 다른 번호면, 자기 번호 원까지 지시선을 그림 (다시 불러올 때 번호 유지)*/
         const own=d.defects.find(x=>!x.hideLabel&&x.no===def.no);let nb=null,nd=Infinity;
         for(const x of d.defects)if(!x.hideLabel){const q=defDistPx(labelPos(x),def);if(q<nd){nd=q;nb=x;}}
-        if(own&&nb&&nb.no!==def.no){const an=anchorOf(def),lp=labelPos(own),A=WP(an[0],an[1]),C=WP(lp[0],lp[1]),dd=Math.hypot(C[0]-A[0],C[1]-A[1]);
+        if(own&&nb&&(nb.no!==def.no||def.v27Moved)/*V27-EDIT*/){const lp=labelPos(own),an=v27An(def,lp)/*V27-EDIT*/,A=WP(an[0],an[1]),C=WP(lp[0],lp[1]),dd=Math.hypot(C[0]-A[0],C[1]-A[1]);
           if(dd>R*1.02+v25Gap(def,R))lwp([v25LA(A,C,dd,def,R),[C[0]-(C[0]-A[0])*R/dd,C[1]-(C[1]-A[1])*R/dd]],false,LDW,col,false)/*V25-FREE: 균열선 지시선 틈*/;}
         continue;}
       const an=anchorOf(def),lp=labelPos(def),A=WP(an[0],an[1]),C=WP(lp[0],lp[1]),dd=Math.hypot(C[0]-A[0],C[1]-A[1]);
@@ -1463,7 +1467,7 @@ function v21Ents(E,H,d,list,WP,owner){
       g(45,N(-2.2450640303*HS));g(46,N(2.2450640303*HS));g(79,0);g(98,0);}
     if(def.hideLabel){const own=d.defects.find(x=>!x.hideLabel&&x.no===def.no);let nb=null,nd=Infinity;
       for(const x of d.defects)if(!x.hideLabel){const q=defDistPx(labelPos(x),def);if(q<nd){nd=q;nb=x;}}
-      if(own&&nb&&nb.no!==def.no){const an=anchorOf(def),lp=labelPos(own),A=WP(an[0],an[1]),C=WP(lp[0],lp[1]),dd=Math.hypot(C[0]-A[0],C[1]-A[1]);
+      if(own&&nb&&(nb.no!==def.no||def.v27Moved)/*V27-EDIT*/){const lp=labelPos(own),an=v27An(def,lp)/*V27-EDIT*/,A=WP(an[0],an[1]),C=WP(lp[0],lp[1]),dd=Math.hypot(C[0]-A[0],C[1]-A[1]);
         if(dd>R*1.02+v25Gap(def,R))lwp([v25LA(A,C,dd,def,R),[C[0]-(C[0]-A[0])*R/dd,C[1]-(C[1]-A[1])*R/dd]],false,LDW,col,false)/*V25-FREE: 균열선 지시선 틈*/;}
       continue;}
     const an=anchorOf(def),lp=labelPos(def),A=WP(an[0],an[1]),C=WP(lp[0],lp[1]),dd=Math.hypot(C[0]-A[0],C[1]-A[1]);
@@ -1878,9 +1882,52 @@ function v26Fit(raw,scale){if(raw.length<8)return null;const Lp=polyLen(raw);
   else{kind='rect';pts=[[1,1],[-1,1],[-1,-1],[1,-1]].map(([u,v])=>back(fq,fq.cx+u*fq.a,fq.cy+v*fq.b));}
   pts.push(pts[0]);const tol=Math.max(1.8,1.5/(scale||1));for(let k=0;k<20;k++){const q=dp(pts,tol);if(q.length===pts.length)break;pts=q;}
   pts=pts.map(q=>[Math.round(q[0]*100)/100,Math.round(q[1]*100)/100]);pts[pts.length-1]=pts[0].slice();
-  return {kind,pts,err:Math.min(eE,qE)};}
+  return {kind,pts,err:Math.min(eE,qE),th:kind==='ellipse'?fe.th:fq.th/*V27-EDIT: 틀 기울기*/};}
 /*V26-SHAPE: 타원·사각형이면 번호 원을 도형 바깥쪽부터 찾음*/
 function v26Side(def,a,n){if(!def.shape)return [1,-1];let cx=0,cy=0;const P=def.pts;P.forEach(p=>{cx+=p[0]/P.length;cy+=p[1]/P.length;});return n[0]*(a[0]-cx)+n[1]*(a[1]-cy)>=0?[1,-1]:[-1,1];}
+/*V27-EDIT: 선택한 균열선(도형·자유선·직선) 옮기기·돌리기·크기 바꾸기.
+  손잡이가 보이는 때: 선택 도구에서 균열선을 골랐을 때, 그리고 도형(shape)은 균열선 도구에서도(인식 직후 바로 선택). 다음 획은 손잡이·도형 밖에서 그으면 그대로 그려짐.
+  틀 = def.rot(도형은 인식한 기울기, 돌리면 더해짐, 없으면 0) 방향의 둘레 사각형 + 화면 12px 여백. 손잡이 = 네 모서리(크기) + 위쪽 회전 손잡이, 화면 반지름 13px, 잡는 범위 24px.
+  몸통 = 선 화면 18px 안, 도형은 틀 안 전체. 끌기 한 번 = 실행 취소 한 번. 번호는 기준점에 붙어 따라가고(돌리면 번호 방향도 같이 돎), 떼면
+  v25 자리 조건(다시 불러올 때 지시선으로 안 읽힘)을 못 지키는 경우에만 v25PlaceFree로 다시 놓음. 크기를 바꾸면 v25와 같은 점 줄이기(1.8)를 다시 해서 다시 불러와도 점이 같게 함*/
+function v27An(def,q){if(!(def.v27Moved&&def.type==='line'))return anchorOf(def);let b=null,bd=Infinity;
+  for(let j=1;j<def.pts.length;j++){const a=def.pts[j-1],c=def.pts[j],dx=c[0]-a[0],dy=c[1]-a[1],l2=dx*dx+dy*dy,t=l2?Math.max(0,Math.min(1,((q[0]-a[0])*dx+(q[1]-a[1])*dy)/l2)):0,p=[a[0]+t*dx,a[1]+t*dy];if(dist(p,q)<bd){bd=dist(p,q);b=p;}}
+  return b||anchorOf(def);}
+function v27Show(def){return def&&def.type==='line'&&def.id===sel&&!bendId&&(tool==='select'||!!def.shape);}
+function v27Frame(def){const t=def.rot||0,c=Math.cos(t),s_=Math.sin(t);let u0=1e18,u1=-1e18,v0=1e18,v1=-1e18;
+  for(const p of def.pts){const u=p[0]*c+p[1]*s_,v=-p[0]*s_+p[1]*c;u0=Math.min(u0,u);u1=Math.max(u1,u);v0=Math.min(v0,v);v1=Math.max(v1,v);}
+  const pad=12/view.s,W=(u,v)=>[u*c-v*s_,u*s_+v*c],U0=u0-pad,U1=u1+pad,V0=v0-pad,V1=v1+pad,um=(u0+u1)/2;
+  return {c,s:s_,u0,u1,v0,v1,cn:[W(U0,V0),W(U1,V0),W(U1,V1),W(U0,V1)],ctr:W(um,(v0+v1)/2),top:W(um,V0),rh:W(um,V0-40/view.s)};}
+function v27Handles(def){const f=v27Frame(def),R=13/view.s,w=2/view.s,P=q=>q[0].toFixed(1)+','+q[1].toFixed(1);
+  let o=`<polygon points="${f.cn.map(P).join(' ')}" fill="none" stroke="var(--sel)" stroke-width="${w}" stroke-dasharray="${w*4} ${w*3}"/>`;
+  o+=`<line x1="${f.top[0]}" y1="${f.top[1]}" x2="${f.rh[0]}" y2="${f.rh[1]}" stroke="var(--sel)" stroke-width="${w}"/>`;
+  f.cn.forEach((q,i)=>{o+=`<circle data-h="c${i}" cx="${q[0]}" cy="${q[1]}" r="${R}" fill="#fff" stroke="var(--sel)" stroke-width="${w*1.5}"/>`;});
+  return o+`<circle data-h="rot" cx="${f.rh[0]}" cy="${f.rh[1]}" r="${R}" fill="var(--sel)" stroke="#fff" stroke-width="${w*1.5}"/>`;}
+function v27Down(e){const def=selDef();if(!v27Show(def))return false;const p=toImg(e),f=v27Frame(def),T=24/view.s;let mode=null,k=-1,best=T;
+  /*짧은 선은 손잡이가 선 위에 겹치므로 가장 가까운 것을 잡음(선 몸통 포함)*/
+  if(dist(p,f.rh)<=best){mode='rot';best=dist(p,f.rh);}for(let i=0;i<4;i++)if(dist(p,f.cn[i])<best){mode='scale';k=i;best=dist(p,f.cn[i]);}
+  let m=Infinity;for(let j=1;j<def.pts.length;j++)m=Math.min(m,segDist(p,def.pts[j-1],def.pts[j]));
+  const u=p[0]*f.c+p[1]*f.s,v=-p[0]*f.s+p[1]*f.c,inside=def.shape&&u>=f.u0&&u<=f.u1&&v>=f.v0&&v<=f.v1;
+  if(m<=18/view.s&&m<best||!mode&&inside)mode='move';
+  if(!mode)return false;
+  gesture={kind:'v27',mode,k,id:def.id,sp:p,pts0:def.pts.map(q=>q.slice()),rot0:def.rot||0,lx0:def.lx,ly0:def.ly,f,moved:false};return true;}
+function v27Apply(g,p){const d=D(),def=d&&d.defects.find(x=>x.id===g.id);if(!def)return;
+  if(!g.moved){if(dist(p,g.sp)*view.s<3)return;pushUndo(d);g.moved=true;}
+  const f=g.f,P0=g.pts0;let pts;
+  if(g.mode==='move'){const dx=p[0]-g.sp[0],dy=p[1]-g.sp[1];pts=P0.map(q=>[q[0]+dx,q[1]+dy]);}
+  else if(g.mode==='rot'){const c=f.ctr,a=Math.atan2(p[1]-c[1],p[0]-c[0])-Math.atan2(g.sp[1]-c[1],g.sp[0]-c[0]),cs=Math.cos(a),sn=Math.sin(a);
+    pts=P0.map(q=>[c[0]+(q[0]-c[0])*cs-(q[1]-c[1])*sn,c[1]+(q[0]-c[0])*sn+(q[1]-c[1])*cs]);def.rot=g.rot0+a;def.lx=g.lx0*cs-g.ly0*sn;def.ly=g.lx0*sn+g.ly0*cs;}
+  else{const fu=q=>q[0]*f.c+q[1]*f.s,fv=q=>-q[0]*f.s+q[1]*f.c,O=f.cn[(g.k+2)%4],C=f.cn[g.k];
+    const su=f.u1-f.u0>1e-6?Math.max(0.05,(fu(p)-fu(O))/(fu(C)-fu(O))):1,sv=f.v1-f.v0>1e-6?Math.max(0.05,(fv(p)-fv(O))/(fv(C)-fv(O))):1; /*납작한 쪽(직선)은 그 방향 크기 그대로, 뒤집기 없음*/
+    pts=P0.map(q=>{const u=fu(O)+(fu(q)-fu(O))*su,v=fv(O)+(fv(q)-fv(O))*sv;return [u*f.c-v*f.s,u*f.s+v*f.c];});}
+  def.pts=pts.map(q=>[Math.round(q[0]*100)/100,Math.round(q[1]*100)/100]);renderOverlay();}
+function v27LabelOk(d,def){if(def.hideLabel)return true;const L=d.labelSize,r=Math.max(0.75*L,d.cadR>0&&d.src&&d.src.mm?d.cadR/d.src.mm:0),a=anchorOf(def),c=labelPos(def),P=def.pts;
+  let md=Infinity;for(let i=1;i<P.length;i++)md=Math.min(md,segDist(c,P[i-1],P[i]));
+  return md>1.8*r&&!polyCross([c,a],P)&&segDist(P[0],c,a)>0.9*r&&segDist(P[P.length-1],c,a)>0.9*r&&c[0]>=0&&c[1]>=0&&c[0]<=d.w&&c[1]<=d.h;}
+function v27End(d,g){if(!g.moved)return;const def=d.defects.find(x=>x.id===g.id);if(!def)return;
+  if(g.mode==='scale'&&def.pts.length>2){let p=def.pts;const tol=Math.max(1.8,1.5/view.s);for(let k=0;k<20;k++){const q=dp(p,tol);if(q.length===p.length)break;p=q;}def.pts=p;}
+  if(def.hideLabel)def.v27Moved=true;else if(!v27LabelOk(d,def))v25PlaceFree(d,def);
+  save();renderOverlay();renderPanel();}
 /*V16-LEADER: 두 꺾은선이 서로 교차하는지*/
 function polyCross(A,B){const cr=(o,a,b)=>(a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]);
   for(let i=1;i<A.length;i++)for(let j=1;j<B.length;j++){const p=A[i-1],q=A[i],r=B[j-1],t=B[j];
@@ -2035,7 +2082,7 @@ async function importCadFile(file){
 })();
 })();
 </script>
-<script>/*IPAD-V26-PWA: 오프라인 캐시(sw.js). https(깃허브 Pages)에서만*/
+<script>/*IPAD-V27-PWA: 오프라인 캐시(sw.js). https(깃허브 Pages)에서만*/
 if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostname==='localhost')){
   navigator.serviceWorker.register('./sw.js').catch(function(){});
   if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(function(){});
