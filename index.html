@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>야장 결함 마킹</title>
-<!--IPAD-V27-PWA: 홈 화면에 추가(앱처럼 설치)용. pwa/index.html 머리와 같음-->
+<title>야장 결함 마킹</title><!--V28-UI-->
+<!--IPAD-V31-PWA: 홈 화면에 추가(앱처럼 설치)용. pwa/index.html 머리와 같음-->
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-title" content="야장">
@@ -151,60 +151,213 @@ input[type=range]{width:100%}
   .fac select{max-width:140px}
   #status{display:none}
 }
+
+/*V28-UI: 시안 2단계_A안_보강(시안1 시트형, 도구 왼쪽)을 v27에 입힘. 아래 규칙이 위 v27 규칙을 덮음*/
+:root{--accent:#1D5FA0;--unrep:#D1242F;--rep:#808080;--rep-ink:#5C5C5C;--on-state:#FFFFFF;--star:#7D5600;--stage:#C9CECB;--chrome:#FFFFFF;--bg:#EEF0EF;--muted:#55606B;--rule:#CDD3D0}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--accent:#6FA8DE;--unrep:#FF5A5F;--rep:#9A9A9A;--rep-ink:#B5B5B5;--on-state:#0E1924;--star:#E3B341;--stage:#2A3036;--chrome:#1D2328;--bg:#14181C;--muted:#A3ADB6;--rule:#38424A}}
+:root[data-theme="dark"]{--accent:#6FA8DE;--unrep:#FF5A5F;--rep:#9A9A9A;--rep-ink:#B5B5B5;--on-state:#0E1924;--star:#E3B341;--stage:#2A3036;--chrome:#1D2328;--bg:#14181C;--muted:#A3ADB6;--rule:#38424A}
+body{font-size:16px}
+.top{position:relative;z-index:30;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;padding:6px 10px}
+.top .l,.top .r{display:flex;align-items:center;gap:8px;min-width:0}
+.top .r{justify-content:flex-end;position:relative}
+.top .c{position:relative;min-width:0;display:flex;justify-content:center}
+.save{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);white-space:nowrap;min-width:0}
+.save i{flex:none;width:9px;height:9px;border-radius:50%;background:#1E8C4E}
+#status{font-size:13px;overflow:hidden;text-overflow:ellipsis}
+#srcBadge{font-size:13px;border-radius:8px;padding:2px 8px;border-color:var(--rule)}
+.tbtn{height:44px;min-width:44px;padding:0 14px;border:1px solid var(--rule);border-radius:8px;background:transparent;white-space:nowrap}
+.tbtn[aria-expanded="true"]{background:var(--ink);color:var(--chrome);border-color:var(--ink)}
+.pill{height:44px;display:flex;align-items:center;gap:8px;padding:0 14px 0 16px;border:1px solid var(--rule);border-radius:22px;background:var(--bg);font-weight:600;max-width:100%;min-width:0}
+.pill svg{width:20px;height:20px;flex:none}
+.pill .pf{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;max-width:260px}
+.pill .sep{width:1px;height:20px;background:var(--rule);flex:none}
+.pill b{white-space:nowrap}
+.pill[aria-expanded="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.fpop{position:absolute;left:50%;top:calc(100% + 6px);transform:translateX(-50%);z-index:31;width:min(460px,calc(100vw - 20px));display:grid;grid-template-columns:1fr 1.2fr;background:var(--chrome);border:1px solid var(--rule);border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.18);max-height:calc(100vh - 80px);overflow-y:auto}
+.fpop section{padding:8px}
+.fpop section+section{border-left:1px solid var(--rule)}
+.fpop h5{margin:4px 8px 6px;font-size:13px;color:var(--muted);font-weight:600}
+.fpop button{display:flex;align-items:center;gap:8px;width:100%;min-height:48px;text-align:left;border:0;border-radius:8px;background:transparent;padding:4px 10px}
+.fpop button:hover{background:var(--hover)}
+.fpop button[aria-current="true"]{font-weight:700;box-shadow:inset 3px 0 0 var(--accent);background:var(--hover)}
+.fpop button .n{margin-left:auto;font-size:13px;color:var(--muted);font-weight:400;white-space:nowrap}
+.fpop button.add{color:var(--accent)}
+.menu{position:absolute;right:0;top:calc(100% + 6px);z-index:31;width:340px;max-height:calc(100vh - 80px);overflow-y:auto;background:var(--chrome);border:1px solid var(--rule);border-radius:12px;padding:6px;box-shadow:0 12px 30px rgba(0,0,0,.18)}
+.menu h5{margin:10px 12px 4px;font-size:13px;color:var(--muted);font-weight:600}
+.menu button{display:block;width:100%;min-height:48px;text-align:left;border:0;border-radius:8px;background:transparent;padding:8px 12px}
+.menu button:hover{background:var(--hover)}
+.menu small{display:block;font-size:13px;color:var(--muted)}
+.menu hr{border:0;border-top:1px solid var(--rule);margin:6px 8px}
+main{display:flex;position:relative;min-height:0}
+#stage{flex:1;min-width:0}
+.island{position:absolute;left:10px;top:10px;z-index:5;display:flex;flex-direction:column;gap:6px;padding:6px;background:var(--chrome);border:1px solid var(--rule);border-radius:12px}
+.island .tool{position:relative;width:64px;height:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:0;border:0;border-radius:9px;background:transparent;font-size:14px;font-weight:600;white-space:nowrap;color:var(--ink)}
+.island .tool svg{width:28px;height:28px}
+.island .tool.on{background:var(--accent);color:var(--accent-ink)}
+.island .tool.sm{height:48px;font-weight:500}
+.island .tool.sm svg{width:22px;height:22px}
+.island .tool[data-act="pen"][aria-pressed="true"]{background:transparent;color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent)}
+.island hr{border:0;border-top:1px solid var(--rule);margin:2px 4px}
+.lineopt{position:absolute;left:84px;top:86px;z-index:5;display:flex;background:var(--chrome);border:1px solid var(--rule);border-radius:10px;padding:4px;gap:4px}
+.lineopt button,#diagBtn,#freeBtn{position:static;height:48px;padding:0 14px;border:0;border-radius:7px;background:transparent;font-size:16px;color:var(--ink)}
+.lineopt button[aria-pressed="true"],#diagBtn[aria-pressed="true"],#freeBtn[aria-pressed="true"]{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink);font-weight:700}
+.fitbtn{position:absolute;right:12px;bottom:12px;z-index:5;width:76px;height:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:1px solid var(--rule);border-radius:12px;background:var(--chrome);font-size:14px;font-weight:600}
+.fitbtn svg{width:26px;height:26px}
+#hint{left:50%;top:12px;bottom:auto;transform:translateX(-50%);z-index:6;max-width:min(560px,calc(100% - 200px));background:var(--ink);color:var(--chrome);font-size:16px;padding:10px 16px;border-radius:9px;text-align:center}
+#scaleBadge{left:96px;right:auto;bottom:12px;min-height:44px;padding:4px 12px;font-size:13px;color:var(--muted);pointer-events:auto;border-radius:8px;background:var(--chrome);border:1px solid var(--rule)}
+#tabs{display:none}
+@media (min-width: 1200px){ /*V28-UI: 넓은 화면(PC 브라우저)에서만 도면 아래에 층 띠를 함께 둠. 아이패드(1180·820)는 위 막대의 동·층 알약만*/
+  #tabs{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);z-index:4;display:flex;gap:4px;max-width:calc(100% - 420px);overflow-x:auto;padding:4px;background:var(--chrome);border:1px solid var(--rule);border-radius:12px}
+  #tabs .tab{height:44px}
+}
+#panel{width:380px;flex:none;display:flex;flex-direction:column;min-height:0;overflow:hidden;background:var(--chrome);border-left:1px solid var(--rule)}
+#panel .hd{display:flex;align-items:center;gap:10px;padding:12px 12px 10px 16px;border-bottom:1px solid var(--rule)}
+#panel .hd b{font-size:18px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#panel .bd{flex:1;overflow-y:auto;padding:12px 16px 20px;-webkit-overflow-scrolling:touch}
+#panel .grab{display:none}
+#panel .badge{width:40px;height:40px;border-width:3px}
+#panel .field{margin-bottom:16px}
+.lb{display:flex;align-items:baseline;gap:8px;font-size:13px;color:var(--muted);margin-bottom:6px}
+.lb .v{margin-left:auto;font-size:16px;color:var(--ink);font-weight:700;text-align:right;overflow-wrap:anywhere}
+.state{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.state button{height:52px;border-radius:9px;border:2px solid var(--rule);background:transparent;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px}
+.state .sw{width:16px;height:16px;border-radius:3px}
+.state [data-st="unrep"] .sw{background:var(--unrep)}
+.state [data-st="rep"] .sw{background:var(--rep)}
+.state [data-st="unrep"][aria-pressed="true"]{border-color:var(--unrep);background:var(--unrep);color:var(--on-state)}
+.state [data-st="rep"][aria-pressed="true"]{border-color:var(--rep-ink);background:var(--rep-ink);color:var(--on-state)}
+.state [aria-pressed="true"] .sw{background:var(--on-state)}
+#panel .chips{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:6px}
+#panel .chips.w{grid-template-columns:repeat(6,1fr)}
+#panel .chip{height:auto;min-height:44px;padding:4px 6px;border-radius:8px;border:1px solid var(--rule);background:transparent;color:var(--ink);line-height:1.2;word-break:keep-all;font-size:16px/*V28-UI: 본문 선택 단추 16px*/}
+#panel .chip[aria-pressed="true"]{border:2px solid var(--ink);font-weight:700;background:transparent;color:var(--ink)}
+#panel .chip[aria-pressed="true"]::before{content:"✓ "}
+#panel .in{height:44px;padding:0 12px}
+#panel textarea.in{height:80px;padding:10px 12px}
+#panel details{border-top:1px solid var(--rule);padding-top:4px;margin-top:4px}
+#panel summary{min-height:48px;display:flex;align-items:center;font-weight:600;cursor:pointer;list-style:none}
+#panel summary::-webkit-details-marker{display:none}
+#panel summary::before{content:"";width:0;height:0;border:6px solid transparent;border-left-color:currentColor;margin-right:10px;transition:transform .15s}
+#panel details[open]>summary::before{transform:rotate(90deg) translateX(3px)}
+#panel summary small{margin-left:8px;font-weight:400;font-size:13px;color:var(--muted)}
+#panel .quick{border:0;margin:0 0 14px;padding:4px 10px 10px;background:var(--bg);border-radius:10px}
+.quick ul{list-style:none;margin:0;padding:0}
+.quick li{display:flex;align-items:center;border-bottom:1px solid var(--rule)}
+.quick li:last-child{border-bottom:0}
+.quick .ap{flex:1;min-width:0;min-height:48px;text-align:left;border:0;background:transparent;padding:6px 4px;line-height:1.3}
+.quick .st{flex:none;width:44px;height:44px;border:0;background:transparent;color:var(--star);font-size:22px}
+.quick .add{width:100%;min-height:44px;margin-top:8px;border:1px solid var(--rule);border-radius:8px;background:var(--chrome)}
+.quick .add span{color:var(--star)}
+.quick .add:disabled{color:var(--muted);cursor:default}
+.quick .none{margin:6px 4px;color:var(--muted);font-size:13px}
+.btn{height:44px}
+.btn.w{width:100%;margin-bottom:8px}
+.btn.primary:disabled{background:var(--bg);color:var(--muted);border-color:var(--rule);cursor:not-allowed}
+.del{margin-top:28px;padding-top:16px;border-top:1px solid var(--rule)}
+.del .btn.danger,.del [data-act="deldraw"]{color:var(--unrep);border-color:currentColor}
+.x{width:44px;height:44px;border:0;border-radius:8px;background:transparent;font-size:22px;line-height:1;flex:none}
+.x:hover{background:var(--hover)}
+#panel .list button{min-height:56px;gap:12px;border-bottom:1px solid var(--rule);border-radius:0;padding:6px 2px}
+#panel .list .t span{display:block;font-size:13px;color:var(--muted)}
+.tag{flex:none;font-size:13px;font-weight:600;padding:2px 8px;border-radius:6px}
+.tag.unrep{color:var(--unrep);border:1px solid var(--unrep)}
+.tag.rep{color:var(--rep-ink);border:1px solid var(--rep-ink)}
+#panel .seg button{height:44px}
+#panel input[type=range]{height:44px}
+.sum{display:flex;gap:8px;align-items:center;margin-bottom:12px;font-size:13px;color:var(--muted)}
+#exportPop{position:fixed;inset:0;z-index:40;background:rgba(15,20,25,.45);display:flex;align-items:center;justify-content:center;padding:20px;width:auto;max-height:none;border:0;border-radius:0;box-shadow:none;overflow:visible}
+#exportPop[hidden]{display:none}
+.dlg{width:min(680px,100%);max-height:100%;display:flex;flex-direction:column;background:var(--chrome);border-radius:14px;overflow:hidden}
+.dlg .hd{display:flex;align-items:center;padding:10px 10px 10px 20px;border-bottom:1px solid var(--rule)}
+.dlg .hd h2{flex:1;margin:0;font-size:22px}
+.dlg .bd{overflow-y:auto;padding:16px 20px}
+.dlg h3{margin:0 0 2px;font-size:18px}
+.dlg .sub{margin:0 0 10px;color:var(--muted);font-size:13px}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:22px}
+.tw{display:flex;border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.tw.on{border:2px solid var(--accent)}
+.tile{flex:1;min-width:0;display:flex;align-items:center;gap:12px;min-height:60px;padding:8px 12px;border:0;background:transparent;text-align:left}
+.tile:disabled{color:var(--muted);cursor:not-allowed}
+.tile .fm{flex:none;width:48px;height:28px;display:flex;align-items:center;justify-content:center;border:1px solid var(--muted);border-radius:5px;font-size:12px;font-weight:700;color:var(--muted)}
+.tile .tx{flex:1;min-width:0;line-height:1.3}
+.tile .tx small{display:block;font-size:13px;color:var(--muted)}
+.tile .ok{flex:none;width:24px;height:24px;border-radius:6px;border:2px solid var(--rule);position:relative}
+.tile[aria-pressed="true"] .ok{border-color:var(--accent);background:var(--accent)}
+.tile[aria-pressed="true"] .ok::after{content:"";position:absolute;left:6px;top:2px;width:6px;height:11px;border:solid var(--accent-ink);border-width:0 3px 3px 0;transform:rotate(45deg)}
+.tw .now{flex:none;width:64px;min-height:44px;border:0;border-left:1px solid var(--rule);background:transparent;font-size:13px;line-height:1.25;color:var(--accent);font-weight:600}
+.oseg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.oseg button{min-height:60px;border:1px solid var(--rule);border-radius:10px;background:transparent;line-height:1.3}
+.oseg button small{display:block;font-size:13px;color:var(--muted)}
+.oseg button[aria-pressed="true"]{border:2px solid var(--accent);font-weight:700}
+#srcKeepBtn{display:block;width:100%;min-height:48px;margin-top:12px;text-align:left;border:1px solid var(--rule);border-radius:10px;background:transparent;padding:8px 12px}
+#srcKeepBtn[hidden]{display:none}
+#srcKeepBtn small{display:block;font-size:13px;color:var(--muted)}
+.dlg .ft{padding:12px 20px;border-top:1px solid var(--rule);display:flex;gap:10px;align-items:center}
+.dlg .ft .note{flex:1;font-size:13px;color:var(--muted)}
+.dlg .ft .btn.primary{height:52px;padding:0 24px;font-size:18px}
+@media (orientation: portrait), (max-width: 900px){
+  main{flex-direction:column;grid-template-columns:none;grid-template-rows:none}
+  #panel{width:auto;height:52%;max-height:none;border-left:0;border-top:1px solid var(--rule);border-radius:14px 14px 0 0}
+  #panel .grab{display:block;flex:none;width:100%;height:24px;position:relative}
+  #panel .grab::after{content:"";position:absolute;left:50%;top:8px;width:44px;height:5px;margin-left:-22px;border-radius:3px;background:var(--rule)}
+  #panel .chips{grid-template-columns:repeat(4,1fr)}
+  #status{display:inline}
+}
+@media (max-width: 620px){
+  .top{grid-template-columns:1fr auto}
+  .top .c{grid-column:1 / -1;order:3}
+  #status,#srcBadge{display:none}
+  .menu{width:calc(100vw - 20px)}
+  .tiles,.oseg{grid-template-columns:1fr}
+  #panel .chips,#panel .chips.w{grid-template-columns:repeat(3,1fr)}
+  .fpop{grid-template-columns:1fr}
+  .fpop section+section{border-left:0;border-top:1px solid var(--rule)}
+}
+@media (prefers-reduced-motion: reduce){#panel summary::before{transition:none}}
+/*V28-UI: 읽는 중·오류 화면*/
+#sState{position:absolute;inset:0;z-index:25;display:flex;align-items:center;justify-content:center;padding:24px;background:var(--stage)}
+#sState[hidden]{display:none}
+#sState .box{max-width:420px;background:var(--chrome);border:1px solid var(--rule);border-radius:14px;padding:28px}
+#sState h2{margin:0 0 10px;font-size:21px}#sState p{margin:0 0 20px;color:var(--muted)}#sState .err{color:var(--unrep);font-weight:700}
+#sState .bar{height:8px;border-radius:4px;background:var(--bg);overflow:hidden;margin-bottom:12px}#sState .bar i{display:block;height:100%;width:40%;background:var(--accent);animation:v28bar 1.2s ease-in-out infinite alternate}
+@keyframes v28bar{from{transform:translateX(-10%)}to{transform:translateX(160%)}}@media (prefers-reduced-motion:reduce){#sState .bar i{animation:none;width:100%;opacity:.5}}
+#sState .acts{display:flex;gap:8px;flex-wrap:wrap}#sState .btn{min-height:44px}
+/*V28-UI: 시설물 이름이 길어도 위 막대가 넘치지 않게*/.top{grid-template-columns:minmax(0,1fr) minmax(0,auto) minmax(0,1fr)}.top .c{min-width:0}
+@media (max-width:900px){.pill .pf{max-width:150px}}@media (max-width:560px){.pill .pf{max-width:72px}}
 </style>
 </head>
 <body>
 <div id="app">
-  <header class="top">
-    <div class="fac">
-      <select id="facSel" aria-label="시설물 선택"></select>
-      <button class="icon" data-act="newfac" title="새 시설물" aria-label="새 시설물">＋</button>
-      <button class="icon" data-act="renfac" title="시설물 이름 바꾸기" aria-label="시설물 이름 바꾸기">✎</button>
+  <header class="top"><!--V28-UI: 왼쪽 저장 상태, 가운데 동·층 알약, 오른쪽 목록·출력·파일·설정-->
+    <div class="l"><span class="save"><i aria-hidden="true"></i><span id="status"></span></span><span id="srcBadge" hidden title="불러온 원본 DXF를 바탕으로 결함만 바꿔 내보내요">원본 보존</span><!--V21-SRC--></div>
+    <div class="c">
+      <button class="pill" data-act="floorpop" aria-expanded="false" aria-haspopup="true" aria-label="동·층 고르기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="1"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></svg><span class="pf" id="pillFac">시설물 없음</span><span class="sep"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 4l9 5-9 5-9-5z"/><path d="M3 14l9 5 9-5"/></svg><b id="pillFl">도면 없음</b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg></button>
+      <div class="fpop" id="floorPop" hidden><section><h5>동 (시설물)</h5><div id="facList"></div></section><section><h5>층</h5><div id="flList"></div></section></div>
+      <select id="facSel" aria-label="시설물 선택" hidden></select>
     </div>
-    <nav id="tabs" aria-label="도면"></nav>
-    <div class="acts">
-      <span id="status"></span><span id="srcBadge" hidden title="불러온 원본 DXF를 바탕으로 결함만 바꿔 내보내요">원본 보존</span><!--V21-SRC-->
-      <button class="btn primary" data-act="export" aria-haspopup="true">내보내기</button>
-      <div class="pop" id="exportPop" hidden>
-        <small style="padding:6px 12px 2px;display:block;color:var(--muted)">시설물 전체 (모든 층)</small>
-        <button data-act="dxfall">CAD 일괄 (DXF, 회사 양식)<small id="dxfallNote">모든 층을 한 파일에, 도곽·평면도 포함</small></button>
-        <button data-act="srckeep" id="srcKeepBtn" hidden>원본 보존 모드 끄기<small>끄면 모든 층을 새로 그려요</small></button><!--V21-SRC-->
-        <button data-act="pngall">이미지 일괄 (도곽 포함 PNG)<small>층별 이미지를 zip 하나로</small></button>
-        <button data-act="xlsx">결함표 엑셀<small>모든 층, 집계 시트 포함</small></button>
-        <button data-act="xlsxco">결함표 엑셀 (회사 양식)<small>결함리스트 양식, 머리 3줄·B열부터</small></button><!--V24-XLS-->
-        <hr>
-        <small style="padding:6px 12px 2px;display:block;color:var(--muted)">지금 보는 층만</small>
-        <button data-act="dxf">CAD (DXF, 회사 양식)</button>
-        <button data-act="pngframe">이미지, 도곽 포함 (PNG)</button>
-        <button data-act="png">이미지, 도면만 (PNG)</button>
-        <hr>
+    <div class="r">
+      <button class="tbtn" data-act="list" aria-expanded="false">목록</button>
+      <button class="tbtn" data-act="export" aria-haspopup="dialog">출력</button>
+      <button class="tbtn" data-act="menu" aria-expanded="false" aria-haspopup="true">파일·설정</button>
+      <div class="menu" id="menuPop" hidden>
+        <h5>가져오기</h5>
         <button data-act="importcad">기존 위치도 불러오기 (DXF·ZIP)<small>zip 안의 DXF와 평면도 이미지를 읽어요</small></button>
         <button data-act="xlsximp">결함표 엑셀 불러오기<small>회사 결함리스트로 (층, 번호)마다 결함 정보를 채워요</small></button><!--V24-XLS-->
-        <button data-act="backup">백업 파일 저장<small>도면 이미지와 결함 전체를 한 파일로</small></button>
+        <button data-act="xmlimp">전회 자료 불러오기 (XML)<small>회사 엑셀의 인수 파일로 결함 정보와 전회 보고서 내용을 채워요</small></button><!--V30-PREV-->
+        <button data-act="prevphotoimp">전회 사진 불러오기<small>전회차현장사진 폴더의 사진을 파일 이름으로 결함에 붙여요</small></button><!--V30-PREV-->
         <button data-act="restore">백업 불러오기<small>다른 기기에서 저장한 백업 파일</small></button>
+        <button data-act="adddraw">도면 이미지 올리기<small>평면도·입면도 JPG, PNG</small></button>
+        <hr><h5>시설물</h5>
+        <button data-act="newfac">새 시설물</button>
+        <button data-act="renfac">시설물 이름 바꾸기</button>
+        <button data-act="taskinfo">과업 정보<small>학교·건물, 점검 연도·시기·구분</small></button><!--V31-TASK-->
+        <button data-act="precheck">내보내기 전 검사<small>빈칸, 번호, 확인하지 않은 전회 결함을 찾아요</small></button><!--V31-CHECK-->
+        <hr><h5>설정</h5>
+        <button data-act="settings">도면 설정·도곽<small>도면 이름·종류·회전·축척, CAD 크기, 현장명·로고</small></button>
       </div>
     </div>
   </header>
   <main>
-    <aside class="rail" aria-label="도구">
-      <button class="tool on" data-tool="select" title="선택·이동 (V)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M5 3l13 8-6 1.5L9 19z"/></svg>선택</button>
-      <button class="tool" data-tool="point" title="점 (P)">
-        <svg viewBox="0 0 24 24"><circle class="sw" cx="12" cy="12" r="4.5"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4" stroke="currentColor" stroke-width="1.4"/></svg>점</button>
-      <button class="tool" data-tool="line" title="균열선 (L)">
-        <svg viewBox="0 0 24 24" fill="none"><path class="sw" d="M4 18h7V9l9 0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>균열선</button>
-      <button class="tool" data-tool="area" title="영역 (A)">
-        <svg viewBox="0 0 24 24" fill="none"><rect class="sw" x="4" y="6" width="16" height="12" stroke-width="2.2"/></svg>영역</button>
-      <button class="tool" data-tool="scale" title="축척 지정">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2.5" y="8" width="19" height="8" rx="1"/><path d="M6 8v3M9.5 8v4M13 8v3M16.5 8v4"/></svg>축척</button>
-      <hr>
-      <button class="tool" data-act="undo" title="되돌리기 (Ctrl+Z)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 7L4 12l5 5"/><path d="M4 12h10a6 6 0 010 12"/></svg>되돌리기</button>
-      <button class="tool" data-act="fit" title="도면 전체 보기">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>전체 보기</button>
-      <button class="tool" data-act="pen" aria-pressed="false" title="켜면 손가락은 이동·확대만, 그리기는 펜슬로만">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M16 3l5 5L9 20H4v-5z"/><path d="M13 6l5 5"/></svg>펜슬 전용</button>
-    </aside>
     <div id="stage">
       <div id="world" hidden>
         <img id="img" alt="" draggable="false">
@@ -215,14 +368,97 @@ input[type=range]{width:100%}
         <p>평면도나 입면도 이미지를 올리면 바로 결함을 표시할 수 있어요. 회사 앱에서 내보낸 JPG도 그대로 쓸 수 있어요.</p>
         <button class="btn primary" data-act="adddraw">도면 올리기</button>
       </div></div>
-      <button id="diagBtn" class="btn" data-act="diag" aria-pressed="false" hidden>사선 45° 꺼짐</button>
-      <button id="freeBtn" class="btn" data-act="free" aria-pressed="false" hidden>자유선 꺼짐</button><!--V25-FREE-->
+      <div class="over" id="sState" hidden role="status" aria-live="polite"><div class="box"><!--V28-UI: 읽는 중·읽을 수 없음-->
+        <h2></h2><div class="bar"><i></i></div><p></p>
+        <div class="acts"><button class="btn primary" data-act="importcad">다른 파일 고르기</button><button class="btn" data-act="stclose">닫기</button></div>
+      </div></div>
+      <div class="island" aria-label="도구"><!--V28-UI: 도구 섬 (축척은 왼쪽 아래 축척 표시, 전체 보기는 오른쪽 아래 화면 맞춤으로 옮김)-->
+      <button class="tool" data-tool="point" title="점 (P)">
+        <svg viewBox="0 0 24 24"><circle class="sw" cx="12" cy="12" r="4.5"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4" stroke="currentColor" stroke-width="1.4"/></svg>점</button>
+      <button class="tool" data-tool="line" title="균열선 (L)">
+        <svg viewBox="0 0 24 24" fill="none"><path class="sw" d="M4 18h7V9l9 0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>균열선</button>
+      <button class="tool" data-tool="area" title="영역 (A)">
+        <svg viewBox="0 0 24 24" fill="none"><rect class="sw" x="4" y="6" width="16" height="12" stroke-width="2.2"/></svg>영역</button>
+      <button class="tool" data-act="undo" title="되돌리기 (Ctrl+Z)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 7L4 12l5 5"/><path d="M4 12h10a6 6 0 010 12"/></svg>되돌리기</button>
+      <hr>
+      <button class="tool sm on" data-tool="select" title="선택·이동 (V)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M5 3l13 8-6 1.5L9 19z"/></svg>선택</button>
+      <button class="tool sm" data-act="pen" aria-pressed="false" title="켜면 손가락은 이동·확대만, 그리기는 펜슬로만">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M16 3l5 5L9 20H4v-5z"/><path d="M13 6l5 5"/></svg>펜슬 전용</button>
+      </div>
+      <div class="lineopt" id="lineOpt" role="group" aria-label="균열선 모양" hidden>
+        <button id="straightBtn" data-act="straight" aria-pressed="true">직선</button>
+        <button id="diagBtn" data-act="diag" aria-pressed="false">사선 45°</button>
+        <button id="freeBtn" data-act="free" aria-pressed="false">자유선</button><!--V25-FREE-->
+      </div>
       <div id="hint"></div>
-      <div id="scaleBadge" hidden></div>
+      <button id="scaleBadge" data-tool="scale" hidden title="눌러서 축척 지정"></button>
+      <button class="fitbtn" id="fitBtn" data-act="fit" title="도면 전체 보기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>화면 맞춤</button>
+      <nav id="tabs" aria-label="도면"></nav>
     </div>
-    <aside id="panel" aria-label="결함 정보"></aside>
+    <aside id="panel" aria-label="결함 정보" hidden></aside>
   </main>
 </div>
+<div id="exportPop" hidden><div class="dlg" role="dialog" aria-modal="true" aria-labelledby="outT"><!--V28-UI: 출력 한 화면-->
+  <div class="hd"><h2 id="outT">출력</h2><button class="x" data-act="outclose" aria-label="닫기">×</button></div>
+  <div class="bd" id="outBody"></div>
+  <div class="ft"><span class="note" id="outNote"></span><button class="btn primary" data-act="outrun" id="outRun">출력하기</button></div>
+</div></div>
+<style>/*V29-PHOTO: 결함 시트의 사진 칸과 크게 보기 화면*/
+.v29g{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.v29t,.v29a{height:72px;min-width:44px;border:1px solid var(--rule);border-radius:8px;background:var(--bg);padding:0;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.v29t img{width:100%;height:100%;object-fit:cover;display:block}
+.v29t.miss img{display:none}
+.v29t.miss::after{content:'사진 없음';font-size:12px;color:var(--muted)}
+.v29a{font-weight:700;font-size:16px}
+#v29View{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top,0px) + 12px) 12px calc(env(safe-area-inset-bottom,0px) + 12px)}
+#v29View img{max-width:100%;max-height:calc(100% - 130px);object-fit:contain;background:#000}
+#v29View .cap{color:#fff;margin:12px 0;font-size:16px}
+#v29View .row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+#v29View .row button{min-height:48px;padding:0 18px;border-radius:10px;border:1px solid #fff;background:transparent;color:#fff;font-weight:700;font-size:16px}
+#v29View .row .dg{border-color:#ff9c9c;color:#ffc2c2}
+</style>
+<style>/*V30-PREV: 결함 시트의 전회차 칸*/
+.v30b{display:grid;grid-template-columns:72px minmax(0,1fr);gap:6px;align-items:stretch}
+.v30n{display:flex;align-items:center;justify-content:center;height:72px;border:1px dashed var(--rule);border-radius:8px;font-size:12px;line-height:1.3;color:var(--muted);text-align:center;padding:0 4px}
+.v30s{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.v30s button{min-height:72px;border:1px solid var(--rule);border-radius:8px;background:var(--bg);font-weight:700;font-size:15px;line-height:1.25;padding:0 4px}
+.v30s button[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent)}
+.sum{flex-wrap:wrap;row-gap:4px}.sum span{white-space:nowrap}/*V30-PREV: 요약 줄이 세 칸이 되어도 글자가 쪼개지지 않게*/
+</style>
+<style>/*V31-TASK·V31-CHECK: 출력 화면 맨 위 띠, 검사 화면, 과업 정보 입력*/
+#v31Pop{position:fixed;inset:0;z-index:41;background:rgba(15,20,25,.45);display:flex;align-items:center;justify-content:center;padding:20px}
+#v31Pop[hidden]{display:none}
+.v31bar{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;border:1px solid var(--rule);border-radius:10px;padding:10px 12px;margin-bottom:16px}
+.v31bar .tx{flex:1 1 220px;min-width:0;display:flex;flex-direction:column;gap:2px}
+.v31bar .tx b{font-size:15px;line-height:1.3;overflow-wrap:anywhere}
+.v31bar .tx small{font-size:13px;color:var(--muted)}
+.v31bar .tx small.warn{color:var(--ink);font-weight:700}
+.v31bar .btn{min-height:44px}
+.v31task{margin:0 0 14px;font-size:15px;line-height:1.4;overflow-wrap:anywhere}
+.v31c{display:inline-block;min-width:26px;text-align:center;font-size:13px;font-weight:700;border-radius:999px;padding:1px 8px;border:1px solid var(--rule);vertical-align:2px}
+.v31c.must{background:var(--ink);color:var(--chrome);border-color:var(--ink)}
+.v31sec{margin:0 0 18px}
+.v31grp{border-top:1px solid var(--rule);padding:10px 0}
+.v31grp>b{display:block;font-size:15px}
+.v31grp>small{display:block;font-size:13px;color:var(--muted);margin:2px 0 6px}
+.v31fl{display:grid;grid-template-columns:92px minmax(0,1fr);gap:6px 8px;align-items:start;margin-top:6px}
+.v31fl>span{font-size:13px;color:var(--muted);padding-top:9px;overflow-wrap:anywhere}
+.v31chips{display:flex;flex-wrap:wrap;gap:6px}
+.v31chips button{min-width:44px;min-height:40px;border:1px solid var(--rule);border-radius:8px;background:var(--bg);font-weight:700;font-size:14px;padding:0 10px;font-variant-numeric:tabular-nums}
+.v31chips span{display:inline-flex;align-items:center;min-height:40px;font-size:14px;padding:0 2px}
+.v31ok{margin:8px 0 0;font-size:15px}
+.v31two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+#modal .card .field label{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}
+#modal .card select.in{appearance:auto}
+</style>
+<div id="v31Pop" hidden><div class="dlg" role="dialog" aria-modal="true" aria-labelledby="v31T"><!--V31-CHECK: 내보내기 전 검사-->
+  <div class="hd"><h2 id="v31T">내보내기 전 검사</h2><button class="x" data-act="v31close" aria-label="닫기">×</button></div>
+  <div class="bd" id="v31Body"></div>
+  <div class="ft"><span class="note" id="v31Note"></span><button class="btn primary" data-act="v31toout">출력으로</button></div>
+</div></div>
+<div id="v29View" hidden><img alt="결함 사진"><div class="cap"></div><div class="row"><button data-act="pvfirst">대표 사진으로</button><button class="dg" data-act="pvdel">이 사진 빼기</button><button data-act="pvclose">닫기</button></div></div><!--V29-PHOTO-->
 <div id="modal" hidden><div class="card" role="dialog" aria-modal="true"></div></div>
 <div id="toast" role="status" aria-live="polite"></div>
 <input type="file" id="fileImg" accept="image/*" multiple hidden>
@@ -230,6 +466,8 @@ input[type=range]{width:100%}
 <input type="file" id="fileCad" accept=".zip,.dxf,application/zip" hidden>
 <input type="file" id="fileJson" accept=".json,application/json" hidden>
 <input type="file" id="fileXlsx" accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden><!--V24-XLS-->
+<input type="file" id="filePhotoCam" accept="image/*" capture="environment" hidden><input type="file" id="filePhoto" accept="image/*" multiple hidden><!--V29-PHOTO: 촬영 / 앨범-->
+<input type="file" id="fileXml" accept=".xml,text/xml,application/xml" hidden><input type="file" id="filePrevPhotos" accept="image/*" multiple hidden><!--V30-PREV-->
 
 <script>
 (()=>{
@@ -242,6 +480,21 @@ const NAMES={
   point:['점녹','천공','철근노출','파손','탈락','고정불량','누수흔']
 };
 const TYPE_LABEL={line:'균열선',area:'영역',point:'점'};
+/*V28-UI: 선택 단추(칩)는 회사 결함리스트.xlsx 용어(의왕덕성초 결함리스트 시트, 많이 쓴 순). 화면에 보이는 선택지만 바뀌고 저장 칸(member·name·width·room·remark)은 그대로*/
+const CO_MEMBERS=['벽체','벽체 마감재','천장 슬래브','천장 마감재','인방','기둥','천장 보','계단 슬래브','바닥','바닥 방수층','바닥 마감재','파라펫'];
+const CO_NAMES={line:['경사균열','수직균열','수평균열','균열','망상균열','누수흔적','미장박리','미장박락','백태'],
+  point:['누수흔적','파손','도장열화','탈락','철근노출','미장박락','백태','들뜸','재료분리'],
+  area:['누수흔적','파손','도장열화','탈락','철근노출','미장박락','백태','들뜸','재료분리','물고임 흔적']};
+const CO_WIDTHS=['0.1','0.2','0.3','0.5','1','2'],CO_ROOMS=['계단실','복도','외부','교실','옥상','급식실','기계실','물탱크실'],CO_REMARKS=['비구조체','구조체','비구조체 (이질접합부)','구조체 (마감면)'];
+const DEFAULT_FAVS=[{member:'벽체',name:'경사균열',width:'0.2',remark:'비구조체'},{member:'벽체',name:'수직균열',width:'0.3',remark:'비구조체 (이질접합부)'},{member:'천장 슬래브',name:'누수흔적/백태',width:'',remark:'구조체'}];
+const V28={list:false,set:false,qOpen:true,out:{sel:new Set(['cad','xco']),r:'all'}};
+const V28_OUT=[{k:'cad',fm:'DXF',t:'CAD 위치도',s:'회사 양식, 도곽·평면도 포함',act:r=>r==='all'?'dxfall':'dxf'},
+  {k:'xco',fm:'XLSX',t:'결함표 엑셀',s:'회사 양식 · 늘 모든 층',act:()=>'xlsxco'},
+  {k:'xls',fm:'XLSX',t:'결함표 엑셀',s:'기본 양식 · 늘 모든 층, 집계 시트 포함',act:()=>'xlsx'},
+  {k:'pngf',fm:'PNG',t:'위치도 이미지',s:'도곽 포함',act:r=>r==='all'?'pngall':'pngframe'},
+  {k:'png',fm:'PNG',t:'도면 이미지',s:'도곽 없이 도면만',act:r=>r==='all'?null:'png'},
+  {k:'pho',fm:'ZIP',t:'현장사진',s:'결함 번호 이름(RF001.jpg), 원본 크기 · 늘 모든 층',act:()=>'photozip'}, /*V29-PHOTO*/
+  {k:'json',fm:'JSON',t:'백업 파일',s:'도면과 결함 전체, 다른 기기로 옮길 때 · 늘 시설물 전체',act:()=>'backup'}];
 const HEX={line:'#D1242F',area:'#E0780F',point:'#1E8C4E'};
 
 function dist(a,b){return Math.hypot(a[0]-b[0],a[1]-b[1]);}
@@ -386,7 +639,7 @@ const DB={db:null,
 
 /* ---------- state ---------- */
 const DEFAULT_LAST={line:{member:'벽체',name:'균열'},area:{member:'벽체',name:'박리'},point:{member:'벽체',name:'점녹'}};
-let S={facilities:[],curF:null,curD:null,prefs:{penOnly:false,diag:false,free:false/*V25-FREE*/,last:JSON.parse(JSON.stringify(DEFAULT_LAST))}};
+let S={facilities:[],curF:null,curD:null,prefs:{penOnly:false,diag:false,free:false/*V25-FREE*/,favs:null/*V28-UI*/,last:JSON.parse(JSON.stringify(DEFAULT_LAST))}};
 const imgURL={},imgData={},imgTried={};
 const view={s:1,tx:0,ty:0};
 let tool='select',sel=null,gesture=null,scaleTmp=null,undoStack=[],bendId=null;
@@ -407,7 +660,13 @@ function save(){
 }
 function setStatus(t){$('#status').textContent=t;}
 let toastT=null;
-function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2400);}
+const V28_INK={'#FF0000':'#D1242F','#808080':'#5C5C5C'};const v28Ink=c=>V28_INK[String(c||'').toUpperCase()]||c; /*V28-UI: 화면 번호 글자색만(시안 --lbl-unrep·--lbl-rep)*/
+function v28State(k,name,msg){const el=$('#sState');if(!k){el.hidden=true;return;} /*V28-UI: 위치도 읽는 중·읽을 수 없음 화면*/
+  el.querySelector('h2').innerHTML=k==='load'?'위치도를 읽는 중이에요':'<span class="err">!</span> 이 파일은 읽을 수 없어요';
+  el.querySelector('p').textContent=k==='load'?name+' 파일을 읽고 있어요. 층이 많으면 몇 초 걸려요.':msg+' (받은 파일: '+name+')';
+  el.querySelector('.bar').hidden=k!=='load';el.querySelector('.acts').hidden=k==='load';el.hidden=false;}
+function v28Fail(name,msg){toast(msg);v28State('err',name,msg);}
+function toast(t){const el=$('#toast');el.textContent=t;const hb=$('#hint').getBoundingClientRect();el.style.top=hb.height?(hb.bottom+8)+'px':''; /*V28-UI: 안내 띠 아래에 쌓음*/el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2400);}
 
 /* ---------- modal ---------- */
 function modal(html){
@@ -466,8 +725,8 @@ function applyView(){world.style.transform=`translate(${view.tx}px,${view.ty}px)
 function fit(){
   const d=D();if(!d)return;const r=stage.getBoundingClientRect();
   if(!r.width||!r.height)return;
-  const s=Math.min(r.width/d.w,r.height/d.h)*0.94;
-  view.s=s;view.tx=(r.width-d.w*s)/2;view.ty=(r.height-d.h*s)/2;applyView();
+  const IL=84,s=Math.min((r.width-IL)/d.w,r.height/d.h)*0.94; /*V28-UI: 왼쪽 도구 섬과 겹치지 않게*/
+  view.s=s;view.tx=IL+(r.width-IL-d.w*s)/2;view.ty=(r.height-d.h*s)/2;applyView();
 }
 function toImg(e){const r=stage.getBoundingClientRect();return [(e.clientX-r.left-view.tx)/view.s,(e.clientY-r.top-view.ty)/view.s];}
 function zoomAt(cx,cy,ns){
@@ -486,7 +745,12 @@ function renderTop(){
   $('#tabs').innerHTML=(f?sortFloors(f.drawings).map(d=> /*V19-FLOORORDER: 탭은 층 순서 규칙대로 (저장된 배열은 그대로)*/`<button class="tab${d.id===S.curD?' on':''}" data-draw="${d.id}">${esc(d.name)}<span class="n">${d.defects.length}</span></button>`).join(''):'')
     +`<button class="tab add" data-act="adddraw">＋ 도면</button>`;
   {const sb=$('#srcBadge');if(sb)sb.hidden=!(f&&f.srcDxf&&f.srcKeep!==false);} /*V21-SRC: 원본 보존 모드 표시*/
+  v28Top(); /*V28-UI*/
 }
+function v28Top(){const f=F(),d=D(); /*V28-UI: 동·층 알약과 고르기 목록. 층 순서는 v19 규칙(sortFloors) 그대로*/
+  $('#pillFac').textContent=f?f.name:'시설물 없음';$('#pillFl').textContent=d?d.name:(f?'도면 없음':'');
+  $('#facList').innerHTML=S.facilities.map(x=>`<button data-fac="${x.id}" aria-current="${x.id===S.curF}">${esc(x.name)}</button>`).join('')+'<button class="add" data-act="newfac">＋ 새 시설물</button>';
+  $('#flList').innerHTML=(f?sortFloors(f.drawings).map(x=>{const n=x.defects.filter(y=>!isRepaired(y)).length;return `<button data-fl="${x.id}" aria-current="${x.id===S.curD}">${esc(x.name)}<span class="n">미보수 ${n}</span></button>`;}).join(''):'')+(f?'<button class="add" data-act="adddraw">＋ 층 추가</button>':'');}
 function renderStage(){
   const d=D();
   if(!d){world.hidden=true;$('#empty').hidden=false;$('#scaleBadge').hidden=true;
@@ -523,8 +787,8 @@ function renderOverlay(){
     const an=anchorOf(def),lp=labelPos(def),r=L*0.75,dd=dist(an,lp);
     if(!def.hideLabel){
     if(dd>r)s+=`<line x1="${an[0]}" y1="${an[1]}" x2="${lp[0]-(lp[0]-an[0])*r/dd}" y2="${lp[1]-(lp[1]-an[1])*r/dd}" stroke="#5B6570" stroke-width="${sw*0.55}"/>`;
-    s+=`<circle cx="${lp[0]}" cy="${lp[1]}" r="${r}" fill="#fff" stroke="${on?'var(--sel)':c}" stroke-width="${on?sw*1.6:sw}"/>`;
-    s+=`<text x="${lp[0]}" y="${lp[1]}" font-size="${L*0.82}" font-weight="700" text-anchor="middle" dominant-baseline="central" fill="${c}">${def.no}</text>`;
+    s+=`<circle cx="${lp[0]}" cy="${lp[1]}" r="${r}" fill="#fff" stroke="${on?'var(--sel)':v30Ink(def,c)/*V30-PREV*/}" stroke-width="${on?sw*1.6:sw}"/>`;
+    s+=`<text x="${lp[0]}" y="${lp[1]}" font-size="${L*0.82}" font-weight="700" text-anchor="middle" dominant-baseline="central" fill="${v30Ink(def,c)/*V30-PREV*/}">${def.no}</text>`;
     }
     if(on&&def.type==='line'&&def.pts.length<4&&bendId===def.id){
       const e=def.pts[def.pts.length-1];
@@ -565,51 +829,38 @@ const HINTS={
   area:'대각선으로 끌어서 영역을 그려요. 면적은 사각형 기준으로 계산돼요.',
   scale:'길이를 아는 두 지점을 차례로 누른 뒤 실제 거리(mm)를 입력하세요.'
 };
-function renderTool(){
+function renderTool(){ /*V28-UI: 도구 섬 + 균열선 모양(직선·사선 45°·자유선) 한 줄. 사선·자유선 설정 값(prefs.diag·free)은 v27 그대로*/
   document.querySelectorAll('.tool[data-tool]').forEach(b=>b.classList.toggle('on',b.dataset.tool===tool));
-  const pen=document.querySelector('[data-act="pen"]');pen.setAttribute('aria-pressed',S.prefs.penOnly?'true':'false');
+  const pen=document.querySelector('[data-act="pen"]');pen.setAttribute('aria-pressed',S.prefs.penOnly?'true':'false');pen.lastChild.textContent=S.prefs.penOnly?'펜슬 켜짐':'펜슬 전용';
+  $('.island').hidden=!D();
   $('#hint').textContent=D()?HINTS[tool]:'';
-  const db=$('#diagBtn');db.hidden=!(D()&&tool==='line');db.setAttribute('aria-pressed',S.prefs.diag?'true':'false');db.textContent=S.prefs.diag?'사선 45° 켜짐':'사선 45° 꺼짐';
-  /*V25-FREE: 자유선 켜기/끄기 (균열선 도구일 때만 보임). 켜면 사선 단추는 숨김, 안내 문구도 바꿈*/
-  const fb=$('#freeBtn');fb.hidden=!(D()&&tool==='line');fb.setAttribute('aria-pressed',S.prefs.free?'true':'false');fb.textContent=S.prefs.free?'자유선 켜짐':'자유선 꺼짐';
-  if(S.prefs.free){db.hidden=true;fb.style.top='12px';}else fb.style.top='';
+  $('#lineOpt').hidden=!(D()&&tool==='line');
+  $('#straightBtn').setAttribute('aria-pressed',!S.prefs.free&&!S.prefs.diag?'true':'false');
+  $('#diagBtn').setAttribute('aria-pressed',!S.prefs.free&&S.prefs.diag?'true':'false');
+  $('#freeBtn').setAttribute('aria-pressed',S.prefs.free?'true':'false'); /*V25-FREE*/
   if(D()&&tool==='line'&&S.prefs.free)$('#hint').textContent=V25_HINT;
 }
 function setTool(t){tool=t;scaleTmp=null;gesture=null;bendId=null;renderDraft();renderTool();renderOverlay();}
 
 function chips(arr,cur,field){return arr.map(v=>`<button class="chip${v===cur?' on':''}" data-set="${field}" data-v="${esc(v)}">${esc(v)}</button>`).join('');}
-function renderPanel(){
-  const d=D();
-  if(!d){panel.innerHTML=`<section class="pane"><h3>시작하기</h3><p class="muted">왼쪽 위에서 시설물을 만들고, 도면 이미지를 올린 다음 도구를 골라 표시하세요. 축척을 지정하면 길이와 면적이 자동으로 계산돼요.</p></section>`;return;}
-  const def=selDef();
+function renderPanel(){ /*V28-UI: 시트형. 결함을 고르면 결함 시트, '목록'을 누르면 목록·도면 설정 시트, 둘 다 아니면 닫힘(도면을 넓게)*/
+  const d=D(),def=d&&selDef();
+  panel.hidden=!(def||d&&V28.list);
+  {const lb=document.querySelector('.tbtn[data-act="list"]');if(lb)lb.setAttribute('aria-expanded',d&&V28.list&&!def?'true':'false');}
+  if(panel.hidden){panel.innerHTML='';delete panel.dataset.sel;return;}
   if(def){
-    panel.innerHTML=`<section class="pane">
-      <div class="defhead"><span class="badge" style="--c:${def.color||HEX[def.type]}">${def.no}</span>
-        <div><b>${esc([def.member,def.name].filter(Boolean).join(' ')||'결함 정보 입력')}</b><div class="sub">${TYPE_LABEL[def.type]}${def.type==='line'?`, ${def.pts.length-1}구간`:''}</div></div></div>
-      <div class="field"><span class="lbl">보수 여부</span><div class="seg">
-        <button data-act="setcolor" data-v="#FF0000" class="${!isRepaired(def)?'on':''}">미보수</button>
-        <button data-act="setcolor" data-v="#808080" class="${isRepaired(def)?'on':''}">보수 완료</button></div>
-        <p class="muted" style="margin:6px 0 0">보수 완료는 도면과 CAD에서 회색으로 표시돼요.</p></div>
-      <div class="field"><label>실</label><input class="in" data-field="room" value="${esc(def.room||'')}" placeholder="예: 복도, 3-1 교실"></div><!--V24-ROOM-->
-      <div class="field"><span class="lbl">부재</span><div class="chips">${chips(MEMBERS,def.member,'member')}</div>
-        <input class="in" data-field="member" value="${esc(def.member)}" placeholder="직접 입력"></div>
-      <div class="field"><span class="lbl">결함명</span><div class="chips">${chips(NAMES[def.type],def.name,'name')}</div>
-        <input class="in" data-field="name" value="${esc(def.name)}" placeholder="직접 입력"></div>
-      ${def.type==='line'?`<div class="field"><label>균열 폭 (mm)</label><input class="in" data-field="width" inputmode="decimal" value="${esc(def.width)}" placeholder="예: 0.3"></div>`:''}
-      <div class="field"><span class="lbl">수량</span><div class="qty" id="qtyText">${esc(qtyText(d,def))}</div>
-        <input class="in" data-field="qtyOverride" inputmode="decimal" value="${esc(def.qtyOverride)}" placeholder="${def.type==='point'?'개소 수 직접 입력':def.type==='line'?'실측 길이(mm) 직접 입력':'실측 면적(m²) 직접 입력'}"></div>
-      <div class="field"><label>메모</label><textarea class="in" data-field="note" placeholder="위치, 특이사항">${esc(def.note)}</textarea></div>
-      <div class="field"><label>비고 (회사 결함표)</label><input class="in" data-field="remark" value="${esc(def.remark||'')}" placeholder="예: 비구조체, 구조체 (마감면)"></div><!--V24-ROOM-->
-      ${def.type==='line'&&def.pts.length<4&&!def.free/*V25-FREE: 자유선은 꺾기 없음*/?`<div class="btnrow" style="margin-bottom:8px"><button class="btn" data-act="bend">${bendId===def.id?'꺾기 취소':'이 선 끝에서 꺾기 (90°)'}</button></div>`:''}
-      <!--V13-HATCH: 빗금 있음/없음 버튼 제거 (영역은 항상 빗금)-->
-      <div class="btnrow" style="margin-bottom:8px"><button class="btn" data-act="togglelabel">${def.hideLabel?'번호 원 표시하기':'번호 원 숨기기 (같은 번호 추가 위치)'}</button></div>
-      <div class="btnrow"><button class="btn danger" data-act="deldef">삭제</button><button class="btn primary" data-act="close">완료</button></div>
-    </section>`;
-    if(panel.dataset.sel!==def.id){panel.scrollTop=0;panel.dataset.sel=def.id;}
+    panel.innerHTML=v28DefSheet(d,def);v29Fill(panel); /*V29-PHOTO*/
+    if(panel.dataset.sel!==def.id){panel.querySelector('.bd').scrollTop=0;panel.dataset.sel=def.id;}
     return;
   }
-  const defs=[...d.defects].sort((a,b)=>a.no-b.no);
-  panel.innerHTML=`<section class="pane"><h3>도면 설정</h3>
+  delete panel.dataset.sel;
+  const defs=[...d.defects].sort((a,b)=>a.no-b.no),un=defs.filter(x=>!isRepaired(x)).length;
+  panel.innerHTML=`<div class="grab" aria-hidden="true"></div><div class="hd"><b>결함 ${defs.length}개 · ${esc(d.name)}</b><button class="x" data-act="list" aria-label="목록 닫기">×</button></div><div class="bd">
+    <div class="sum"><span>미보수 ${un}개</span><span>보수 완료 ${defs.length-un}개</span>${v30Sum(defs)/*V30-PREV*/}${defs.length>1?'<button class="btn" data-act="renumber" style="margin-left:auto">위치순 번호 정리</button>':''}</div>
+    ${defs.length?`<ul class="list">${defs.map(x=>`<li><button data-pick="${x.id}"><span class="badge" style="--c:${v30Ink(x,x.color||HEX[x.type])/*V30-PREV*/}">${x.no}</span>
+      <span class="t"><b>${esc([x.member,x.name].filter(Boolean).join(' ')||TYPE_LABEL[x.type])}</b><span>${esc(qtyText(d,x))}${num(x.width)!=null?`, 폭 ${esc(x.width)}mm`:''}</span></span><span class="tag ${isRepaired(x)?'rep':'unrep'}">${isRepaired(x)?'보수 완료':'미보수'}</span></button></li>`).join('')}</ul>`
+    :'<p class="muted">아직 표시한 결함이 없어요. 왼쪽 도구로 도면 위에 그려 보세요.</p>'}
+    <details id="setDet"${V28.set?' open':''}><summary>도면 설정</summary>
       <div class="field"><label>도면 이름</label><input class="in" data-dfield="name" value="${esc(d.name)}"></div>
       <div class="field"><span class="lbl">도면 종류</span><div class="seg">
         <button data-act="kind" data-v="plan" class="${d.kind==='plan'?'on':''}">평면도</button>
@@ -629,23 +880,62 @@ function renderPanel(){
       <div class="field"><label>캐드 영역 선 폭</label><input class="in" type="number" min="0" step="any" inputmode="decimal" placeholder="자동 ${cadAuto(d).rw}" value="${d.cadRectW||''}" data-dfield="cadRectW"></div>
       <div class="field"><label>캐드 지시선 폭</label><input class="in" type="number" min="0" step="any" inputmode="decimal" placeholder="자동 ${cadAuto(d).lw}" value="${d.cadLeaderW||''}" data-dfield="cadLeaderW">
         <p class="muted" style="margin:6px 0 0">캐드로 내보낼 때만 써요(단위 mm). 비우면 번호·표시 크기를 따라가고, 위치도를 불러오면 원본 크기가 들어가요.</p></div>
-    </section>
-    <section class="pane"><h3>도곽</h3>
+</details>
+    <details id="frmDet"${V28.set?' open':''}><summary>도곽</summary>
       <canvas id="framePrev" width="594" height="420" style="width:100%;display:block;border:1px solid var(--rule);border-radius:6px;background:#fff;margin-bottom:12px"></canvas>
       <div class="field"><label>현장명</label><input class="in" data-ffield="site" value="${esc(siteOf(F()))}"></div>
       <div class="field"><label>도면 제목</label><input class="in" data-dfield="title" value="${esc(titleOf(d))}"></div>
       <div class="btnrow"><button class="btn" data-act="logo">${logoImg?'로고 바꾸기':'회사 로고 올리기'}</button>${logoImg?'<button class="btn" data-act="logodel">로고 빼기</button>':''}</div>
       <p class="muted" style="margin:6px 0 0">로고는 한 번 올리면 모든 도면에 들어가요.</p>
-    </section>
-    <section class="pane"><h3><span>결함 ${defs.length}개</span>${defs.length>1?'<button class="btn" data-act="renumber" style="height:32px;font-size:13px">위치순 번호 정리</button>':''}</h3>
-      ${defs.length?`<ul class="list">${defs.map(x=>`<li><button data-pick="${x.id}"><span class="badge" style="--c:${x.color||HEX[x.type]}">${x.no}</span>
-        <span class="t"><b>${esc([x.member,x.name].filter(Boolean).join(' ')||TYPE_LABEL[x.type])}</b><span class="q">${esc(qtyText(d,x))}${num(x.width)!=null?`, 폭 ${esc(x.width)}mm`:''}${isRepaired(x)?', 보수 완료':''}</span></span></button></li>`).join('')}</ul>`
-      :'<p class="muted">아직 표시한 결함이 없어요. 왼쪽 도구로 도면 위에 그려 보세요.</p>'}
-    </section>
-    <section class="pane"><button class="btn danger" data-act="deldraw" style="width:100%">이 도면 삭제</button></section>`;
+</details>
+    <div class="del"><button class="btn w" data-act="deldraw">이 도면 삭제</button></div>
+  </div>`;
   schedulePreview();
 }
-
+function v28FavOf(def){return {member:def.member||'',name:def.name||'',width:def.type==='line'?(def.width||''):'',remark:def.remark||''};}
+function v28FavKey(f){return [f.member||'',f.name||'',f.width||'',f.remark||''].join('|');}
+function v28FavLabel(f){return [f.member,f.name,f.width?f.width+'mm':'',f.remark].filter(Boolean).join(' · ');}
+function v28DefSheet(d,def){const c=def.color||HEX[def.type],rep=isRepaired(def),nm=(def.name||'').split('/').filter(Boolean);
+  const ch=(arr,field,on,cls)=>`<div class="chips${cls||''}">${arr.map(v=>`<button class="chip" data-set="${field}" data-v="${esc(v)}" aria-pressed="${on(v)?'true':'false'}">${esc(v)}</button>`).join('')}</div>`;
+  const favs=S.prefs.favs||[],cur=v28FavOf(def),has=favs.some(f=>v28FavKey(f)===v28FavKey(cur)),filled=[cur.member,cur.name,cur.width,cur.remark].some(Boolean);
+  const lb=(t,v)=>`<div class="lb">${t}${v?`<span class="v">${esc(v)}</span>`:''}</div>`;
+  return `<div class="grab" aria-hidden="true"></div><div class="hd"><span class="badge" style="--c:${v30Ink(def,c)/*V30-PREV*/}">${def.no}</span><b>${esc([def.member,def.name].filter(Boolean).join(' ')||'결함 정보 입력')}</b><button class="x" data-act="close" aria-label="닫기">×</button></div>
+  <div class="bd">
+    <p class="muted" style="margin:0 0 10px">${TYPE_LABEL[def.type]}${def.type==='line'?`, ${def.pts.length-1}구간`:''}</p>
+    ${v29Field(def)/*V29-PHOTO*/}
+    ${v30Field(def)/*V30-PREV*/}
+    <details class="quick" id="quickDet"${V28.qOpen?' open':''}><summary>★ 빠른 입력<small>한 번 누르면 아래 칸이 모두 채워져요</small></summary>
+      ${favs.length?`<ul>${favs.map((f,i)=>`<li><button class="ap" data-fav="${i}">${esc(v28FavLabel(f))}</button><button class="st" data-favdel="${i}" aria-label="빠른 입력에서 빼기" title="빠른 입력에서 빼기">★</button></li>`).join('')}</ul>`:'<p class="none">아직 없어요. 아래 칸을 채운 뒤 추가하세요.</p>'}
+      <button class="add" data-act="favadd"${has||!filled?' disabled':''}><span>☆</span> 지금 내용을 빠른 입력에 추가</button></details>
+    <div class="field">${lb('보수 여부')}<div class="state">
+      <button data-act="setcolor" data-v="#FF0000" data-st="unrep" aria-pressed="${!rep}"><span class="sw"></span>미보수</button>
+      <button data-act="setcolor" data-v="#808080" data-st="rep" aria-pressed="${rep}"><span class="sw"></span>보수 완료</button></div>
+      <p class="muted" style="margin:6px 0 0">보수 완료는 도면과 CAD에서 회색으로 표시돼요.</p></div>
+    <div class="field">${lb('부재',def.member)}${ch(CO_MEMBERS,'member',v=>v===def.member)}<input class="in" data-field="member" value="${esc(def.member)}" placeholder="직접 입력"></div>
+    <div class="field">${lb('유형 및 형상 · 여러 개 고르면 / 로 이어 적어요',def.name)}${ch(CO_NAMES[def.type],'name',v=>nm.includes(v))}<input class="in" data-field="name" value="${esc(def.name)}" placeholder="직접 입력"></div>
+    ${def.type==='line'?`<div class="field">${lb('폭 (mm)',def.width)}${ch(CO_WIDTHS,'width',v=>num(def.width)!=null&&num(def.width)===num(v),' w')}<input class="in" data-field="width" inputmode="decimal" value="${esc(def.width)}" placeholder="직접 입력, 예: 0.3"></div>`:''}
+    <div class="field">${lb('실',def.room)}${ch(CO_ROOMS,'room',v=>v===def.room)}<input class="in" data-field="room" value="${esc(def.room||'')}" placeholder="직접 입력, 예: 3-1 교실"></div><!--V24-ROOM-->
+    <div class="field">${lb('비고 (구조체 여부)',def.remark)}${ch(CO_REMARKS,'remark',v=>v===def.remark)}<input class="in" data-field="remark" value="${esc(def.remark||'')}" placeholder="직접 입력"></div><!--V24-ROOM-->
+    <div class="field"><div class="lb">수량</div><div class="qty" id="qtyText">${esc(qtyText(d,def))}</div>
+      <input class="in" data-field="qtyOverride" inputmode="decimal" value="${esc(def.qtyOverride)}" placeholder="${def.type==='point'?'개소 수 직접 입력':def.type==='line'?'실측 길이(mm) 직접 입력':'실측 면적(m²) 직접 입력'}"></div>
+    <div class="field"><div class="lb">메모</div><textarea class="in" data-field="note" placeholder="위치, 특이사항">${esc(def.note)}</textarea></div>
+    ${def.type==='line'&&def.pts.length<4&&!def.free/*V25-FREE: 자유선은 꺾기 없음*/?`<button class="btn w" data-act="bend">${bendId===def.id?'꺾기 취소':'이 선 끝에서 꺾기 (90°)'}</button>`:''}
+    <button class="btn w" data-act="togglelabel">${def.hideLabel?'번호 원 표시하기':'번호 원 숨기기 (같은 번호 추가 위치)'}</button>
+    <button class="btn primary w" data-act="close">완료</button>
+    <div class="del"><button class="btn danger w" data-act="deldef">이 결함 삭제</button></div>
+  </div>`;}
+function v28Out(){const r=V28.out.r,f=F(),d=D(); /*V28-UI: 출력 한 화면. 고른 것을 한 번에, 또는 타일 오른쪽 '바로 받기'로 하나만(v27 내보내기 메뉴와 같은 동작)*/
+  $('#outBody').innerHTML=`${v31Bar(f)/*V31-TASK·V31-CHECK*/}<h3>1. 무엇을 내보낼까요</h3><p class="sub">여러 개를 고르면 한 번에 내보내요. 하나만 받을 때는 '바로 받기'를 누르세요.</p>
+    <div class="tiles">${V28_OUT.map(o=>{const act=o.act(r),on=V28.out.sel.has(o.k)&&!!act;
+      return `<div class="tw${on?' on':''}"><button class="tile" data-outk="${o.k}" aria-pressed="${on}"${act?'':' disabled'}><span class="fm">${o.fm}</span><span class="tx">${o.t}<small${o.k==='cad'?' id="dxfallNote"':''}>${act?o.s:'‘지금 보는 층만’에서 고를 수 있어요'}</small></span><span class="ok" aria-hidden="true"></span></button>${act?`<button class="now" data-act="${act}" aria-label="${o.t} 바로 받기">바로<br>받기</button>`:''}</div>`;}).join('')}</div>
+    <h3>2. 어느 층까지</h3><p class="sub">층 순서와 결함 번호는 지금 앱 그대로 나가요. 결함표 엑셀과 백업 파일은 늘 시설물 전체를 담아요.</p>
+    <div class="oseg"><button data-outr="all" aria-pressed="${r==='all'}">시설물 전체<small>${f?esc(f.name)+' · '+f.drawings.length+'개 층':''}</small></button>
+      <button data-outr="cur" aria-pressed="${r==='cur'}">지금 보는 층만<small>${d?esc(d.name):''}</small></button></div>
+    <button id="srcKeepBtn" data-act="srckeep" hidden>원본 보존 모드 끄기<small>끄면 모든 층을 새로 그려요</small></button><!--V21-SRC-->`;
+  v21SrcUI();if(r==='cur'){const n=$('#dxfallNote');if(n)n.textContent='지금 보는 층만, 회사 양식';}
+  const pick=V28_OUT.filter(o=>V28.out.sel.has(o.k)&&o.act(r));
+  $('#outNote').textContent=pick.length?pick.map(o=>o.t+(o.k==='xls'?' (기본)':'')).join(', '):'내보낼 것을 하나 이상 고르세요';
+  const b=$('#outRun');b.disabled=!pick.length;b.textContent=pick.length?`출력하기 · 파일 ${pick.length}개`:'출력하기';}
 /* ---------- geometry / hit test ---------- */
 function segDist(p,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],l2=dx*dx+dy*dy;let t=l2?((p[0]-a[0])*dx+(p[1]-a[1])*dy)/l2:0;t=Math.max(0,Math.min(1,t));return dist(p,[a[0]+t*dx,a[1]+t*dy]);}
 function hitTest(p){
@@ -700,7 +990,7 @@ function startPinch(){
   gesture={kind:'pinch',d0:Math.hypot(a.x-b.x,a.y-b.y)||1,m0:[(a.x+b.x)/2,(a.y+b.y)/2],s0:view.s,tx0:view.tx,ty0:view.ty};
 }
 stage.addEventListener('pointerdown',e=>{
-  if(e.target.closest('#empty,#diagBtn,#freeBtn'))return; /*V25-FREE: 도면 위 단추는 그리기·포인터 붙잡기에서 뺌(붙잡으면 click이 stage로 가서 단추가 안 눌림)*/
+  if(e.target.closest('#empty,#sState,#diagBtn,#freeBtn,.island,#lineOpt,#fitBtn,#scaleBadge,#tabs'))return; /*V28-UI: 도구 섬·화면 맞춤·축척·층 띠도 도면 위에 있음*/ /*V25-FREE: 도면 위 단추는 그리기·포인터 붙잡기에서 뺌(붙잡으면 click이 stage로 가서 단추가 안 눌림)*/
   const d=D();if(!d)return;
   try{stage.setPointerCapture(e.pointerId);}catch(_){}
   ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY,type:e.pointerType});
@@ -819,19 +1109,45 @@ async function finishScale(){
 document.addEventListener('click',async e=>{
   const pop=$('#exportPop');
   if(!pop.hidden&&!e.target.closest('#exportPop')&&!e.target.closest('[data-act="export"]'))pop.hidden=true;
+  if(e.target===pop){pop.hidden=true;return;} /*V28-UI: 출력 화면 바깥(어두운 곳)을 누르면 닫힘*/
+  {const fp=$('#floorPop'),mp=$('#menuPop'); /*V28-UI: 동·층 / 파일·설정 목록은 바깥을 누르거나 항목을 고르면 닫힘*/
+    if(!fp.hidden&&(!e.target.closest('.top .c')||e.target.closest('#floorPop button'))){fp.hidden=true;$('.pill').setAttribute('aria-expanded','false');}
+    if(!mp.hidden&&(!e.target.closest('.top .r')||e.target.closest('#menuPop button'))){mp.hidden=true;$('[data-act="menu"]').setAttribute('aria-expanded','false');}}
+  {const fc=e.target.closest('[data-fac]');if(fc){const f=S.facilities.find(x=>x.id===fc.dataset.fac);if(!f)return; /*V28-UI*/
+    S.curF=f.id;S.curD=f.drawings.length?sortFloors(f.drawings)[0].id:null;sel=null;undoStack=[];save();renderAll();requestAnimationFrame(fit);return;}}
+  {const fl=e.target.closest('[data-fl]');if(fl){S.curD=fl.dataset.fl;sel=null;undoStack=[];save();renderAll();requestAnimationFrame(fit);return;}} /*V28-UI: 층 목록 = v27 도면 탭과 같은 동작*/
+  {const ok=e.target.closest('[data-outk]');if(ok){const k=ok.dataset.outk;if(V28.out.sel.has(k))V28.out.sel.delete(k);else V28.out.sel.add(k);v28Out();return;}
+   const orr=e.target.closest('[data-outr]');if(orr){V28.out.r=orr.dataset.outr;v28Out();return;}}
+  {const fv=e.target.closest('[data-fav]');if(fv){const def=selDef(),fa=(S.prefs.favs||[])[+fv.dataset.fav];if(!def||!fa)return; /*V28-UI: 빠른 입력 넣기*/
+    pushUndo(D());for(const k of ['member','name','width','remark'])if(fa[k]&&(k!=='width'||def.type==='line'))def[k]=fa[k];
+    S.prefs.last[def.type]=Object.assign({},S.prefs.last[def.type],{member:def.member,name:def.name});save();renderPanel();toast('빠른 입력을 넣었어요');return;}
+   const fd=e.target.closest('[data-favdel]');if(fd){S.prefs.favs.splice(+fd.dataset.favdel,1);save();renderPanel();return;}}
   const t=e.target.closest('[data-tool]');if(t){setTool(t.dataset.tool);return;}
   const dr=e.target.closest('[data-draw]');
   if(dr){S.curD=dr.dataset.draw;sel=null;undoStack=[];save();renderAll();requestAnimationFrame(fit);return;}
   const pk=e.target.closest('[data-pick]');
   if(pk){sel=pk.dataset.pick;const def=selDef();if(def)centerOn(anchorOf(def));renderOverlay();renderPanel();return;}
   const st=e.target.closest('[data-set]');
-  if(st){const def=selDef();if(!def)return;def[st.dataset.set]=st.dataset.v;
-    S.prefs.last[def.type]=Object.assign({},S.prefs.last[def.type],{[st.dataset.set]:st.dataset.v});
+  if(st){const def=selDef();if(!def)return;let v=st.dataset.v;
+    if(st.dataset.set==='name'){const p=(def.name||'').split('/').filter(Boolean),k=p.indexOf(v);if(k>=0)p.splice(k,1);else p.push(v);v=p.join('/');} /*V28-UI: 유형은 여러 개 = '/'로 이어 적음(칸은 그대로 name 하나)*/
+    def[st.dataset.set]=v;
+    S.prefs.last[def.type]=Object.assign({},S.prefs.last[def.type],{[st.dataset.set]:v});
     save();renderPanel();return;}
   const a=e.target.closest('[data-act]');if(!a)return;
   const act=a.dataset.act,d=D(),f=F();
   switch(act){
-    case 'export':pop.hidden=!pop.hidden;if(!pop.hidden)v21SrcUI();break; /*V21-SRC*/
+    case 'export':pop.hidden=!pop.hidden;if(!pop.hidden)v28Out();break; /*V21-SRC·V28-UI: v28Out 안에서 v21SrcUI*/
+    case 'outclose':pop.hidden=true;break; /*V28-UI*/
+    case 'outrun':{const r=V28.out.r,acts=V28_OUT.filter(o=>V28.out.sel.has(o.k)).map(o=>o.act(r)).filter(Boolean); /*V28-UI: 고른 것을 차례로 (v27 내보내기 함수 그대로)*/
+      const FN={dxfall:exportDXFAll,dxf:exportDXF,pngall:exportFramedAll,pngframe:exportFramedPNG,png:exportPNG,xlsx:exportXLSX,xlsxco:exportXlsCompany,backup:exportBackup,photozip:v29Zip/*V29-PHOTO*/};pop.hidden=true;
+      for(const x of acts){try{await FN[x]();}catch(err){console.error(err);toast('내보내기 중 문제가 생겼어요: '+x);}await new Promise(r_=>setTimeout(r_,700));}
+      if(acts.length>1)toast(`파일 ${acts.length}개를 내보냈어요. 다운로드 폴더를 확인하세요`);break;}
+    case 'floorpop':{const fp=$('#floorPop');fp.hidden=!fp.hidden;a.setAttribute('aria-expanded',fp.hidden?'false':'true');break;} /*V28-UI*/
+    case 'menu':{const mp=$('#menuPop');mp.hidden=!mp.hidden;a.setAttribute('aria-expanded',mp.hidden?'false':'true');break;}
+    case 'list':V28.list=!(V28.list&&!selDef());if(V28.list)V28.set=false;sel=null;bendId=null;renderOverlay();renderPanel();break;
+    case 'settings':V28.list=true;V28.set=true;sel=null;bendId=null;renderOverlay();renderPanel();break;
+    case 'straight':S.prefs.free=false;S.prefs.diag=false;save();renderTool();toast('직선(수평·수직) 균열선으로 그려져요');break;
+    case 'favadd':{const def=selDef();if(!def)return;const c=v28FavOf(def);if(!(S.prefs.favs||[]).some(x=>v28FavKey(x)===v28FavKey(c))){S.prefs.favs.push(c);save();toast('빠른 입력에 추가했어요');}renderPanel();break;}
     case 'srckeep':if(f&&f.srcDxf){if(f.srcKeep===false)delete f.srcKeep;else f.srcKeep=false;save();v21SrcUI();}break; /*V21-SRC: 기본 켜짐, 끄면 srcKeep=false*/
     case 'adddraw':if(!f){const nm=await askText('새 시설물','학교나 시설물 이름을 입력하세요.','');if(!nm)return;
         const nf={id:uid(),name:nm.trim()||'새 시설물',drawings:[]};S.facilities.push(nf);S.curF=nf.id;S.curD=null;save();renderAll();}
@@ -840,7 +1156,7 @@ document.addEventListener('click',async e=>{
       const nf={id:uid(),name:nm.trim()||'새 시설물',drawings:[]};S.facilities.push(nf);S.curF=nf.id;S.curD=null;sel=null;save();renderAll();break;}
     case 'renfac':{if(!f)return;const nm=await askText('시설물 이름 바꾸기','',f.name);if(nm&&nm.trim()){f.name=nm.trim();save();renderTop();}break;}
     case 'free':S.prefs.free=!S.prefs.free;save();renderTool();toast(S.prefs.free?'자유선: 펜슬이 지나간 대로 부드럽게 그려져요':'직선(수평·수직) 균열선으로 그려져요');break; /*V25-FREE*/
-    case 'diag':S.prefs.diag=!S.prefs.diag;save();renderTool();toast(S.prefs.diag?'사선(45°)도 그릴 수 있어요':'수평·수직 직선만 그려져요');break;
+    case 'diag':if(S.prefs.free){S.prefs.free=false;S.prefs.diag=true;}else S.prefs.diag=!S.prefs.diag; /*V28-UI: 세 칸 중 사선*/save();renderTool();toast(S.prefs.diag?'사선(45°)도 그릴 수 있어요':'수평·수직 직선만 그려져요');break;
     case 'rotl':case 'rotr':rotateDrawing(d,act==='rotr');sel=null;save();renderStage();renderPanel();requestAnimationFrame(fit);break;
     case 'bend':{const def=selDef();if(!def)return;if(bendId===def.id){bendId=null;}else{setTool('line');sel=def.id;bendId=def.id;toast('화면 아무 곳에서나 끌면 끝점에서 90도로 꺾여 이어져요');}renderOverlay();renderPanel();break;}
     /*V13-HATCH: sethatch 처리 제거 (버튼 없음)*/
@@ -849,6 +1165,31 @@ document.addEventListener('click',async e=>{
     case 'undo':undo();break;
     case 'fit':fit();break;
     case 'pen':S.prefs.penOnly=!S.prefs.penOnly;save();renderTool();toast(S.prefs.penOnly?'펜슬 전용: 손가락은 이동과 확대만 해요':'손가락으로도 그릴 수 있어요');break;
+    /*V31-TASK·V31-CHECK*/
+    case 'taskinfo':{if(!f){toast('먼저 시설물을 만드세요');break;}const wasOut=!pop.hidden,wasChk=!$('#v31Pop').hidden;
+      await v31TaskEdit(f);await new Promise(r_=>setTimeout(r_,0)); // 입력 창을 닫은 누름이 출력 화면까지 닫지 않게 한 박자 뒤에 다시 연다
+      if(wasChk)v31Open();else if(wasOut){pop.hidden=false;v28Out();}break;}
+    case 'precheck':if(!f){toast('먼저 시설물을 만드세요');break;}pop.hidden=true;v31Open();break;
+    case 'v31close':$('#v31Pop').hidden=true;break;
+    case 'v31toout':$('#v31Pop').hidden=true;pop.hidden=false;v28Out();break;
+    case 'v31go':v31Go(a.dataset.did,a.dataset.def);break;
+    /*V30-PREV*/
+    case 'xmlimp':pop.hidden=true;$('#fileXml').click();break;
+    case 'prevphotoimp':pop.hidden=true;$('#filePrevPhotos').click();break;
+    case 'prevview':v30View(a.dataset.pid);break;
+    case 'prevstate':{const def=selDef();if(!def||!def.prev)break;pushUndo(d);const v=a.dataset.v;
+      if(def.prev.state===v)delete def.prev.state;else{def.prev.state=v;if(v==='rep')def.color='#808080';}
+      save();renderOverlay();renderPanel();break;}
+    /*V29-PHOTO*/
+    case 'photocam':$('#filePhotoCam').click();break;
+    case 'photopick':$('#filePhoto').click();break;
+    case 'photoview':v29Open(a.dataset.pid);break;
+    case 'pvclose':v29Close();break;
+    case 'pvfirst':{const def=selDef();if(!def||!v29Cur||!def.photos)break;const i=def.photos.findIndex(p=>p.id===v29Cur);
+      if(i>0){pushUndo(d);const [p]=def.photos.splice(i,1);def.photos.unshift(p);save();renderPanel();toast('대표 사진으로 정했어요');}v29Close();break;}
+    case 'pvdel':{const def=selDef();if(!def||!v29Cur||!def.photos)break;pushUndo(d);def.photos=def.photos.filter(p=>p.id!==v29Cur);if(!def.photos.length)delete def.photos;
+      save();renderPanel();v29Close();toast('사진을 뺐어요. 되돌리기로 복구할 수 있어요');break;}
+    case 'photozip':pop.hidden=true;v29Zip();break;
     case 'close':sel=null;bendId=null;renderOverlay();renderPanel();break;
     case 'deldef':{const def=selDef();if(!def)return;pushUndo(d);d.defects=d.defects.filter(x=>x!==def);sel=null;save();renderOverlay();renderPanel();toast(`${def.no}번을 삭제했어요. 되돌리기로 복구할 수 있어요`);break;}
     case 'kind':d.kind=a.dataset.v;save();renderPanel();break;
@@ -864,6 +1205,7 @@ document.addEventListener('click',async e=>{
     case 'dxfall':pop.hidden=true;exportDXFAll();break;
     case 'pngall':pop.hidden=true;exportFramedAll();break;
     case 'importcad':pop.hidden=true;$('#fileCad').click();break;
+    case 'stclose':v28State(null);break; /*V28-UI*/
     case 'pngframe':pop.hidden=true;exportFramedPNG();break;
     case 'logo':$('#fileLogo').click();break;
     case 'logodel':logoImg=null;await DB.del('logo');logoRec=null;renderPanel();break;
@@ -875,13 +1217,14 @@ $('#facSel').addEventListener('change',e=>{
   const f=S.facilities.find(x=>x.id===e.target.value);if(!f)return;
   S.curF=f.id;S.curD=f.drawings.length?f.drawings[0].id:null;sel=null;undoStack=[];save();renderAll();requestAnimationFrame(fit);
 });
+panel.addEventListener('toggle',e=>{const t=e.target;if(t.id==='quickDet')V28.qOpen=t.open;else if(t.id==='setDet')V28.set=t.open;},true); /*V28-UI*/
 panel.addEventListener('input',e=>{
   const t=e.target,d=D();if(!d)return;
   if(t.dataset.field){
     const def=selDef();if(!def)return;def[t.dataset.field]=t.value;
     if(t.dataset.field==='member'||t.dataset.field==='name'){
       S.prefs.last[def.type]=Object.assign({},S.prefs.last[def.type],{[t.dataset.field]:t.value});
-      panel.querySelectorAll(`.chip[data-set="${t.dataset.field}"]`).forEach(c=>c.classList.toggle('on',c.dataset.v===t.value));
+      panel.querySelectorAll(`.chip[data-set="${t.dataset.field}"]`).forEach(c=>c.setAttribute('aria-pressed',(t.dataset.field==='name'?t.value.split('/'):[t.value]).includes(c.dataset.v)?'true':'false')); /*V28-UI*/
       const b=panel.querySelector('.defhead b');if(b)b.textContent=[def.member,def.name].filter(Boolean).join(' ')||'결함 정보 입력';
     }
     const q=$('#qtyText');if(q)q.textContent=qtyText(d,def);
@@ -896,6 +1239,10 @@ $('#fileImg').addEventListener('change',e=>{const fs=[...e.target.files];e.targe
 $('#fileCad').addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';if(f)importCadFile(f);});
 $('#fileJson').addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';if(f)restoreBackup(f);});
 $('#fileXlsx').addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';if(f)v24ImportXls(f);}); /*V24-XLS*/
+$('#filePhotoCam').addEventListener('change',e=>{const fs=[...e.target.files];e.target.value='';v29Add(fs);}); /*V29-PHOTO*/
+$('#filePhoto').addEventListener('change',e=>{const fs=[...e.target.files];e.target.value='';v29Add(fs);}); /*V29-PHOTO*/
+$('#fileXml').addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';if(f)v30ImportXml(f);}); /*V30-PREV*/
+$('#filePrevPhotos').addEventListener('change',e=>{const fs=[...e.target.files];e.target.value='';v30AddPrevPhotos(fs);}); /*V30-PREV*/
 document.addEventListener('keydown',e=>{
   if(e.target.closest('input,textarea,select')||!$('#modal').hidden)return;
   if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();undo();return;}
@@ -1082,7 +1429,7 @@ function exportXlsCompany(){
   const items=[];
   sortFloors(f.drawings).forEach((d,fi)=>{const by=new Map();
     for(const def of [...d.defects].sort((a,b)=>a.no-b.no||(a.hideLabel?1:0)-(b.hideLabel?1:0)))if(!by.has(def.no))by.set(def.no,def);
-    for(const [no,def] of by)items.push({fi,no:+no,o:v24Row(d,def)});
+    for(const [no,def] of by)items.push({fi,no:+no,o:v24Row(d,def),ph:v29PhotosOf(d,def.no).length?v29Code(d,def.no):null/*V29-PHOTO*/});
     for(const o of f.xlOrphans||[])if(v24FindDrawing(f,o.floor)===d)items.push({fi,no:+v24NumCell(o.no)||0,o:Object.assign({'구분':o.no,'층':o.floor},o.raw)});});
   let extra=f.drawings.length;
   for(const o of f.xlOrphans||[])if(!v24FindDrawing(f,o.floor))items.push({fi:extra++,no:+v24NumCell(o.no)||0,o:Object.assign({'구분':o.no,'층':o.floor},o.raw)});
@@ -1092,7 +1439,9 @@ function exportXlsCompany(){
   const r2=blank();r2[1]='결함데이터 시트 및 .txt 작성용';r2[15]='금회 보고서 사진';r2[17]='전회차 보고서';
   const r3=blank();V24_COLS.forEach(([c,h],i)=>{r3[i+1]=h;});
   const aoa=[r1,r2,r3];
-  for(const it of items){const r=blank();V24_COLS.forEach(([c,h,k],i)=>{if(!k||V24_PHOTO.has(k))return;const v=it.o[k];r[i+1]=v===undefined?null:v;});aoa.push(r);}
+  for(const it of items){const r=blank();V24_COLS.forEach(([c,h,k],i)=>{if(!k||V24_PHOTO.has(k))return;const v=it.o[k];r[i+1]=v===undefined?null:v;});
+    if(it.ph)V24_COLS.forEach(([c,h,k],i)=>{if(k==='사진번호'||k==='보고서사진번호'||k==='카메라번호')r[i+1]=it.ph;else if(k==='파일이름')r[i+1]=it.ph+'.jpg';}); /*V29-PHOTO*/
+    aoa.push(r);}
   const ws=XLSX.utils.aoa_to_sheet(aoa);
   ws['!cols']=['A',...V24_COLS.map(x=>x[0])].map(c=>({wch:V24_WIDTH[c]||9}));
   ws['!autofilter']={ref:`A3:${V24_COLS[V24_COLS.length-1][0]}${aoa.length}`};
@@ -1135,6 +1484,225 @@ async function exportPNG(){
 }
 function abToB64(buf){const u=new Uint8Array(buf);let s='';for(let i=0;i<u.length;i+=0x8000)s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(s);}
 function b64ToAb(b64){const s=atob(b64),u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u.buffer;}
+/*V31-START: 과업 정보(V31-TASK)와 내보내기 전 검사(V31-CHECK).
+   시설물에 새 항목 task={school,building,region,year,half,kind}. 없으면 항목 자체가 없다(백업이 v30과 같음).
+   검사는 자료를 바꾸지 않는다. CAD·결함표·그림 출력은 v30 그대로다. */
+const V31_KINDS=['정기안전점검','정밀안전점검','정밀안전진단'];
+function v31TaskGuess(f){const ov=((f.prev||{}).doc||{}).overview||{},s=k=>typeof ov[k]==='string'?ov[k]:'';
+  const now=new Date();let year=String(now.getFullYear()),half=now.getMonth()<6?'1':'2';
+  const m=/^(\d{4})_([12])$/.exec((f.prev||{}).seq||''); // 전회 자료가 2026_1이면 이번은 2026_2, 2026_2면 2027_1
+  if(m){if(m[2]==='1'){year=m[1];half='2';}else{year=String(+m[1]+1);half='1';}}
+  return {school:s('schoolName')||siteOf(f)||'',building:s('buildingName'),region:s('regionName'),year,half,kind:V31_KINDS[0]};}
+function v31Seq(f){const k=f&&f.task;return k&&k.year?k.year+'_'+(k.half==='2'?'2':'1'):'';}
+function v31TaskLabel(f){const k=f&&f.task;if(!k)return '';
+  return [[k.school,k.building].filter(Boolean).join(' '),k.year?`${k.year}년 ${k.half==='2'?'하반기':'상반기'}`:'',k.kind||''].filter(Boolean).join(' · ');}
+async function v31TaskEdit(f){const k=Object.assign(v31TaskGuess(f),f.task||{}),first=!f.task;
+  const p=modal(`<h4>과업 정보</h4><p class="muted">${first&&f.prev?'전회 자료에서 가져온 값이에요. 맞는지 보고 저장하세요.':first?'보고서 표지와 문서에 쓰는 값이에요.':'보고서 표지와 문서에 쓰는 값이에요.'}</p>
+    <div class="field"><label for="v31school">학교(시설물) 이름</label><input class="in" id="v31school" data-v31="school" value="${esc(k.school||'')}"></div>
+    <div class="v31two"><div class="field"><label for="v31building">건물(동)</label><input class="in" id="v31building" data-v31="building" value="${esc(k.building||'')}"></div>
+      <div class="field"><label for="v31region">지역</label><input class="in" id="v31region" data-v31="region" value="${esc(k.region||'')}"></div></div>
+    <div class="v31two"><div class="field"><label for="v31year">점검 연도</label><input class="in" id="v31year" data-v31="year" inputmode="numeric" maxlength="4" value="${esc(k.year||'')}"></div>
+      <div class="field"><label for="v31half">시기</label><select class="in" id="v31half" data-v31="half"><option value="1"${k.half==='2'?'':' selected'}>상반기</option><option value="2"${k.half==='2'?' selected':''}>하반기</option></select></div></div>
+    <div class="field"><label for="v31kind">점검 구분</label><select class="in" id="v31kind" data-v31="kind">${V31_KINDS.map(x=>`<option${x===k.kind?' selected':''}>${x}</option>`).join('')}</select></div>
+    <div class="btnrow"><button class="btn" data-m="no">취소</button><button class="btn primary" data-m="ok">저장</button></div>`);
+  const card=$('#modal .card'),draft={},read=()=>{card.querySelectorAll('[data-v31]').forEach(el=>{draft[el.dataset.v31]=String(el.value||'').trim();});};
+  card.addEventListener('input',read);card.addEventListener('change',read);read();
+  const r=await p;card.removeEventListener('input',read);card.removeEventListener('change',read);
+  if(r===null)return false;
+  if(draft.year&&!/^\d{4}$/.test(draft.year)){toast('점검 연도는 숫자 네 자리로 넣어 주세요');return false;}
+  f.task={school:draft.school||'',building:draft.building||'',region:draft.region||'',year:draft.year||'',half:draft.half==='2'?'2':'1',kind:V31_KINDS.includes(draft.kind)?draft.kind:V31_KINDS[0]};
+  save();toast('과업 정보를 저장했어요');return true;}
+/* 검사. 돌려주는 값 {must:[묶음], see:[묶음]}, 묶음 = {k, t, h, items:[{did, def?, lab}]}
+   고칠 것: 부재 없음, 유형 없음, 길이·면적을 못 구함, 같은 번호의 번호 원이 둘 이상, 번호 원이 하나도 없음, 확인하지 않은 전회 결함
+   확인할 것: 과업 정보, 비어 있는 번호, 폭 없는 균열, 사진 없는 번호, 못 찾은 전회 결함, 도면에 없는 전회 번호, 결함 없는 층 */
+function v31Check(f){const must=[],see=[],G={},grp=(arr,k,t,h)=>G[k]||(arr.push(G[k]={k,t,h,items:[]}),G[k]);
+  const M=(k,t,h)=>grp(must,k,t,h),W=(k,t,h)=>grp(see,k,t,h),blank=v=>!String(v==null?'':v).trim();
+  if(!f)return {must,see};
+  const fls=sortFloors(f.drawings),anyPhoto=fls.some(d=>d.defects.some(x=>(x.photos||[]).length));
+  if(!f.task)W('task','과업 정보가 없어요','보고서 표지와 문서에 쓰는 값이에요. 파일·설정 메뉴의 과업 정보에서 넣어요.').items.push({lab:'과업 정보 넣기'});
+  else{const miss=[['school','학교 이름'],['building','건물(동)'],['year','점검 연도']].filter(([k])=>blank(f.task[k])).map(x=>x[1]);
+    if(miss.length)W('task','과업 정보에 빈칸이 있어요','').items.push({lab:miss.join(', ')});}
+  for(const d of fls){const defs=[...d.defects].sort((a,b)=>a.no-b.no||(a.hideLabel?1:0)-(b.hideLabel?1:0)),lab=x=>({did:d.id,def:x.id,lab:String(x.no)});
+    if(!defs.length){W('empty','결함이 없는 층','결함이 없으면 그대로 두면 돼요. 빠뜨린 층인지 확인하세요.').items.push({did:d.id,lab:d.name});continue;}
+    const byNo=new Map();for(const x of defs){if(!byNo.has(x.no))byNo.set(x.no,[]);byNo.get(x.no).push(x);}
+    for(const x of defs){
+      if(blank(x.member))M('member','부재가 비어 있어요','결함표의 부재 칸이 빈칸으로 나가요.').items.push(lab(x));
+      if(blank(x.name))M('name','유형이 비어 있어요','결함표의 유형 및 형상 칸이 빈칸으로 나가요.').items.push(lab(x));
+      if(x.type!=='point'){const q=qtyOf(d,x);if((x.type==='line'?q.len:q.area)==null)M('scale','길이·면적을 구할 수 없어요','이 층에 축척이 없어요. 도면 설정에서 축척을 지정하거나 수량을 직접 넣으세요.').items.push(lab(x));}
+      if(v30Open(x))M('prev','확인하지 않은 전회 결함','결함 시트의 전회차 칸에서 그대로 있음, 보수 완료, 못 찾음 중 하나를 누르세요.').items.push(lab(x));
+      if(x.type==='line'&&blank(x.width))W('width','폭이 없는 균열','폭을 재지 못한 것이면 그대로 두세요.').items.push(lab(x));
+      if(x.prev&&x.prev.state==='miss')W('miss','못 찾은 전회 결함','결함표와 CAD에는 그대로 나가요. 뺄지, 비고에 적을지 정하세요.').items.push(lab(x));}
+    for(const [no,xs] of byNo){const vis=xs.filter(x=>!x.hideLabel);
+      if(vis.length>1)for(const x of vis)M('dup','같은 번호의 번호 원이 둘 이상이에요','다른 결함이면 위치순 번호 정리를, 같은 결함의 추가 위치면 번호 원 숨기기를 누르세요.').items.push(lab(x));
+      if(!vis.length)M('nolabel','번호 원이 하나도 없는 번호','이 번호는 위치도에 번호가 보이지 않아요. 한 곳은 번호 원을 표시하세요.').items.push(lab(xs[0]));
+      if(anyPhoto&&!v29PhotosOf(d,no).length)W('photo','사진이 없는 번호','결함표의 사진번호·파일이름 칸이 빈칸으로 나가요.').items.push(lab(vis[0]||xs[0]));}
+    const max=Math.max(...byNo.keys()),gap=[];for(let i=1;i<max;i++)if(!byNo.has(i))gap.push(i);
+    if(gap.length)W('gap','비어 있는 번호','결함을 지워서 번호가 건너뛰었어요. 목록의 위치순 번호 정리로 다시 매길 수 있어요.').items.push({did:d.id,lab:`${d.name}: ${gap.slice(0,12).join(', ')}${gap.length>12?` 외 ${gap.length-12}개`:''}번`});}
+  if(!anyPhoto&&fls.some(d=>d.defects.length))W('photo0','사진을 붙인 결함이 없어요','결함표의 사진번호·파일이름 칸이 모두 빈칸으로 나가요.').items.push({lab:'사진 없음'});
+  for(const o of f.xlOrphans||[])W('orphan','전회 자료에만 있고 도면에 없는 번호','위치도에 번호가 없어서 위치를 알 수 없어요.').items.push({lab:`${o.floor} ${o.no}번`});
+  return {must,see};}
+function v31Count(c){const n=a=>a.reduce((s,g)=>s+g.items.length,0);return {must:n(c.must),see:n(c.see)};}
+function v31Bar(f){if(!f)return '';const n=v31Count(v31Check(f)),lb=v31TaskLabel(f);
+  return `<div class="v31bar"><div class="tx"><b>${lb?esc(lb):'과업 정보가 없어요'}</b><small id="v31BarN"${n.must?' class="warn"':''}>${n.must||n.see?`검사: 고칠 것 ${n.must}건 · 확인할 것 ${n.see}건`:'검사: 걸린 것이 없어요'}</small></div><button class="btn" data-act="taskinfo">과업 정보</button><button class="btn" data-act="precheck">검사 보기</button></div>`;}
+function v31Open(){const f=F();if(!f)return;const c=v31Check(f),n=v31Count(c),name=new Map(f.drawings.map(d=>[d.id,d.name]));
+  const chip=it=>it.def?`<button data-act="v31go" data-did="${it.did}" data-def="${it.def}" aria-label="${esc(name.get(it.did)||'')} ${esc(it.lab)}번으로 가기">${esc(it.lab)}</button>`
+    :it.did?`<button data-act="v31go" data-did="${it.did}">${esc(it.lab)}</button>`:it.lab==='과업 정보 넣기'?`<button data-act="taskinfo">${esc(it.lab)}</button>`:`<span>${esc(it.lab)}</span>`;
+  const group=g=>{const fl=new Map(),rest=[];for(const it of g.items){if(it.def){if(!fl.has(it.did))fl.set(it.did,[]);fl.get(it.did).push(it);}else rest.push(it);}
+    return `<div class="v31grp" data-v31k="${g.k}"><b>${esc(g.t)} · ${g.items.length}건</b>${g.h?`<small>${esc(g.h)}</small>`:''}
+      ${[...fl].map(([did,its])=>`<div class="v31fl"><span>${esc(name.get(did)||'')}</span><div class="v31chips">${its.map(chip).join('')}</div></div>`).join('')}
+      ${rest.length?`<div class="v31chips">${rest.map(chip).join('')}</div>`:''}</div>`;};
+  const sec=(title,cls,gs)=>gs.length?`<div class="v31sec"><h3>${title} <span class="v31c ${cls}">${gs.reduce((s,g)=>s+g.items.length,0)}</span></h3>${gs.map(group).join('')}</div>`:'';
+  const lb=v31TaskLabel(f);
+  $('#v31Body').innerHTML=`<p class="v31task"><b>${lb?esc(lb):esc(f.name)}</b>${f.prev&&f.prev.seq?` <span class="muted">전회 자료 ${esc(f.prev.seq)}</span>`:''}</p>
+    ${sec('고칠 것','must',c.must)}${sec('확인할 것','see',c.see)}${n.must||n.see?'':'<p class="v31ok">걸린 것이 없어요. 그대로 내보내면 돼요.</p>'}`;
+  $('#v31Note').textContent=n.must||n.see?'번호를 누르면 그 결함으로 가요':'';
+  $('#v31Pop').hidden=false;}
+function v31Go(did,defId){const f=F(),d=f&&f.drawings.find(x=>x.id===did);if(!d)return;$('#v31Pop').hidden=true;
+  if(S.curD!==did){S.curD=did;undoStack=[];save();}
+  const def=defId?d.defects.find(x=>x.id===defId):null;sel=def?def.id:null;bendId=null;V28.list=!def;V28.set=false;renderAll();
+  requestAnimationFrame(()=>{fit();if(def)centerOn(anchorOf(def));});}
+document.addEventListener('click',e=>{const p=$('#v31Pop');if(p&&e.target===p)p.hidden=true;}); // 검사 화면 바깥(어두운 곳)을 누르면 닫힘
+/*V31-END*/
+/*V30-PREV-START: 전회 자료 불러오기와 현장 확인 (P1-5).
+  회사 엑셀이 만든 인수 파일(XML, 뿌리 safetyInspectionReport)을 읽는다.
+  시설물에 새 항목 prev = {file, at, seq, doc}. doc = XML 전체를 그대로 옮긴 값(이름: 글자 | 묶음 | 목록). 문서 화면(v33~)이 여기서 읽는다.
+  결함에 새 항목 prev = {photo, no, pid?, state?}. photo = 전회 사진 파일 이름, no = 전회 사진번호, pid = 불러온 전회 사진('photo:'+pid),
+  state = 'same'(그대로 있음) | 'rep'(보수 완료) | 'miss'(못 찾음), 없으면 아직 확인 안 함(화면 번호가 보라색).
+  결함 정보는 결함표 엑셀 불러오기(V24-XLS)와 같은 규칙으로 (층, 번호)마다 채운다. 옛 백업은 이 항목들이 없다*/
+const V30_INK='#6B4FBB';
+function v30Open(def){return !!(def&&def.prev&&!def.prev.state);}
+function v30Ink(def,c){return v30Open(def)?V30_INK:v28Ink(c);}
+function v30Sum(defs){const all=defs.filter(x=>x.prev).length;return all?`<span>전회 미확인 ${defs.filter(v30Open).length}개</span>`:'';}
+function v30Photos(def){return (def.photos||[]).concat(def.prev&&def.prev.pid?[{id:def.prev.pid}]:[]);}
+function v30Tree(el){const kids=[...el.children];if(!kids.length)return (el.textContent||'').trim();
+  const o={};for(const k of kids){const v=v30Tree(k),n=k.tagName;if(n in o){if(!Array.isArray(o[n]))o[n]=[o[n]];o[n].push(v);}else o[n]=v;}
+  return o;}
+const v30Arr=v=>v==null||v===''?[]:(Array.isArray(v)?v:[v]);
+const v30Stem=s=>String(s==null?'':s).trim().replace(/\.[A-Za-z0-9]+$/,'').toLowerCase();
+function v30Cell(v){if(v==null||typeof v!=='string'||v==='')return null; // XML 글자 → 엑셀 칸 값처럼 (수는 수로)
+  if(/^-?\d+(\.\d+)?$/.test(v))return +v;if(/^\d{1,3}(,\d{3})+(\.\d+)?$/.test(v))return +v.replace(/,/g,'');return v;}
+function v30Field(def){const p=def.prev;if(!p)return '';const st=p.state||'';
+  return `<div class="field v30"><div class="lb">전회차 결함${p.photo?`<span class="v">전회 사진 ${esc(p.photo)}</span>`:''}</div>
+    <div class="v30b">${p.pid?`<button class="v29t" data-act="prevview" data-pid="${p.pid}" aria-label="전회 사진 크게 보기"><img data-v29="${p.pid}" alt=""></button>`:'<span class="v30n">전회 사진 없음</span>'}
+      <div class="v30s"><button data-act="prevstate" data-v="same" aria-pressed="${st==='same'}">그대로 있음</button><button data-act="prevstate" data-v="rep" aria-pressed="${st==='rep'}">보수 완료</button><button data-act="prevstate" data-v="miss" aria-pressed="${st==='miss'}">못 찾음</button></div></div>
+    <p class="muted" style="margin:6px 0 0">${st?'확인한 결함이에요. 같은 단추를 다시 누르면 미확인으로 돌아가요.':'아직 확인하지 않은 전회 결함이에요. 번호가 보라색으로 보여요.'}</p></div>`;}
+async function v30View(pid){const v=$('#v29View'),u=await v29Get(pid);if(!u){toast('이 기기에 전회 사진 파일이 없어요');return;}
+  v29Cur=null;v.querySelector('img').src=u;v.querySelector('.cap').textContent='전회 사진';
+  v.querySelector('[data-act=pvfirst]').hidden=true;v.querySelector('[data-act=pvdel]').hidden=true;v.hidden=false;}
+async function v30ImportXml(file){
+  const f=F();if(!f||!f.drawings.length){toast('먼저 기존 위치도나 도면을 불러오세요');return;}
+  let doc;try{const x=new DOMParser().parseFromString(await file.text(),'application/xml');
+    if(x.querySelector('parsererror')||!x.documentElement||x.documentElement.tagName!=='safetyInspectionReport')throw new Error('xml');doc=v30Tree(x.documentElement);}
+  catch(e){console.error(e);toast('전회 자료 파일(XML)을 읽지 못했어요');return;}
+  const list=v30Arr(((doc.defectDataWrapper||{}).defectDataList||{}).defectData).filter(x=>x&&typeof x==='object');
+  for(const d of f.drawings)pushUndo(d);
+  const orphans=[],used=new Set();let rowsOk=0,defsOk=0;
+  for(const it of list){const c=k=>v30Cell(it[k]);
+    const row={'구분':c('classification'),'층':c('floorName'),'실':c('roomName'),'부재':c('memberName'),'유형및형상':c('type'),'폭(mm)':c('width'),'길이(m)':c('length'),'개소':c('count'),'비고':c('remarks'),'전회차파일명':c('fileName')};
+    if(row['층']==null&&row['구분']==null)continue;
+    const d=v24FindDrawing(f,row['층']),no=v24NumCell(row['구분']),defs=d&&no!=null?d.defects.filter(x=>x.no===no):[];
+    const raw={};for(const [k,v] of Object.entries(row))if(v!=null)raw[k]=v;
+    if(!defs.length){orphans.push({floor:row['층']==null?'':String(row['층']),no:row['구분'],raw});continue;}
+    rowsOk++;
+    for(const def of defs){const v=v24AppVals(row,def.type);def.xl=raw;def.xlSet={};
+      for(const [k,val] of Object.entries(v)){v24Set(def,k,val);def.xlSet[k]=val;}
+      const old=def.prev&&v30Stem(def.prev.photo)===v30Stem(it.fileName)?def.prev:null; // 같은 자료를 다시 불러와도 붙인 전회 사진과 현장에서 한 처리는 남긴다
+      def.prev={photo:typeof it.fileName==='string'?it.fileName:'',no:typeof it.photoNumber==='string'?it.photoNumber:''};if(old&&old.pid)def.prev.pid=old.pid;if(old&&old.state)def.prev.state=old.state;
+      used.add(def.id);defsOk++;}}
+  f.xlOrphans=orphans;f.xlFile={name:file.name,sheet:'XML',at:new Date().toISOString()};
+  f.prev={file:file.name,at:new Date().toISOString(),seq:typeof (doc.overview||{}).sequenceNumber==='string'?doc.overview.sequenceNumber:'',doc};
+  const noRow=[];for(const d of sortFloors(f.drawings)){const s=new Set();for(const x of [...d.defects].sort((a,b)=>a.no-b.no))if(!used.has(x.id)&&!s.has(x.no)){s.add(x.no);noRow.push(d.name+' '+x.no+'번');}}
+  save();renderAll();
+  const ir=doc.inspectionResult||{},ck=v30Arr((ir.checklists||{}).checklist),cc=v30Arr((ir.comprehensiveConclusions||{}).comprehensiveConclusion),pr=ir.previousReport||{};
+  console.log(`V30-PREV 전회 ${f.prev.seq}, 결함 ${list.length}건 중 ${rowsOk}건(위치 ${defsOk}곳) 채움, 위치 없음 ${orphans.length}, XML에 없는 번호 ${noRow.length}, 체크리스트 ${ck.length}, 종합결론 ${cc.length}`);
+  const li=a=>a.length?`<ul style="margin:4px 0 10px;padding-left:18px;max-height:120px;overflow:auto">${a.map(s=>`<li>${esc(s)}</li>`).join('')}</ul>`:'<p class="muted">없음</p>';
+  await modal(`<h4>전회 자료를 불러왔어요</h4>
+    <p>${f.prev.seq?`<b>${esc(f.prev.seq)}</b> 회차 자료예요. `:''}결함 ${list.length}건 중 <b>${rowsOk}건</b>을 도면의 번호에 채웠어요. 번호가 보라색인 결함이 아직 확인하지 않은 전회 결함이에요.</p>
+    <p>함께 들어온 내용: 체크리스트 ${ck.length}항목, 종합결론 ${cc.length}항목${typeof pr.previousReportTitle==='string'&&pr.previousReportTitle?`, 그 앞 보고서 "${esc(pr.previousReportTitle)}"`:''}. 문서 화면이 생기면 여기서 이어 써요.</p>
+    <p style="margin-bottom:0"><b>위치 없음 ${orphans.length}개</b> <span class="muted">전회 자료에만 있고 도면에 번호가 없어요.</span></p>
+    ${li(orphans.map(o=>`${o.floor} ${o.no}번 ${[o.raw['실'],o.raw['부재'],o.raw['유형및형상']].filter(Boolean).join(' ')}`))}
+    <p style="margin-bottom:0"><b>전회 자료에 없는 도면 번호 ${noRow.length}개</b></p>${li(noRow)}
+    <div class="btnrow"><button class="btn primary" data-m="ok">확인</button></div>`);
+}
+async function v30AddPrevPhotos(files){const f=F();if(!f||!files.length)return;
+  if(!DB.db){toast('이 기기에 저장할 수 없어서 사진을 붙이지 못했어요');return;}
+  const map=new Map(),exact=new Set();
+  for(const d of f.drawings)for(const def of d.defects)if(def.prev){exact.add(String(def.prev.photo||'').trim().toLowerCase());
+    for(const k of new Set([v30Stem(def.prev.photo),v30Stem(def.prev.no)]))if(k){if(!map.has(k))map.set(k,[]);map.get(k).push(def);}}
+  if(!map.size){toast('먼저 전회 자료(XML)를 불러오세요');return;}
+  const fs=[...files].sort((a,b)=>(exact.has(b.name.toLowerCase())?1:0)-(exact.has(a.name.toLowerCase())?1:0)); // 확장자까지 같은 파일 먼저
+  let hit=0,miss=0,full=false;const done=new Set();
+  for(const file of fs){const k=v30Stem(file.name),defs=map.get(k);if(!defs){miss++;continue;}if(done.has(k))continue;
+    try{const r=await v29ToJpeg(file,0),id=uid();
+      if(!await DB.set('photo:'+id,{buf:r.buf,type:'image/jpeg',w:r.w,h:r.h})){full=true;break;}
+      for(const def of defs)def.prev.pid=id;done.add(k);hit++;}catch(e){console.error(e);}}
+  save();renderPanel();
+  toast(full?'저장 공간이 부족해요. 현장사진을 내보낸 뒤 다시 해 보세요':`전회 사진 ${hit}장을 결함에 붙였어요${miss?`. 맞는 결함이 없는 사진 ${miss}장`:''}`);
+  try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();}catch(e){}}
+/*V30-PREV-END*/
+/*V29-PHOTO-START: 결함 사진 (P1-1).
+  결함에 새 항목 photos:[{id,w,h,at}] (첫 장이 대표, 없으면 항목 자체가 없음). 사진 파일은 기기 DB 'photo:'+id = {buf,type:'image/jpeg',w,h,small?}.
+  사진번호 = 층 기호 + 결함 번호 3자리(지붕층 1번 = RF001). 같은 번호의 둘째 장부터 RF001_2.jpg, RF001_3.jpg.
+  같은 번호가 여러 위치면 번호 원이 있는 결함의 사진이 먼저. 사진을 빼거나 결함을 지워도 DB의 사진 파일은 지우지 않음(되돌리기용)*/
+const v29URL={};let v29Cur=null;
+function v29FloorCode(name){const s=String(name||'').replace(/\s+/g,'');let m;
+  if((m=s.match(/지하(\d+)/)))return 'B'+m[1]+'F';
+  if((m=s.match(/^B(\d+)F?$/i)))return 'B'+m[1]+'F';
+  if(/PIT|피트/i.test(s))return 'PIT';
+  if((m=s.match(/(?:지붕|옥탑|옥상)층?(\d+)?/)))return 'RF'+(m[1]&&m[1]!=='1'?m[1]:'');
+  if((m=s.match(/^RF(\d+)?$/i)))return 'RF'+(m[1]&&m[1]!=='1'?m[1]:'');
+  if((m=s.match(/(\d+)층/)))return m[1]+'F';
+  if((m=s.match(/^(\d+)F$/i)))return m[1]+'F';
+  return s.replace(/[\\/:*?"<>|]+/g,'_')||'X';}
+function v29Code(d,no){return v29FloorCode(d.name)+String(no).padStart(3,'0');}
+function v29PhotosOf(d,no){const out=[];
+  for(const def of d.defects.filter(x=>x.no===no).sort((a,b)=>(a.hideLabel?1:0)-(b.hideLabel?1:0)))for(const p of def.photos||[])out.push(p);
+  return out;}
+function v29Field(def){const ps=def.photos||[];
+  return `<div class="field v29"><div class="lb">사진${ps.length?`<span class="v">${ps.length}장 · 첫 장이 대표</span>`:''}</div><div class="v29g"><button class="v29a" data-act="photocam">촬영</button><button class="v29a" data-act="photopick">앨범</button>${ps.map((p,i)=>`<button class="v29t" data-act="photoview" data-pid="${p.id}" aria-label="사진 ${i+1} 크게 보기"><img data-v29="${p.id}" alt=""></button>`).join('')}</div></div>`;}
+async function v29Get(id){if(v29URL[id])return v29URL[id];const rec=await DB.get('photo:'+id);if(!rec)return null;
+  return v29URL[id]=URL.createObjectURL(new Blob([rec.buf],{type:rec.type||'image/jpeg'}));}
+function v29Fill(root){(root||document).querySelectorAll('img[data-v29]').forEach(async im=>{const u=await v29Get(im.dataset.v29);if(u)im.src=u;else im.closest('button').classList.add('miss');});}
+async function v29ToJpeg(file,max){ // max 없음: JPEG는 원본 그대로, 다른 형식만 JPEG로 바꿈. max 있음: 긴 변을 max px로 줄임
+  const url=URL.createObjectURL(file);
+  try{const im=await loadImage(url),w=im.naturalWidth,h=im.naturalHeight;
+    if(!max&&/jpe?g/i.test(file.type||''))return {buf:await file.arrayBuffer(),w,h};
+    const k=max?Math.min(1,max/Math.max(w,h)):1,cw=Math.max(1,Math.round(w*k)),ch=Math.max(1,Math.round(h*k));
+    const c=document.createElement('canvas');c.width=cw;c.height=ch;const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,cw,ch);g.drawImage(im,0,0,cw,ch);
+    const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',max?0.82:0.92));if(!blob)throw new Error('jpeg');
+    return {buf:await blob.arrayBuffer(),w:cw,h:ch};
+  }finally{URL.revokeObjectURL(url);}}
+async function v29Add(files){const d=D(),def=selDef();if(!d||!def||!files.length)return;
+  if(!DB.db){toast('이 기기에 저장할 수 없어서 사진을 붙이지 못했어요');return;}
+  const add=[];let full=false;
+  for(const f of files){try{const r=await v29ToJpeg(f,0),id=uid();
+    if(!await DB.set('photo:'+id,{buf:r.buf,type:'image/jpeg',w:r.w,h:r.h})){full=true;break;}
+    add.push({id,w:r.w,h:r.h,at:Date.now()});}catch(e){console.error(e);}}
+  if(full)toast('저장 공간이 부족해요. 현장사진을 내보낸 뒤 다시 해 보세요');
+  if(!add.length){if(!full)toast('사진을 읽지 못했어요');return;}
+  if(!d.defects.includes(def))return;
+  pushUndo(d);def.photos=(def.photos||[]).concat(add);save();renderPanel();if(!full)toast(`사진 ${add.length}장을 붙였어요`);
+  try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();}catch(e){}}
+async function v29Open(pid){const def=selDef();if(!def||!def.photos)return;const i=def.photos.findIndex(p=>p.id===pid);if(i<0)return;v29Cur=pid;
+  const v=$('#v29View'),u=await v29Get(pid);if(u)v.querySelector('img').src=u;
+  v.querySelector('.cap').textContent=`${def.no}번 · ${i+1}/${def.photos.length}${i===0?' · 대표 사진':''}${u?'':' · 이 기기에 사진 파일이 없어요'}`;
+  v.querySelector('[data-act=pvfirst]').hidden=i===0;v.querySelector('[data-act=pvdel]').hidden=false/*V30-PREV*/;v.hidden=false;}
+function v29Close(){const v=$('#v29View');v.hidden=true;v.querySelector('img').removeAttribute('src');v29Cur=null;}
+async function v29Zip(){const f=F();if(!f)return;
+  const groups=[];let total=0;
+  for(const d of sortFloors(f.drawings)){const g={d,items:[]};
+    for(const no of [...new Set(d.defects.filter(x=>(x.photos||[]).length).map(x=>x.no))].sort((a,b)=>a-b)){
+      v29PhotosOf(d,no).forEach((p,i)=>g.items.push({id:p.id,name:v29Code(d,no)+(i?'_'+(i+1):'')+'.jpg'}));}
+    if(g.items.length){groups.push(g);total+=g.items.length;}}
+  if(!total){toast('붙인 사진이 없어요');return;}
+  const pack=async(gs,tag)=>{const files=[],seen=new Set();
+    for(const g of gs)for(const it of g.items){const rec=await DB.get('photo:'+it.id);if(!rec)continue;
+      let nm=it.name;while(seen.has(nm))nm=nm.replace(/\.jpg$/,'_.jpg');seen.add(nm);files.push({name:'현장사진/'+nm,data:new Uint8Array(rec.buf)});}
+    if(files.length)await saveBlob(`${safeName(f.name)}_현장사진${tag}_${dateStr()}.zip`,makeZip(files));return files.length;};
+  if(total<=80){await pack(groups,'');return;} // 사진이 많으면 층별로 나눠 받음 (한 파일이 너무 커지지 않게)
+  for(const g of groups){await pack([g],'_'+safeName(g.d.name));await new Promise(r=>setTimeout(r,700));}
+  toast(`현장사진을 층별 파일 ${groups.length}개로 내보냈어요`);}
+/*V29-PHOTO-END*/
 async function exportBackup(){
   if(!S.facilities.length){toast('저장할 내용이 없어요');return;}
   const images={};
@@ -1144,7 +1712,12 @@ async function exportBackup(){
   }
   const srcDxf={}; /*V21-SRC: 새 필드 srcDxf = {시설물 id: {name, enc:'gzip'|'raw', b64}}*/
   for(const f of S.facilities)if(f.srcDxf){const r=await DB.get('srcdxf:'+f.id);if(r)srcDxf[f.id]=await v21Pack(r);}
-  const data={app:'yajang-marker',v:1,savedAt:new Date().toISOString(),facilities:S.facilities,images,logo:logoRec?{type:logoRec.type,b64:abToB64(logoRec.buf)}:null,srcDxf,prefs:{free:!!S.prefs.free}}; /*V25-FREE: prefs.free (옛 백업은 없음 → 그대로)*/
+  const data={app:'yajang-marker',v:1,savedAt:new Date().toISOString(),facilities:S.facilities,images,logo:logoRec?{type:logoRec.type,b64:abToB64(logoRec.buf)}:null,srcDxf,prefs:{free:!!S.prefs.free},favs:S.prefs.favs/*V28-UI: 빠른 입력 ★ 목록(새 항목)*/}; /*V25-FREE: prefs.free (옛 백업은 없음 → 그대로)*/
+  {const photos={}; /*V29-PHOTO: 새 항목 photos = {사진 id: {type, b64, w, h}} (긴 변 1600px로 줄인 사진). 사진이 하나도 없으면 항목을 넣지 않음*/
+    for(const f of S.facilities)for(const d of f.drawings)for(const def of d.defects)for(const p of v30Photos(def)/*V30-PREV: 전회 사진 포함*/){
+      const rec=await DB.get('photo:'+p.id);if(!rec)continue;
+      try{const r=rec.small?{buf:rec.buf,w:rec.w,h:rec.h}:await v29ToJpeg(new Blob([rec.buf],{type:'image/jpeg'}),1600);photos[p.id]={type:'image/jpeg',b64:abToB64(r.buf),w:r.w,h:r.h};}catch(e){console.error(e);}}
+    if(Object.keys(photos).length)data.photos=photos;}
   saveBlob(`야장마킹_백업_${dateStr()}.json`,new Blob([JSON.stringify(data)],{type:'application/json'}));
 }
 async function restoreBackup(file){
@@ -1159,8 +1732,11 @@ async function restoreBackup(file){
     imgURL[id]=URL.createObjectURL(new Blob([rec.buf],{type:rec.type}));imgTried[id]=true;
   }
   for(const [id,sx] of Object.entries(data.srcDxf||{})){try{await DB.set('srcdxf:'+id,await v21Unpack(sx));}catch(e){console.error(e);}} /*V21-SRC (옛 백업은 이 필드가 없음)*/
+  for(const [id,ph] of Object.entries(data.photos||{})){try{const ex=await DB.get('photo:'+id);if(ex&&!ex.small)continue; /*V29-PHOTO: 기기에 원본이 있으면 그대로 둠 (옛 백업은 이 항목이 없음)*/
+    await DB.set('photo:'+id,{buf:b64ToAb(ph.b64),type:'image/jpeg',w:ph.w,h:ph.h,small:true});if(v29URL[id]){URL.revokeObjectURL(v29URL[id]);delete v29URL[id];}}catch(e){console.error(e);}}
   if(data.logo&&data.logo.b64){try{logoRec={buf:b64ToAb(data.logo.b64),type:data.logo.type||'image/png'};await DB.set('logo',logoRec);logoImg=await loadImage(URL.createObjectURL(new Blob([logoRec.buf],{type:logoRec.type})));}catch(e){}}
   if(data.prefs&&typeof data.prefs.free==='boolean'){S.prefs.free=data.prefs.free;renderTool();} /*V25-FREE*/
+  if(Array.isArray(data.favs))S.prefs.favs=data.favs.filter(x=>x&&typeof x==='object').map(x=>({member:String(x.member||''),name:String(x.name||''),width:String(x.width||''),remark:String(x.remark||'')})); /*V28-UI: 옛 백업(favs 없음)은 지금 목록 그대로*/
   for(const nf of data.facilities){
     const i=S.facilities.findIndex(x=>x.id===nf.id);
     if(i>=0)S.facilities[i]=nf;else S.facilities.push(nf);
@@ -2023,20 +2599,20 @@ async function placeholderImage(w,h,file){
 }
 async function importCadFile(file){
   try{
-    toast('위치도를 읽는 중이에요…');
+    toast('위치도를 읽는 중이에요…');v28State('load',file.name); /*V28-UI*/
     let dxfBytes=null,dxfName=file.name;const imgs={};
     if(/\.zip$/i.test(file.name)){
       const entries=await readZip(await file.arrayBuffer());
       const dx=entries.filter(e=>/\.dxf$/i.test(e.name));
-      if(!dx.length){toast(entries.some(e=>/\.dwg$/i.test(e.name))?'zip 안에 DWG만 있어요. 캐드에서 DXF로 저장해서 넣어주세요':'zip 안에 DXF 파일이 없어요');return;}
+      if(!dx.length){v28Fail(file.name,entries.some(e=>/\.dwg$/i.test(e.name))?'zip 안에 DWG만 있어요. 캐드에서 DXF로 저장해서 넣어주세요':'zip 안에 DXF 파일이 없어요');return;}
       dxfBytes=await unzipEntry(dx[0]);dxfName=dx[0].name.split('/').pop();
       for(const e of entries)if(/\.(png|jpe?g|gif|bmp)$/i.test(e.name))imgs[e.name.split('/').pop().toLowerCase()]=e;
     }else if(/\.dxf$/i.test(file.name))dxfBytes=new Uint8Array(await file.arrayBuffer());
-    else if(/\.dwg$/i.test(file.name)){toast('DWG는 바로 읽을 수 없어요. 캐드에서 DXF로 저장해 주세요');return;}
-    else{toast('DXF 또는 ZIP 파일을 골라 주세요');return;}
+    else if(/\.dwg$/i.test(file.name)){v28Fail(file.name,'DWG는 바로 읽을 수 없어요. 캐드에서 DXF로 저장해 주세요');return;}
+    else{v28Fail(file.name,'DXF 또는 ZIP 파일을 골라 주세요');return;}
     const doc=parseDXF(decodeDxfBytes(dxfBytes));
     const res=importDxfDoc(doc);
-    if(!res.floors.length){toast('층별 평면도 이미지(IMAGE)가 없어 도면을 나눌 수 없어요');return;}
+    if(!res.floors.length){v28Fail(file.name,'층별 평면도 이미지(IMAGE)가 없어 도면을 나눌 수 없어요');return;}
     const built=buildDrawings(res);
     const fac={id:uid(),name:res.site||dxfName.replace(/\.[^.]+$/,''),drawings:[]};
     if(res.formScale>0)fac.cadFormScale=res.formScale; /*V14-FORMSCALE: 새 필드, 없으면 계산*/
@@ -2055,12 +2631,13 @@ async function importCadFile(file){
       await DB.set('img:'+it.d.id,rec);imgData[it.d.id]=rec;imgURL[it.d.id]=URL.createObjectURL(new Blob([rec.buf],{type:rec.type}));imgTried[it.d.id]=true;
       fac.drawings.push(it.d);
     }
+    v28State(null); /*V28-UI*/
     S.facilities.push(fac);S.curF=fac.id;S.curD=fac.drawings[0]?fac.drawings[0].id:null;sel=null;undoStack=[];
     save();renderAll();requestAnimationFrame(fit);
     const total=fac.drawings.reduce((s,d)=>s+d.defects.length,0);
     toast(`${fac.drawings.length}개 층, 결함 ${total}개를 불러왔어요`+(missing?` (평면도 이미지 ${missing}개 없음)`:''));
     console.log(built.report.join('\n'));
-  }catch(err){console.error(err);toast('위치도를 읽지 못했어요: '+(err&&err.message||err));}
+  }catch(err){console.error(err);v28Fail(file.name,'위치도를 읽지 못했어요: '+(err&&err.message||err)); /*V28-UI*/}
 }
 /*IMPORT-END*/
 /* ---------- init ---------- */
@@ -2073,8 +2650,10 @@ async function importCadFile(file){
     S.prefs.penOnly=!!(st.prefs&&st.prefs.penOnly);
     S.prefs.diag=!!(st.prefs&&st.prefs.diag);
     S.prefs.free=!!(st.prefs&&st.prefs.free); /*V25-FREE*/
+    if(st.prefs&&Array.isArray(st.prefs.favs))S.prefs.favs=st.prefs.favs; /*V28-UI*/
     S.prefs.last=Object.assign(JSON.parse(JSON.stringify(DEFAULT_LAST)),st.prefs&&st.prefs.last||{});
   }catch(e){}}
+  if(!Array.isArray(S.prefs.favs))S.prefs.favs=DEFAULT_FAVS.map(x=>Object.assign({},x)); /*V28-UI*/
   if(!F()&&S.facilities.length)S.curF=S.facilities[0].id;
   if(!DB.db)setStatus('기기 저장 안 됨, 백업 파일로 보관하세요');else setStatus(S.facilities.length?'이 기기에 저장됨':'');
   renderAll();
@@ -2082,7 +2661,7 @@ async function importCadFile(file){
 })();
 })();
 </script>
-<script>/*IPAD-V27-PWA: 오프라인 캐시(sw.js). https(깃허브 Pages)에서만*/
+<script>/*IPAD-V31-PWA: 오프라인 캐시(sw.js). https(깃허브 Pages)에서만*/
 if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostname==='localhost')){
   navigator.serviceWorker.register('./sw.js').catch(function(){});
   if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(function(){});
