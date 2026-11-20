@@ -1379,7 +1379,7 @@ function v24ReadSheet(buf){
       const cols=[],seen={};hs.forEach((h,c)=>{if(!h)return;seen[h]=(seen[h]||0)+1;cols.push([c,seen[h]>1?h+'#'+seen[h]:h]);});
       const keyCol=cols.find(x=>x[1]==='구분')||cols.find(x=>/^(번호|No\.?)$/i.test(x[1]));
       if(!keyCol)continue;const rows=[];
-      for(let i=r+1;i<A.length;i++){const a=A[i]||[];const o={};for(const [c,k] of cols)o[k]=a[c]==null?null:a[c];
+      for(let i=r+1;i<A.length;i++){const a=A[i]||[];const o={};for(const [c,k] of cols)o[k]=a[c]==null?null:(typeof a[c]==='string'?a[c].replace(/_x000d_/gi,'').replace(/\r/g,''):a[c]); /*V32c: 칸 안 줄바꿈의 \r(엑셀 파일에는 _x000D_)을 뺀다. 내보낼 때 _x000d_ 글자로 나가던 문제*/
         if(o['층']==null&&o[keyCol[1]]==null)continue;o._no=o[keyCol[1]];rows.push(o);}
       return {sheet:sn,rows,cols:cols.map(x=>x[1])};}}
   return null;}
@@ -1514,7 +1514,10 @@ async function v32AddCurPhotos(files,quiet){const f=F();if(!f||!files.length)ret
   const map=new Map();
   for(const d of f.drawings){const seen=new Set();
     for(const def of [...d.defects].sort((a,b)=>a.no-b.no||(a.hideLabel?1:0)-(b.hideLabel?1:0))){if(seen.has(def.no))continue;seen.add(def.no);
-      for(const k of new Set([v29Code(d,def.no).toLowerCase(),v30Stem(def.xlPhoto)]))if(k&&!map.has(k))map.set(k,{d,def});}}
+      const k=v30Stem(def.xlPhoto);if(k&&!map.has(k))map.set(k,{d,def});}}
+  for(const d of f.drawings){const seen=new Set(); /*V32b: 엑셀의 파일이름이 먼저, 그다음 사진번호 규칙*/
+    for(const def of [...d.defects].sort((a,b)=>a.no-b.no||(a.hideLabel?1:0)-(b.hideLabel?1:0))){if(seen.has(def.no))continue;seen.add(def.no);
+      if(def.xlPhoto)continue;const k=v29Code(d,def.no).toLowerCase();if(!map.has(k))map.set(k,{d,def});}}
   const fs=[...files].filter(x=>/^image\//.test(x.type)||/\.(jpe?g|png|heic|webp)$/i.test(x.name)).sort((a,b)=>a.name.localeCompare(b.name,'en',{numeric:true}));
   let hit=0,dup=0,miss=0,full=false;const undone=new Set();
   for(const file of fs){const st=v30Stem(file.name),m=/^(.+?)_(\d+)$/.exec(st),t=map.get(st)||(m&&map.get(m[1]));
@@ -1740,6 +1743,7 @@ function v29FloorCode(name){const s=String(name||'').replace(/\s+/g,'');let m;
   if(/PIT|피트/i.test(s))return 'PIT';
   if((m=s.match(/(?:지붕|옥탑|옥상)층?(\d+)?/)))return 'RF'+(m[1]&&m[1]!=='1'?m[1]:'');
   if((m=s.match(/^RF(\d+)?$/i)))return 'RF'+(m[1]&&m[1]!=='1'?m[1]:'');
+  if((m=s.match(/(\d+)층\(M\)/i)))return m[1]+'MF'; /*V32b: 중층*/
   if((m=s.match(/(\d+)층/)))return m[1]+'F';
   if((m=s.match(/^(\d+)F$/i)))return m[1]+'F';
   return s.replace(/[\\/:*?"<>|]+/g,'_')||'X';}
@@ -2376,13 +2380,18 @@ function flatten(doc,list,tf,scale,depth,out,top){ /*V21-SRC: top = 모델 공�
 function importDxfDoc(doc){
   const out={items:[],forms:[]};flatten(doc,doc.ents,p=>p,1,0,out);
   const layerSet=new Set(IMP.layers);
-  const geoms=[],circles=[],texts=[],lines=[],images=[],hatches=[]; /*V12-HATCH: hatches = ANSI31 등 무늬 해치 범위*/
+  const geoms=[],circles=[],texts=[],lines=[],images=[],hatches=[];const vecs=[]; /*V32c-VECPLAN: 결함이 아닌 선·글자 = 선으로 그린 평면도*/ /*V12-HATCH: hatches = ANSI31 등 무늬 해치 범위*/
   const legends=[],notes=[]; /*V16-LEGEND·V16-NOTE: 범례 표본 글자, 결함 메모로 넣을 글자*/
   for(const {e,tf,scale,top} of out.items){const sh=top?[top]:[]; /*V21-SRC: 이 객체의 원본 핸들*/
     const layer=gv(e.g,8)==='0'&&e._blockLayer?e._blockLayer:gv(e.g,8);
     if(e.type==='IMAGE'){const def=doc.imgdefs[gv(e.g,340)];
       images.push({ins:tf([+gv(e.g,10),+gv(e.g,20)]),u:[+gv(e.g,11)*scale,+gv(e.g,21)*scale],v:[+gv(e.g,12)*scale,+gv(e.g,22)*scale],w:+gv(e.g,13),h:+gv(e.g,23),file:def?def.file:''});continue;}
-    if(!layerSet.has(layer))continue;
+    if(!layerSet.has(layer)){ /*V32c-VECPLAN*/
+      if(e.type==='LINE')vecs.push({pts:[tf([+gv(e.g,10)||0,+gv(e.g,20)||0]),tf([+gv(e.g,11)||0,+gv(e.g,21)||0])]});
+      else if(e.type==='LWPOLYLINE'){const xs=[],ys=[];for(const [k,v] of e.g){if(k===10)xs.push(+v);else if(k===20)ys.push(+v);}
+        const pts=xs.map((x,i)=>tf([x,ys[i]||0]));if(pts.length>1){if((+gv(e.g,70)||0)&1)pts.push(pts[0]);vecs.push({pts});}}
+      else if(e.type==='TEXT'){const s=String(gv(e.g,1)||'').trim();if(s)vecs.push({txt:s,p:tf([+gv(e.g,10)||0,+gv(e.g,20)||0]),h:(+gv(e.g,40)||1)*scale});}
+      continue;}
     const col=colorOf(e,doc,doc.layers[layer]);
     if(e.type==='LWPOLYLINE'){
       const pts=[],bul=[];let cur=null;
@@ -2476,6 +2485,21 @@ function importDxfDoc(doc){
     const rot=un[0]>0.5?0:un[1]<-0.5?1:un[0]<-0.5?2:3;
     return {name,file,minx,maxx,miny,maxy,mmpx:ul,nw:im.w,nh:im.h,rot,formH};
   });
+  for(const fi of formInfo){if(!fi.at[IMP.title])continue; /*V32c-VECPLAN*/
+    const inF=p=>p[0]>=fi.minx&&p[0]<=fi.maxx&&p[1]>=fi.miny&&p[1]<=fi.maxy;
+    const bs=bubbles.filter(b=>inF(b.c));if(!bs.length)continue;
+    const mine=floors.filter(f=>f.formH===fi.h);
+    const reach=b=>mine.some(f=>{const dx=Math.max(f.minx-b.c[0],0,b.c[0]-f.maxx),dy=Math.max(f.miny-b.c[1],0,b.c[1]-f.maxy);return Math.hypot(dx,dy)<=Math.max(f.maxx-f.minx,f.maxy-f.miny)*0.15;});
+    if(bs.filter(reach).length*2>=bs.length)continue;
+    const vec=vecs.filter(v=>v.pts?v.pts.every(inF):inF(v.p)),pts=[];
+    for(const v of vec){if(v.pts)pts.push(...v.pts);else pts.push(v.p);}
+    for(const b of bs)pts.push([b.c[0]-b.r*2,b.c[1]-b.r*2],[b.c[0]+b.r*2,b.c[1]+b.r*2]);
+    for(const g of geoms)if(g.pts.every(inF))pts.push(...g.pts);
+    let minx=Math.min(...pts.map(p=>p[0])),maxx=Math.max(...pts.map(p=>p[0])),miny=Math.min(...pts.map(p=>p[1])),maxy=Math.max(...pts.map(p=>p[1]));
+    const pad=0.04*Math.max(maxx-minx,maxy-miny)||1;minx-=pad;maxx+=pad;miny-=pad;maxy+=pad;
+    const mmpx=Math.max(maxx-minx,maxy-miny)/1600,nw=Math.max(1,Math.round((maxx-minx)/mmpx)),nh=Math.max(1,Math.round((maxy-miny)/mmpx));
+    for(const f of mine)floors.splice(floors.indexOf(f),1);
+    floors.push({name:fi.at[IMP.title].replace('결함조사 위치도','').trim()||fi.at[IMP.title],file:'',minx,maxx,miny,maxy,mmpx,nw,nh,rot:0,formH:fi.h,vec});}
   const site=(formInfo.find(fi=>fi.at[IMP.site])||{at:{}}).at[IMP.site]||'';
   const nameKey=f=>{const m=f.name.match(/(지하)?\s*(\d+)\s*층/);return m?(m[1]?-(+m[2]):+m[2]):999;};
   floors.sort((a,b)=>{const p=floorRank(a.name),q=floorRank(b.name);return p[0]-q[0]||p[1]-q[1]||a.minx-b.minx;}); /*V19-FLOORORDER: 불러온 층 순서 (v18: 지하→1층→N층→그 밖)*/
@@ -2675,10 +2699,17 @@ function buildDrawings(res){
     /*V12-WIDTH-IMPORT: 원본의 영역 사각형 선 폭·지시선 폭(중앙값)을 그 도면의 CAD 선 폭으로 */
     const cadRectW=med(per[fi].g.filter(g=>g.type==='area').map(g=>g.w||0)),cadLeaderW=med(leaderW);
     if(cadRectW)dr.cadRectW=cadRectW;if(cadLeaderW)dr.cadLeaderW=cadLeaderW;
-    drawings.push({file:f.file,nw:f.nw,nh:f.nh,d:dr});
+    drawings.push({file:f.file,nw:f.nw,nh:f.nh,d:dr,vec:f.vec,box:[f.minx,f.miny,f.maxx,f.maxy]/*V32c-VECPLAN*/});
     report.push(`${f.name}: 결함 ${defs.length}개, 번호 ${bs.length}개 중 ${ub.size}개 연결, 같은 번호 추가 위치 ${defs.filter(x=>x.hideLabel).length}개, 새 번호 ${nNew}개, 메모 ${nNote}개`); /*V16: 보고 항목 추가*/
   });
   return {drawings,report,skipped};
+}
+async function v32cVecImage(it){ /*V32c-VECPLAN: 선·글자를 흰 바탕 그림으로*/
+  const [minx,miny,maxx,maxy]=it.box,cv=document.createElement('canvas');cv.width=it.nw;cv.height=it.nh;const c=cv.getContext('2d'),k=it.nw/(maxx-minx),P=p=>[(p[0]-minx)*k,(maxy-p[1])*k];
+  c.fillStyle='#FFFFFF';c.fillRect(0,0,cv.width,cv.height);c.strokeStyle='#333';c.lineWidth=Math.max(1,it.nw/1100);c.lineJoin='round';c.lineCap='round';c.fillStyle='#333';
+  for(const v of it.vec){if(v.pts){c.beginPath();v.pts.forEach((p,i)=>{const q=P(p);if(i)c.lineTo(q[0],q[1]);else c.moveTo(q[0],q[1]);});c.stroke();}
+    else{const q=P(v.p);c.font=`${Math.max(8,v.h*k)}px ${FRAME_FONT}`;c.fillText(v.txt,q[0],q[1]);}}
+  const b=await new Promise(r=>cv.toBlob(r,'image/png'));return {buf:await b.arrayBuffer(),type:'image/png'};
 }
 async function placeholderImage(w,h,file){
   const cv=document.createElement('canvas');cv.width=Math.max(200,w);cv.height=Math.max(150,h);const c=cv.getContext('2d');
@@ -2715,6 +2746,7 @@ async function importCadFile(file){
     for(const it of built.drawings){
       let rec=null;const en=imgs[(it.file||'').toLowerCase()];
       if(en){try{const bytes=await unzipEntry(en);rec={buf:bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),type:/png$/i.test(en.name)?'image/png':/gif$/i.test(en.name)?'image/gif':'image/jpeg'};}catch(_){rec=null;}}
+      if(!rec&&it.vec){rec=await v32cVecImage(it);if(it.d.src)it.d.src.noImg=true;} /*V32c-VECPLAN: 원본 DXF에 그림이 없는 층이라 원본 보존 zip에도 넣지 않음*/
       if(!rec){missing++;rec=await placeholderImage(it.nw,it.nh,it.file||'');if(it.d.src)it.d.src.noImg=true;} /*V21-SRC: 안내 그림은 원본 보존 zip에 넣지 않음*/
       if(it.d.src)it.d.src.title0=titleOf(it.d);
       await DB.set('img:'+it.d.id,rec);imgData[it.d.id]=rec;imgURL[it.d.id]=URL.createObjectURL(new Blob([rec.buf],{type:rec.type}));imgTried[it.d.id]=true;

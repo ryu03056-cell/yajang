@@ -1,6 +1,6 @@
 // 야장 결함 마킹 - 오프라인 캐시
 // 앱을 업데이트하면 아래 버전 이름을 바꿔 주세요 (예: yajang-v28-ipad-2)
-const CACHE = 'yajang-v32-ipad-1'; // IPAD-V32-PWA: v32 앱 (pwa/는 yajang-v10)
+const CACHE = 'yajang-v32-ipad-3'; // IPAD-V32-PWA: v32c 앱 (pwa/는 yajang-v10)
 const SHELL = [
   './', './index.html', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png',
   'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
