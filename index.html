@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>야장 결함 마킹</title><!--V28-UI-->
-<!--IPAD-V31-PWA: 홈 화면에 추가(앱처럼 설치)용. pwa/index.html 머리와 같음-->
+<!--IPAD-V32-PWA: 홈 화면에 추가(앱처럼 설치)용. pwa/index.html 머리와 같음-->
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-title" content="야장">
@@ -345,6 +345,8 @@ main{display:flex;position:relative;min-height:0}
         <button data-act="xlsximp">결함표 엑셀 불러오기<small>회사 결함리스트로 (층, 번호)마다 결함 정보를 채워요</small></button><!--V24-XLS-->
         <button data-act="xmlimp">전회 자료 불러오기 (XML)<small>회사 엑셀의 인수 파일로 결함 정보와 전회 보고서 내용을 채워요</small></button><!--V30-PREV-->
         <button data-act="prevphotoimp">전회 사진 불러오기<small>전회차현장사진 폴더의 사진을 파일 이름으로 결함에 붙여요</small></button><!--V30-PREV-->
+        <button data-act="curphotoimp">금회 사진 불러오기<small>현장사진 폴더의 사진을 사진번호(4F002.jpg)로 결함에 붙여요</small></button><!--V32-ROUND-->
+        <button data-act="roundimp">회차 폴더 불러오기 (PC)<small>건물 폴더를 통째로 골라 엑셀, 전회 사진, 금회 사진을 한 번에 넣어요</small></button><!--V32-ROUND-->
         <button data-act="restore">백업 불러오기<small>다른 기기에서 저장한 백업 파일</small></button>
         <button data-act="adddraw">도면 이미지 올리기<small>평면도·입면도 JPG, PNG</small></button>
         <hr><h5>시설물</h5>
@@ -352,6 +354,7 @@ main{display:flex;position:relative;min-height:0}
         <button data-act="renfac">시설물 이름 바꾸기</button>
         <button data-act="taskinfo">과업 정보<small>학교·건물, 점검 연도·시기·구분</small></button><!--V31-TASK-->
         <button data-act="precheck">내보내기 전 검사<small>빈칸, 번호, 확인하지 않은 전회 결함을 찾아요</small></button><!--V31-CHECK-->
+        <button data-act="nextround">다음 회차 시작<small>금회 사진을 전회 사진으로 넘기고 모든 결함을 다시 확인하게 해요</small></button><!--V32-ROUND-->
         <hr><h5>설정</h5>
         <button data-act="settings">도면 설정·도곽<small>도면 이름·종류·회전·축척, CAD 크기, 현장명·로고</small></button>
       </div>
@@ -465,9 +468,10 @@ main{display:flex;position:relative;min-height:0}
 <input type="file" id="fileLogo" accept="image/*" hidden>
 <input type="file" id="fileCad" accept=".zip,.dxf,application/zip" hidden>
 <input type="file" id="fileJson" accept=".json,application/json" hidden>
-<input type="file" id="fileXlsx" accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden><!--V24-XLS-->
+<input type="file" id="fileXlsx" accept=".xlsx,.xlsm,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel.sheet.macroEnabled.12" hidden><!--V32-ROUND: 회사 엑셀 .xlsm--><!--V24-XLS-->
 <input type="file" id="filePhotoCam" accept="image/*" capture="environment" hidden><input type="file" id="filePhoto" accept="image/*" multiple hidden><!--V29-PHOTO: 촬영 / 앨범-->
 <input type="file" id="fileXml" accept=".xml,text/xml,application/xml" hidden><input type="file" id="filePrevPhotos" accept="image/*" multiple hidden><!--V30-PREV-->
+<input type="file" id="fileCurPhotos" accept="image/*" multiple hidden><input type="file" id="fileRound" webkitdirectory multiple hidden><!--V32-ROUND-->
 
 <script>
 (()=>{
@@ -1165,6 +1169,10 @@ document.addEventListener('click',async e=>{
     case 'undo':undo();break;
     case 'fit':fit();break;
     case 'pen':S.prefs.penOnly=!S.prefs.penOnly;save();renderTool();toast(S.prefs.penOnly?'펜슬 전용: 손가락은 이동과 확대만 해요':'손가락으로도 그릴 수 있어요');break;
+    /*V32-ROUND*/
+    case 'curphotoimp':pop.hidden=true;$('#fileCurPhotos').click();break;
+    case 'roundimp':pop.hidden=true;$('#fileRound').click();break;
+    case 'nextround':pop.hidden=true;await v32NextRound();break;
     /*V31-TASK·V31-CHECK*/
     case 'taskinfo':{if(!f){toast('먼저 시설물을 만드세요');break;}const wasOut=!pop.hidden,wasChk=!$('#v31Pop').hidden;
       await v31TaskEdit(f);await new Promise(r_=>setTimeout(r_,0)); // 입력 창을 닫은 누름이 출력 화면까지 닫지 않게 한 박자 뒤에 다시 연다
@@ -1391,13 +1399,14 @@ async function v24ImportXls(file){
       for(const [k,val] of Object.entries(v)){v24Set(def,k,val);def.xlSet[k]=val;}
       if(isRepaired(def))gray=true;used.add(def.id);defsOk++;}
     if(gray)rep++;}
+  const v32n=v32AfterXl(f,res,used); /*V32-ROUND*/
   f.xlOrphans=orphans;f.xlFile={name:file.name,sheet:res.sheet,at:new Date().toISOString()};
   const noRow=[];for(const d of sortFloors(f.drawings)){const s=new Set();for(const x of [...d.defects].sort((a,b)=>a.no-b.no))if(!used.has(x.id)&&!s.has(x.no)){s.add(x.no);noRow.push(d.name+' '+x.no+'번');}}
   save();renderAll();
   console.log(`V24-XLS 채움 ${rowsOk}/${res.rows.length}행, 결함 ${defsOk}개, 보수완료 ${rep}행, 위치 없음 ${orphans.length}, 엑셀에 없는 번호 ${noRow.length}`);
   const li=a=>a.length?`<ul style="margin:4px 0 10px;padding-left:18px;max-height:140px;overflow:auto">${a.map(s=>`<li>${esc(s)}</li>`).join('')}</ul>`:'<p class="muted">없음</p>';
   await modal(`<h4>결함표를 불러왔어요</h4>
-    <p>엑셀 ${res.rows.length}행 중 <b>${rowsOk}행</b>을 채웠어요 (결함 ${defsOk}개, 보수완료 ${rep}행은 회색).</p>
+    <p>엑셀 ${res.rows.length}행 중 <b>${rowsOk}행</b>을 채웠어요 (결함 ${defsOk}개, 보수완료 ${rep}행은 회색).</p>${v32n?`<p>전회 사진 이름이 있는 결함 <b>${v32n}곳</b>에 전회차 칸을 만들었어요. 전회 사진 불러오기로 사진을 붙일 수 있어요.</p>`:''/*V32-ROUND*/}
     <p style="margin-bottom:0"><b>위치 없음 ${orphans.length}개</b> <span class="muted">엑셀에만 있고 도면에 번호가 없어요. 회사 양식으로 내보낼 때는 그대로 들어가요.</span></p>
     ${li(orphans.map(o=>`${o.floor} ${o.no}번 ${[o.raw['실'],o.raw['부재'],o.raw['유형및형상']].filter(Boolean).join(' ')}`))}
     <p style="margin-bottom:0"><b>엑셀에 없는 도면 번호 ${noRow.length}개</b></p>${li(noRow)}
@@ -1484,6 +1493,86 @@ async function exportPNG(){
 }
 function abToB64(buf){const u=new Uint8Array(buf);let s='';for(let i=0;i<u.length;i+=0x8000)s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(s);}
 function b64ToAb(b64){const s=atob(b64),u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u.buffer;}
+/*V32-ROUND-START: 지난 회차 폴더(회사 엑셀·현장사진·전회차현장사진)를 앱에 넣고, 다음 회차로 넘긴다.
+   새 항목: 결함의 xlPhoto(엑셀의 파일이름), 사진의 src(불러온 파일 이름). 쓰지 않으면 항목 자체가 없다. CAD·결함표 양식은 v31 그대로다. */
+const v32Wait=ms=>new Promise(r=>setTimeout(r,ms));
+/* 결함표 엑셀을 불러온 직후: 행의 '전회차 파일명'으로 전회차 칸(def.prev)을 만들고, '파일이름'을 xlPhoto로 남긴다.
+   엑셀은 이미 정리가 끝난 회차의 자료이므로 처리 상태가 없던 결함은 그대로 있음(보수완료는 보수 완료)으로 둔다. */
+function v32AfterXl(f,res,used){let n=0;const nm=v=>{const s=typeof v==='string'?v.trim():'';return s&&s!=='-'?s:'';};
+  for(const row of res.rows){const d=v24FindDrawing(f,row['층']),no=v24NumCell(row._no);if(!d||no==null)continue;
+    const pv=nm(row['전회차파일명']),cur=nm(row['파일이름']);
+    for(const def of d.defects){if(def.no!==no||!used.has(def.id))continue;
+      if(cur)def.xlPhoto=cur;else delete def.xlPhoto;
+      if(!pv)continue;
+      const old=def.prev&&v30Stem(def.prev.photo)===v30Stem(pv)?def.prev:null;
+      def.prev={photo:pv,no:pv.replace(/\.[A-Za-z0-9]+$/,'')};if(old&&old.pid)def.prev.pid=old.pid;
+      def.prev.state=old&&old.state?old.state:(isRepaired(def)?'rep':'same');n++;}}
+  return n;}
+/* 금회 사진: 파일 이름이 사진번호(층 기호 + 결함 번호, 4F002.jpg)나 엑셀의 파일이름과 같으면 그 번호의 결함에 붙인다. 4F002_2.jpg는 둘째 장 */
+async function v32AddCurPhotos(files,quiet){const f=F();if(!f||!files.length)return null;
+  if(!DB.db){toast('이 기기에 저장할 수 없어서 사진을 붙이지 못했어요');return null;}
+  const map=new Map();
+  for(const d of f.drawings){const seen=new Set();
+    for(const def of [...d.defects].sort((a,b)=>a.no-b.no||(a.hideLabel?1:0)-(b.hideLabel?1:0))){if(seen.has(def.no))continue;seen.add(def.no);
+      for(const k of new Set([v29Code(d,def.no).toLowerCase(),v30Stem(def.xlPhoto)]))if(k&&!map.has(k))map.set(k,{d,def});}}
+  const fs=[...files].filter(x=>/^image\//.test(x.type)||/\.(jpe?g|png|heic|webp)$/i.test(x.name)).sort((a,b)=>a.name.localeCompare(b.name,'en',{numeric:true}));
+  let hit=0,dup=0,miss=0,full=false;const undone=new Set();
+  for(const file of fs){const st=v30Stem(file.name),m=/^(.+?)_(\d+)$/.exec(st),t=map.get(st)||(m&&map.get(m[1]));
+    if(!t){miss++;continue;}
+    if((t.def.photos||[]).some(p=>p.src===file.name)){dup++;continue;}
+    try{const r=await v29ToJpeg(file,0),id=uid();
+      if(!await DB.set('photo:'+id,{buf:r.buf,type:'image/jpeg',w:r.w,h:r.h})){full=true;break;}
+      if(!undone.has(t.d.id)){pushUndo(t.d);undone.add(t.d.id);}
+      t.def.photos=(t.def.photos||[]).concat([{id,w:r.w,h:r.h,at:Date.now(),src:file.name}]);hit++;}catch(e){console.error(e);}}
+  save();renderPanel();
+  if(!quiet)toast(full?'저장 공간이 부족해요. 현장사진을 내보낸 뒤 다시 해 보세요':`금회 사진 ${hit}장을 결함에 붙였어요${dup?`. 이미 붙어 있는 사진 ${dup}장`:''}${miss?`. 맞는 결함이 없는 사진 ${miss}장`:''}`);
+  try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();}catch(e){}
+  return {hit,dup,miss,full};}
+/* 회차 폴더 통째로(PC): 건물 폴더 바로 아래의 회사 엑셀(이름이 가장 뒤인 것), 전회차현장사진, 현장사진을 차례로 넣는다. 도면은 먼저 있어야 한다 */
+async function v32ImportRound(files){const f=F();
+  if(!f||!f.drawings.length){toast('먼저 기존 위치도(DXF)나 도면을 불러오세요');return;}
+  const fs=[...files].map(x=>({x,p:(x.webkitRelativePath||x.name).split('/')}));
+  const xls=fs.filter(o=>o.p.length<=2&&/\.xls[xm]$/i.test(o.x.name)&&!/^~\$/.test(o.x.name)&&!o.x.name.includes('작성기록')).sort((a,b)=>a.x.name.localeCompare(b.x.name,'ko',{numeric:true})).pop();
+  const inDir=n=>fs.filter(o=>o.p.length>=2&&o.p[o.p.length-2]===n&&/\.(jpe?g|png)$/i.test(o.x.name)).map(o=>o.x);
+  const prevF=inDir('전회차현장사진'),curF=inDir('현장사진');
+  if(!xls&&!prevF.length&&!curF.length){toast('엑셀이나 현장사진 폴더를 찾지 못했어요. 건물 폴더(예: 관리동)를 고르세요');return;}
+  if(xls)await v24ImportXls(xls.x);
+  const hasPrev=f.drawings.some(d=>d.defects.some(x=>x.prev));
+  if(prevF.length&&hasPrev){await v30AddPrevPhotos(prevF);await v32Wait(50);}
+  const c=curF.length?await v32AddCurPhotos(curF,true):null;
+  let nP=0,nC=0,nD=0;for(const d of f.drawings)for(const x of d.defects){nD++;if(x.prev&&x.prev.pid)nP++;if((x.photos||[]).length)nC++;}
+  renderAll();
+  await modal(`<h4>회차 폴더를 불러왔어요</h4>
+    <p>${xls?`엑셀: <b>${esc(xls.x.name)}</b>`:'엑셀: 찾지 못했어요'}</p>
+    <p>전회 사진이 붙은 결함 <b>${nP}곳</b>, 금회 사진이 붙은 결함 <b>${nC}곳</b> (결함 ${nD}곳 중)${c&&c.miss?`. 맞는 결함이 없는 금회 사진 ${c.miss}장`:''}</p>
+    <p class="muted">결함을 누르면 결함 시트에 금회 사진과 전회 사진이 같이 보여요. 이 자료로 다음 점검을 하려면 파일·설정 메뉴의 '다음 회차 시작'을 누르세요.</p>
+    <div class="btnrow"><button class="btn primary" data-m="ok">확인</button></div>`);}
+/* 다음 회차 시작: 번호마다 금회 대표 사진을 전회 사진으로 넘기고, 금회 사진과 처리 상태를 비운다. 값(부재·유형·폭·수량)은 그대로 둔다.
+   넘기기 전에 백업 파일을 내려받는다(되돌리려면 그 백업을 불러온다). */
+function v32Advance(k){const o=Object.assign({},k);if(/^\d{4}$/.test(o.year||'')){if(o.half==='2'){o.year=String(+o.year+1);o.half='1';}else o.half='2';}return o;}
+async function v32NextRound(){const f=F();if(!f||!f.drawings.some(d=>d.defects.length)){toast('넘길 결함이 없어요');return;}
+  const base=Object.assign(v31TaskGuess(f),f.task||{}),next=v32Advance(base),lab=k=>k.year?`${k.year}년 ${k.half==='2'?'하반기':'상반기'}`:'다음 회차';
+  let nNo=0,nPh=0;for(const d of f.drawings){const s=new Set(d.defects.map(x=>x.no));nNo+=s.size;for(const no of s)if(v29PhotosOf(d,no).length)nPh++;}
+  const ok=await confirmBox('다음 회차 시작',`${lab(base)} 자료를 ${lab(next)} 점검용으로 넘겨요. 결함 번호 ${nNo}개 중 ${nPh}개는 금회 대표 사진이 전회 사진이 되고, 모든 결함이 '확인 전'(보라색)으로 돌아가요. 부재·유형·폭·수량은 그대로예요. 먼저 지금 상태의 백업 파일을 내려받아요.`,'백업 받고 넘기기');
+  if(!ok)return;
+  try{await exportBackup();}catch(e){console.error(e);toast('백업을 받지 못해서 넘기지 않았어요');return;}
+  await v32Wait(400);
+  for(const d of f.drawings){pushUndo(d);const by=new Map();
+    for(const def of [...d.defects].sort((a,b)=>a.no-b.no||(a.hideLabel?1:0)-(b.hideLabel?1:0))){if(!by.has(def.no))by.set(def.no,[]);by.get(def.no).push(def);}
+    for(const [no,defs] of by){const ph=v29PhotosOf(d,no)[0],code=v29Code(d,no);
+      for(const def of defs){const xl=Object.assign({},def.xl||{});for(const k of Object.keys(xl))if(/#\d+$/.test(k))delete xl[k]; // 엑셀의 전회차 칸은 전전회 값이라 비운다
+        xl['전회차파일명']=ph?code+'.jpg':'-';def.xl=xl;if(!def.xlSet)def.xlSet={};
+        def.prev=ph?{photo:code+'.jpg',no:code,pid:ph.id}:{photo:'',no:''};delete def.photos;delete def.xlPhoto;}}}
+  f.prev=Object.assign({},f.prev||{},{file:'앱에서 넘김',at:new Date().toISOString(),seq:base.year?base.year+'_'+(base.half==='2'?'2':'1'):((f.prev||{}).seq||''),from:'app'});
+  if(!f.prev.doc)f.prev.doc={};
+  f.task=next;sel=null;save();renderAll();
+  await modal(`<h4>${esc(lab(next))} 점검을 시작해요</h4>
+    <p>결함 번호 ${nNo}개가 전회 결함이 됐어요. 그중 <b>${nPh}개</b>에 전회 사진이 있어요.</p>
+    <p class="muted">현장에서 결함을 누르고 그대로 있음, 보수 완료, 못 찾음 중 하나를 누른 뒤 사진을 찍으세요. 되돌리려면 방금 받은 백업 파일을 불러오세요.</p>
+    <div class="btnrow"><button class="btn primary" data-m="ok">확인</button></div>`);}
+$('#fileCurPhotos').addEventListener('change',e=>{const fs=[...e.target.files];e.target.value='';v32AddCurPhotos(fs);});
+$('#fileRound').addEventListener('change',e=>{const fs=[...e.target.files];e.target.value='';v32ImportRound(fs);});
+/*V32-ROUND-END*/
 /*V31-START: 과업 정보(V31-TASK)와 내보내기 전 검사(V31-CHECK).
    시설물에 새 항목 task={school,building,region,year,half,kind}. 없으면 항목 자체가 없다(백업이 v30과 같음).
    검사는 자료를 바꾸지 않는다. CAD·결함표·그림 출력은 v30 그대로다. */
@@ -1629,7 +1718,7 @@ async function v30AddPrevPhotos(files){const f=F();if(!f||!files.length)return;
   const map=new Map(),exact=new Set();
   for(const d of f.drawings)for(const def of d.defects)if(def.prev){exact.add(String(def.prev.photo||'').trim().toLowerCase());
     for(const k of new Set([v30Stem(def.prev.photo),v30Stem(def.prev.no)]))if(k){if(!map.has(k))map.set(k,[]);map.get(k).push(def);}}
-  if(!map.size){toast('먼저 전회 자료(XML)를 불러오세요');return;}
+  if(!map.size){toast('먼저 전회 자료(XML)나 결함표 엑셀을 불러오세요');return;} /*V32-ROUND*/
   const fs=[...files].sort((a,b)=>(exact.has(b.name.toLowerCase())?1:0)-(exact.has(a.name.toLowerCase())?1:0)); // 확장자까지 같은 파일 먼저
   let hit=0,miss=0,full=false;const done=new Set();
   for(const file of fs){const k=v30Stem(file.name),defs=map.get(k);if(!defs){miss++;continue;}if(done.has(k))continue;
@@ -2661,7 +2750,7 @@ async function importCadFile(file){
 })();
 })();
 </script>
-<script>/*IPAD-V31-PWA: 오프라인 캐시(sw.js). https(깃허브 Pages)에서만*/
+<script>/*IPAD-V32-PWA: 오프라인 캐시(sw.js). https(깃허브 Pages)에서만*/
 if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostname==='localhost')){
   navigator.serviceWorker.register('./sw.js').catch(function(){});
   if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(function(){});
