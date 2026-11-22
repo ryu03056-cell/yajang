@@ -1,10 +1,10 @@
 // 야장 결함 마킹 - 오프라인 캐시
 // 앱을 업데이트하면 아래 버전 이름을 바꿔 주세요 (예: yajang-v28-ipad-2)
-const CACHE = 'yajang-v33-ipad-1'; // IPAD-V33-PWA: v33 앱 (pwa/는 yajang-v10)
+const CACHE = 'yajang-v34-ipad-1'; // IPAD-V34-PWA: v34 앱 (pwa/는 yajang-v10)
 const SHELL = [
   './', './index.html', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png',
   'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
-  'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap'
+  './PretendardVariable.woff2' // V34-TYPE: 글꼴을 앱과 같이 저장 (구글 글꼴 연결은 뺌)
 ];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => Promise.allSettled(SHELL.map(u => c.add(u)))).then(() => self.skipWaiting()));

@@ -11,9 +11,9 @@
 <meta name="apple-mobile-web-app-title" content="야장">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#1D4E7A">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>/*V34-TYPE: 프리텐다드(SIL OFL 1.1)를 앱 옆 파일에서 읽는다. 인터넷이 없어도 같은 글꼴*/
+@font-face{font-family:'Pretendard Variable';font-weight:45 920;font-style:normal;font-display:swap;src:url('./PretendardVariable.woff2') format('woff2-variations'),url('./PretendardVariable.woff2') format('woff2')}
+</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 :root{
@@ -38,7 +38,7 @@
 [hidden]{display:none!important}
 html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;height:100%;background:var(--bg);color:var(--ink);
-  font-family:'IBM Plex Sans KR',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  font-family:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',sans-serif; /*V34-TYPE*/
   font-size:15px;line-height:1.45;-webkit-user-select:none;user-select:none;overflow:hidden;
   -webkit-tap-highlight-color:transparent}
 input,textarea,select{font:inherit;color:inherit;-webkit-user-select:text;user-select:text}
@@ -89,7 +89,7 @@ main{display:grid;grid-template-columns:78px 1fr 340px;min-height:0}
 #world{position:absolute;left:0;top:0;transform-origin:0 0}
 #img{position:absolute;left:0;top:0;display:block;pointer-events:none;-webkit-user-drag:none;background:#fff}
 #ov{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
-#ov text{font-family:'IBM Plex Sans KR',-apple-system,sans-serif}
+#ov text{font-family:'Pretendard Variable',Pretendard,-apple-system,sans-serif;font-variant-numeric:tabular-nums} /*V34-TYPE*/
 #empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:24px}
 #empty .box{max-width:380px;background:var(--chrome);border-radius:14px;padding:28px 26px;border:1px solid var(--rule)}
 #empty h2{margin:0 0 6px;font-size:21px}
@@ -354,6 +354,7 @@ main{display:flex;position:relative;min-height:0}
         <button data-act="newfac">새 시설물</button>
         <button data-act="renfac">시설물 이름 바꾸기</button>
         <button data-act="taskinfo">과업 정보<small>학교·건물, 점검 연도·시기·구분</small></button><!--V31-TASK-->
+        <button data-act="v34open">체크리스트·안전등급<small>평가항목 18개의 의견과 등급을 넣으면 상태점수와 안전등급이 계산돼요</small></button><!--V34-DOC-->
         <button data-act="v33table">결함 표<small>모든 층의 결함을 한 표에서 보고 고쳐요. 검사에 걸린 칸을 표시해요</small></button><!--V33-TABLE-->
         <button data-act="precheck">내보내기 전 검사<small>빈칸, 번호, 확인하지 않은 전회 결함을 찾아요</small></button><!--V31-CHECK-->
         <button data-act="nextround">다음 회차 시작<small>금회 사진을 전회 사진으로 넘기고 모든 결함을 다시 확인하게 해요</small></button><!--V32-ROUND-->
@@ -479,7 +480,7 @@ body.v33sz #hint{display:none} /*크기 창이 열려 있는 동안 안내 띠�
 #v33Side .fl button:hover{background:var(--hover)}
 #v33Side .fl button[aria-current="true"]{font-weight:700;background:var(--hover);box-shadow:inset 3px 0 0 var(--accent)}
 #v33Side .fl button.add{color:var(--accent)}
-#v33Side .fl .n{margin-left:auto;font-size:12px;color:var(--muted);font-weight:400;white-space:nowrap}
+#v33Side .fl .n{margin-left:auto;font-size:13px;font-variant-numeric:tabular-nums;color:var(--muted);font-weight:400;white-space:nowrap}
 #v33Side .flt{flex:none;display:flex;gap:4px;padding:8px 8px 4px}
 #v33Side .flt button{flex:1;min-height:36px;border:1px solid var(--rule);border-radius:8px;background:transparent;font-size:13px;white-space:nowrap;padding:0 4px}
 #v33Side .flt button[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink);font-weight:700}
@@ -487,8 +488,8 @@ body.v33sz #hint{display:none} /*크기 창이 열려 있는 동안 안내 띠�
 #v33Side .list button{min-height:48px;gap:10px;border-bottom:1px solid var(--rule);border-radius:0;padding:5px 4px}
 #v33Side .list button[aria-current="true"]{background:var(--hover);box-shadow:inset 3px 0 0 var(--sel)}
 #v33Side .list .t b{font-size:14px}
-#v33Side .list .t span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.v33flag{flex:none;height:22px;border-radius:11px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;padding:0 7px;white-space:nowrap}
+#v33Side .list .t span{display:block;font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v33flag{flex:none;height:22px;border-radius:11px;font-size:13px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;padding:0 7px;white-space:nowrap}
 .v33flag.must{background:var(--ink);color:var(--chrome)}
 .v33flag.see{border:1px solid var(--muted);color:var(--muted)}
 #v33Side .ft{flex:none;display:flex;gap:6px;padding:8px;border-top:1px solid var(--rule)}
@@ -505,11 +506,11 @@ body.v33sz #hint{display:none} /*크기 창이 열려 있는 동안 안내 띠�
 .v33bar .tg[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink);font-weight:700}
 .v33bar .cnt{font-size:13px;color:var(--muted);white-space:nowrap}
 #v33Body{flex:1;overflow:auto;min-height:0}
-.v33t{border-collapse:separate;border-spacing:0;width:100%;font-size:14px}
+.v33t{border-collapse:separate;border-spacing:0;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
 .v33t th{position:sticky;top:0;z-index:2;background:var(--bg);text-align:left;font-weight:600;font-size:13px;color:var(--muted);padding:8px;border-bottom:1px solid var(--rule);white-space:nowrap}
 .v33t td{padding:2px 4px;border-bottom:1px solid var(--rule);vertical-align:middle;white-space:nowrap}
 .v33t td.tx{padding:6px 8px}
-.v33t td small{color:var(--muted);font-size:12px}
+.v33t td small{color:var(--muted);font-size:13px}
 .v33t input{width:100%;min-width:76px;height:36px;border:1px solid transparent;border-radius:6px;background:transparent;padding:0 6px}
 .v33t td[data-c="note"] input,.v33t td[data-c="remark"] input,.v33t td[data-c="name"] input{min-width:150px}
 .v33t input:hover{border-color:var(--rule)}
@@ -542,6 +543,44 @@ body.v33sz #hint{display:none} /*크기 창이 열려 있는 동안 안내 띠�
   <div class="v33bar" id="v33Bar"></div>
   <div id="v33Body"></div>
   <div class="ft"><span class="note"><span class="v33key must" aria-hidden="true"></span>고칠 것<span class="v33key see" aria-hidden="true"></span>확인할 것 · 칸에 마우스를 올리면 이유가 보여요. 번호를 누르면 도면의 그 결함으로 가요.</span><button class="btn" data-act="precheck">검사 보기</button><button class="btn primary" data-act="v33tclose">닫기</button></div>
+</div></div>
+<style>/*V34-DOC: 종이 모양 문서 화면. 종이는 화면 색 설정과 상관없이 흰 바탕에 검은 글씨*/
+#v34Pop{position:fixed;inset:0;z-index:41;background:rgba(15,20,25,.45);display:flex;align-items:stretch;justify-content:center;padding:16px}
+#v34Pop[hidden]{display:none}
+#v34Pop .dlg{width:min(1200px,100%);height:100%}
+#v34Body{flex:1;overflow:auto;min-height:0;padding:20px;background:var(--bg)}
+.v34paper{max-width:1080px;margin:0 auto;background:#fff;color:#111;border:1px solid #C9CCCA;border-radius:4px;padding:28px 28px 32px;box-shadow:0 2px 10px rgba(0,0,0,.08);font-size:15px;line-height:1.5}
+.v34paper h3{margin:0 0 2px;font-size:20px;font-weight:700;color:#111}
+.v34paper h4{margin:22px 0 8px;font-size:15px;font-weight:700;color:#111}
+.v34meta{margin:0 0 14px;font-size:13px;color:#555}
+.v34key{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;margin:0 0 12px;font-size:13px;color:#333}
+.v34key i{display:inline-block;width:16px;height:16px;vertical-align:-3px;margin-right:6px;border:1px solid #888;border-radius:3px}
+.v34key i.in{background:#EAF2FB}.v34key i.pv{background:#E9E3F7}.v34key i.au{background:#F0F0EE}
+.v34key button{margin-left:auto;min-height:40px;padding:0 14px;border:1px solid #6B4FBB;border-radius:8px;background:#fff;color:#4A3594;font-weight:600;font-size:14px}
+.v34scroll{overflow-x:auto}
+.v34t{width:100%;min-width:900px;border-collapse:collapse;table-layout:fixed}
+.v34t th,.v34t td{border:1px solid #333;padding:6px 8px;vertical-align:middle;text-align:left;font-weight:400;color:#111}
+.v34t thead th{background:#F0F0EE;font-weight:600;font-size:13px;text-align:center}
+.v34t th.grp{background:#F7F7F5;text-align:center;font-weight:600}
+.v34t td.in{background:#EAF2FB;padding:2px}
+.v34t td.in.pv{background:#E9E3F7}
+.v34t td.au{background:#F0F0EE;text-align:center;font-variant-numeric:tabular-nums;font-weight:600}
+.v34t td.au small{display:block;font-weight:400;font-size:13px;color:#555}
+.v34t td.fx{background:#F0F0EE;font-variant-numeric:tabular-nums;font-size:14px}
+.v34t input{width:100%;height:40px;border:1px solid transparent;border-radius:4px;background:transparent;color:#111;padding:0 6px;font-size:15px}
+.v34t textarea{display:block;width:100%;min-height:46px;border:1px solid transparent;border-radius:4px;background:transparent;color:#111;padding:4px 6px;font:inherit;font-size:15px;line-height:1.35;resize:none}
+.v34t input:focus,.v34t textarea:focus{border-color:#0A84D6;background:#fff;outline:0}
+.v34g{display:grid;grid-template-columns:repeat(6,1fr);gap:2px}
+.v34g button,.v34seg button{height:40px;border:1px solid #98A1A8;border-radius:4px;background:#fff;color:#111;font-size:15px;font-weight:600;padding:0}
+.v34g button[aria-pressed="true"],.v34seg button[aria-pressed="true"]{background:#111;color:#fff;border-color:#111}
+.v34t td.in.pv .v34g button[aria-pressed="true"],.v34t td.in.pv .v34seg button[aria-pressed="true"]{background:#6B4FBB;border-color:#6B4FBB}
+.v34seg{display:grid;grid-template-columns:1fr 1fr;gap:2px;max-width:200px}
+.v34big{font-size:20px;font-weight:700}
+</style>
+<div id="v34Pop" hidden><div class="dlg" role="dialog" aria-modal="true" aria-labelledby="v34T"><!--V34-DOC: 체크리스트 / 안전등급-->
+  <div class="hd"><h2 id="v34T">체크리스트 / 안전등급</h2><button class="x" data-act="v34close" aria-label="닫기">×</button></div>
+  <div id="v34Body"></div>
+  <div class="ft"><span class="note" id="v34Note"></span><button class="btn" data-act="v34copy">엑셀에 붙여 넣기용 복사</button><button class="btn primary" data-act="v34close">닫기</button></div>
 </div></div>
 <div id="v31Pop" hidden><div class="dlg" role="dialog" aria-modal="true" aria-labelledby="v31T"><!--V31-CHECK: 내보내기 전 검사-->
   <div class="hd"><h2 id="v31T">내보내기 전 검사</h2><button class="x" data-act="v31close" aria-label="닫기">×</button></div>
@@ -1473,7 +1512,7 @@ function v24ReadSheet(buf){
 async function v24ImportXls(file){
   const f=F();if(!f||!f.drawings.length){toast('먼저 도면을 불러오세요');return;}
   if(typeof XLSX==='undefined'){toast('엑셀 모듈을 불러오지 못했어요. 인터넷 연결을 확인하세요');return;}
-  let res;try{res=v24ReadSheet(new Uint8Array(await file.arrayBuffer()));}catch(e){console.error(e);toast('엑셀 파일을 읽지 못했어요');return;}
+  let res,v34buf;try{v34buf=new Uint8Array(await file.arrayBuffer());res=v24ReadSheet(v34buf);}catch(e){console.error(e);toast('엑셀 파일을 읽지 못했어요');return;}
   if(!res){toast("결함표 머리줄('층', '부재', '구분')을 찾지 못했어요");return;}
   for(const d of f.drawings)pushUndo(d);
   const orphans=[],used=new Set();let rowsOk=0,defsOk=0,rep=0;
@@ -1487,6 +1526,7 @@ async function v24ImportXls(file){
       if(isRepaired(def))gray=true;used.add(def.id);defsOk++;}
     if(gray)rep++;}
   const v32n=v32AfterXl(f,res,used); /*V32-ROUND*/
+  try{v34FromXl(f,v34buf);}catch(e){console.error(e);} /*V34-DOC*/
   f.xlOrphans=orphans;f.xlFile={name:file.name,sheet:res.sheet,at:new Date().toISOString()};
   const noRow=[];for(const d of sortFloors(f.drawings)){const s=new Set();for(const x of [...d.defects].sort((a,b)=>a.no-b.no))if(!used.has(x.id)&&!s.has(x.no)){s.add(x.no);noRow.push(d.name+' '+x.no+'번');}}
   save();renderAll();
@@ -1560,7 +1600,7 @@ function drawDefectsCanvas(c,d){
     if(def.hideLabel)continue;
     if(dd>r){c.strokeStyle='#5B6570';c.lineWidth=sw*0.55;c.beginPath();c.moveTo(an[0],an[1]);c.lineTo(lp[0]-(lp[0]-an[0])*r/dd,lp[1]-(lp[1]-an[1])*r/dd);c.stroke();c.strokeStyle=col;}
     c.lineWidth=sw;c.beginPath();c.arc(lp[0],lp[1],r,0,Math.PI*2);c.fillStyle='#fff';c.fill();c.stroke();
-    c.fillStyle=col;c.font=`700 ${L*0.82}px 'IBM Plex Sans KR',-apple-system,sans-serif`;c.textAlign='center';c.textBaseline='middle';
+    c.fillStyle=col;c.font=`700 ${L*0.82}px 'Pretendard Variable',Pretendard,-apple-system,sans-serif`/*V34-TYPE*/;c.textAlign='center';c.textBaseline='middle';
     c.fillText(String(def.no),lp[0],lp[1]+L*0.03);
   }
 }
@@ -1655,7 +1695,7 @@ async function v32NextRound(){const f=F();if(!f||!f.drawings.some(d=>d.defects.l
         xl['전회차파일명']=ph?code+'.jpg':'-';def.xl=xl;if(!def.xlSet)def.xlSet={};
         def.prev=ph?{photo:code+'.jpg',no:code,pid:ph.id}:{photo:'',no:''};delete def.photos;delete def.xlPhoto;}}}
   f.prev=Object.assign({},f.prev||{},{file:'앱에서 넘김',at:new Date().toISOString(),seq:base.year?base.year+'_'+(base.half==='2'?'2':'1'):((f.prev||{}).seq||''),from:'app'});
-  if(!f.prev.doc)f.prev.doc={};
+  if(!f.prev.doc)f.prev.doc={};v34Roll(f); /*V34-DOC*/
   f.task=next;sel=null;save();renderAll();
   await modal(`<h4>${esc(lab(next))} 점검을 시작해요</h4>
     <p>결함 번호 ${nNo}개가 전회 결함이 됐어요. 그중 <b>${nPh}개</b>에 전회 사진이 있어요.</p>
@@ -1721,6 +1761,11 @@ function v31Check(f){const must=[],see=[],G={},grp=(arr,k,t,h)=>G[k]||(arr.push(
     const max=Math.max(...byNo.keys()),gap=[];for(let i=1;i<max;i++)if(!byNo.has(i))gap.push(i);
     if(gap.length)W('gap','비어 있는 번호','결함을 지워서 번호가 건너뛰었어요. 목록의 위치순 번호 정리로 다시 매길 수 있어요.').items.push({did:d.id,lab:`${d.name}: ${gap.slice(0,12).join(', ')}${gap.length>12?` 외 ${gap.length-12}개`:''}번`});}
   if(!anyPhoto&&fls.some(d=>d.defects.length))W('photo0','사진을 붙인 결함이 없어요','결함표의 사진번호·파일이름 칸이 모두 빈칸으로 나가요.').items.push({lab:'사진 없음'});
+  {const ck=f.doc&&f.doc.ck; /*V34-DOC: 체크리스트를 만든 시설물만 본다*/
+    if(ck){ck.items.forEach((it,i)=>{if(it.pv)W('ckprev','체크리스트에 확인하지 않은 전회 값','보라색 칸은 전회 보고서 값이에요. 평가결과를 한 번 눌러 확인하거나 고치세요.').items.push({lab:(i+1)+'번',act:'v34open'});
+        else if(!it.gr)W('ckblank','체크리스트 평가결과가 빈 항목','해당 없는 항목은 - 를 누르세요.').items.push({lab:(i+1)+'번',act:'v34open'});});
+      if(ck.pvx)W('ckprev','체크리스트에 확인하지 않은 전회 값','보라색 칸은 전회 보고서 값이에요. 평가결과를 한 번 눌러 확인하거나 고치세요.').items.push({lab:'필요성·중대결함',act:'v34open'});
+      if(!ck.emg||!ck.msr)W('ckmeta','긴급점검·안전조치 필요성이 비어 있어요','체크리스트 아래 표에서 있음, 없음 중 하나를 누르세요.').items.push({lab:'체크리스트 열기',act:'v34open'});}}
   for(const o of f.xlOrphans||[])W('orphan','전회 자료에만 있고 도면에 없는 번호','위치도에 번호가 없어서 위치를 알 수 없어요.').items.push({lab:`${o.floor} ${o.no}번`});
   return {must,see};}
 function v31Count(c){const n=a=>a.reduce((s,g)=>s+g.items.length,0);return {must:n(c.must),see:n(c.see)};}
@@ -1728,7 +1773,7 @@ function v31Bar(f){if(!f)return '';const n=v31Count(v31Check(f)),lb=v31TaskLabel
   return `<div class="v31bar"><div class="tx"><b>${lb?esc(lb):'과업 정보가 없어요'}</b><small id="v31BarN"${n.must?' class="warn"':''}>${n.must||n.see?`검사: 고칠 것 ${n.must}건 · 확인할 것 ${n.see}건`:'검사: 걸린 것이 없어요'}</small></div><button class="btn" data-act="taskinfo">과업 정보</button><button class="btn" data-act="precheck">검사 보기</button></div>`;}
 function v31Open(){const f=F();if(!f)return;const c=v31Check(f),n=v31Count(c),name=new Map(f.drawings.map(d=>[d.id,d.name]));
   const chip=it=>it.def?`<button data-act="v31go" data-did="${it.did}" data-def="${it.def}" aria-label="${esc(name.get(it.did)||'')} ${esc(it.lab)}번으로 가기">${esc(it.lab)}</button>`
-    :it.did?`<button data-act="v31go" data-did="${it.did}">${esc(it.lab)}</button>`:it.lab==='과업 정보 넣기'?`<button data-act="taskinfo">${esc(it.lab)}</button>`:`<span>${esc(it.lab)}</span>`;
+    :it.did?`<button data-act="v31go" data-did="${it.did}">${esc(it.lab)}</button>`:it.act?`<button data-act="${it.act}">${esc(it.lab)}</button>`/*V34-DOC*/:it.lab==='과업 정보 넣기'?`<button data-act="taskinfo">${esc(it.lab)}</button>`:`<span>${esc(it.lab)}</span>`;
   const group=g=>{const fl=new Map(),rest=[];for(const it of g.items){if(it.def){if(!fl.has(it.did))fl.set(it.did,[]);fl.get(it.did).push(it);}else rest.push(it);}
     return `<div class="v31grp" data-v31k="${g.k}"><b>${esc(g.t)} · ${g.items.length}건</b>${g.h?`<small>${esc(g.h)}</small>`:''}
       ${[...fl].map(([did,its])=>`<div class="v31fl"><span>${esc(name.get(did)||'')}</span><div class="v31chips">${its.map(chip).join('')}</div></div>`).join('')}
@@ -1745,6 +1790,119 @@ function v31Go(did,defId){const f=F(),d=f&&f.drawings.find(x=>x.id===did);if(!d)
   requestAnimationFrame(()=>{fit();if(def)centerOn(anchorOf(def));});}
 document.addEventListener('click',e=>{const p=$('#v31Pop');if(p&&e.target===p)p.hidden=true;}); // 검사 화면 바깥(어두운 곳)을 누르면 닫힘
 /*V31-END*/
+/*V34-START: 문서 화면 1 = 체크리스트 / 안전등급 (V34-DOC).
+  시설물에 새 항목 doc={ck:{items:[{op,need,gr,pv?}×18], emg, msr, major, pvx?, src}}.
+    op 점검자 의견, need 보수필요 유무, gr 평가결과('a'~'e', '-' = 해당 없음, '' = 아직 안 넣음), pv = 전회 보고서에서 온 값이고 아직 확인 안 함(보라색)
+    emg 긴급점검·진단 필요성, msr 안전조치 필요성('있음'|'없음'|''), major 중대결함 등, pvx = 이 세 칸이 전회 값, src 'prev'|'xlsm'|'app'
+  체크리스트를 한 번도 열지 않은 시설물은 doc가 없다(백업이 v33과 같음). 점수와 등급은 저장하지 않고 늘 계산한다.
+  산식은 회사 엑셀 매크로 그대로: stonScore(a 10, b 8, c 5, d 2, e 0), stonScoreFacilities(빈 항목을 뺀 평균. 종합 = 주요 60 + 일반 20 + 부대 20,
+  일반·부대 중 하나가 없으면 주요 75 + 나머지 25, 둘 다 없으면 주요), stonGrade(9 이상 A, 7 이상 B, 5 이상 C, 3 이상 D, 그 아래 E), stonChangeGrade(등급 변경 문구)*/
+const V34_ITEMS=['1. 시설물 주변의 지반침하 또는 이로 인한 건물의 기울음, 균열 상태','2. 구조부재의 균열, 누수 상태','3. 구조부재의 변형(처짐, 기울음, 단면손실 등) 상태','4. 구조부재의 철근 부식, 노출 또는 콘크리트 박리·박락 상태',
+  '5. 철골부재의 접합부 상태 (볼트 풀림, 누락, 탈락, 용접불량)','6. 철골부재의변형 (기울음, 좌굴 등) 상태','7. 철골부재의 부식 또는 부재 미시공, 단면손실 상태','8. 옥상, 지붕 방수층의 손상 상태',
+  '9. 외부 마감재(외단열, 치장벽돌, 미장 등) 및 처마의 손상 상태','10. 내부 마감재 손상 상태','11. 내부 칸막이벽(벽돌, 블록 등)의 손상 상태','12. 용도변경 또는 사용상 물품 적치 등으로 인한 과하중(컨테이너, 물탱크, 태양열 집열판, 공조시설 등) 상태',
+  '13. 옹벽, 석축, 담장의 배수 및 손상 상태','14. 비탈면(사면, 절개지)의 배수 및 손상 상태','15. 외부 난간 및 파라펫 설치 및 손상 상태','16. 내부 난간 설치 및 손상 상태','17. 환기구의 손상 상태(덮개 설치 유무 포함)','18. 점검로 등 손상 상태'];
+const V34_GROUPS=[['주요시설',0,7],['일반시설',7,12],['부대시설',12,18]],V34_SCORE={a:10,b:8,c:5,d:2,e:0},V34_GR=['a','b','c','d','e','-'];
+const V34_NEEDS=['-','주의관찰','적절한 보수실시'];
+function v34Blank(){return {items:V34_ITEMS.map(()=>({op:'',need:'',gr:''})),emg:'',msr:'',major:''};}
+function v34Gr(v){const g=String(v==null?'':v).trim().toLowerCase();return /^[a-e]$/.test(g)?g:(g==='-'?'-':'');}
+function v34Prev(f){const c=(((f&&f.prev||{}).doc||{}).inspectionResult||{}).checklists;if(!c||typeof c!=='object')return null; // 전회 보고서의 체크리스트 (v30이 보관한 XML 묶음)
+  const s=v=>typeof v==='string'?v:'',it=v30Arr(c.checklist).map(x=>({op:s(x&&x.inspectorOpinion),need:s(x&&x.repairNecessity),gr:v34Gr(x&&x.evaluationResult)}));
+  if(!it.length&&!s(c.safetyGrade))return null;
+  return {items:it,grade:s(c.safetyGrade).toUpperCase(),emg:s(c.emergencyInspection),msr:s(c.safetyMeasure),major:s(c.majorDefect)};}
+function v34Ck(f,make){if(!f)return null;if(f.doc&&f.doc.ck)return f.doc.ck;if(!make)return null; // 금회 체크리스트. 없으면 전회 값으로 채워 만든다(전회에서 온 칸은 pv)
+  const p=v34Prev(f),ck=v34Blank();
+  if(p){ck.items.forEach((it,i)=>{const q=p.items[i];if(q&&(q.op||q.need||q.gr)){it.op=q.op;it.need=q.need;it.gr=q.gr;it.pv=true;}});
+    ck.emg=p.emg;ck.msr=p.msr;ck.major=p.major;if(p.emg||p.msr||p.major)ck.pvx=true;ck.src='prev';}
+  f.doc=f.doc||{};f.doc.ck=ck;return ck;}
+function v34Calc(ck){const sc=ck.items.map(it=>it.gr in V34_SCORE?V34_SCORE[it.gr]:null),f2=v=>v.toFixed(2);
+  const g=V34_GROUPS.map(([n,a,b])=>{const v=sc.slice(a,b).filter(x=>x!=null),avg=v.length?v.reduce((s,x)=>s+x,0)/v.length:null;return {n,avg,fx:v.length?`(${v.join('+')})/${v.length} = ${f2(avg)}`:''};});
+  const m=g[0].avg,ge=g[1].avg,an=g[2].avg;let tot=null,fx='';
+  if(m==null)fx='주요시설 평가결과를 넣으세요';
+  else if(ge==null&&an==null){tot=m;fx=`(${f2(m)}x100)/100 = ${f2(tot)}`;}
+  else if(ge==null){tot=m*0.75+an*0.25;fx=`{(${f2(m)}x75)+(${f2(an)}x25)}/100 = ${f2(tot)}`;}
+  else if(an==null){tot=m*0.75+ge*0.25;fx=`{(${f2(m)}x75)+(${f2(ge)}x25)}/100 = ${f2(tot)}`;}
+  else{tot=m*0.6+ge*0.2+an*0.2;fx=`{(${f2(m)}x60)+(${f2(ge)}x20)+(${f2(an)}x20)}/100 = ${f2(tot)}`;}
+  return {sc,g,tot,fx,grade:tot==null?'':tot>=9?'A':tot>=7?'B':tot>=5?'C':tot>=3?'D':'E'};}
+function v34Change(g,last){if(!g||!last)return '';return g.toUpperCase()===last.toUpperCase()?'등급의 변동은 없는 것으로 확인되었다':`${last.toUpperCase()}등급에서 ${g.toUpperCase()}등급으로 안전등급이 변동 되었다`;}
+function v34Open(){const f=F();if(!f){toast('먼저 시설물을 만드세요');return;}
+  const had=!!(f.doc&&f.doc.ck),ck=v34Ck(f,true),p=v34Prev(f);if(!had)save();
+  const seg=k=>`<div class="v34seg" role="group">${['있음','없음'].map(v=>`<button data-ckx="${k}" data-v="${v}" aria-pressed="false">${v}</button>`).join('')}</div>`;
+  const dl=(id,arr)=>`<datalist id="${id}">${arr.map(v=>`<option value="${esc(v)}"></option>`).join('')}</datalist>`;
+  let rows='';V34_GROUPS.forEach(([n,a,b])=>{for(let i=a;i<b;i++)rows+=`<tr data-i="${i}">${i===a?`<th class="grp" rowspan="${b-a}" scope="rowgroup">${n}</th>`:''}<td>${esc(V34_ITEMS[i])}</td>
+      <td class="in"><textarea data-ck="op" rows="2" autocomplete="off" aria-label="${i+1}번 점검자 의견"></textarea></td><td class="in"><input data-ck="need" list="v34dlN" autocomplete="off" aria-label="${i+1}번 보수필요 유무"></td>
+      <td class="in"><div class="v34g" role="group" aria-label="${i+1}번 평가결과">${V34_GR.map(g=>`<button data-ckg="${g}" aria-pressed="false"${g==='-'?' aria-label="해당 없음" title="해당 없음"':''}>${g}</button>`).join('')}</div></td><td class="au" data-sc></td></tr>`;});
+  $('#v34Body').innerHTML=`<div class="v34paper"><h3>체크리스트 / 안전등급</h3>
+    <p class="v34meta">${esc(v31TaskLabel(f)||f.name)}${p?' · 전회 보고서 값으로 시작했어요':ck.src==='xlsm'?' · 회사 엑셀의 점검결과 시트에서 가져왔어요':''}</p>
+    <div class="v34key"><span><i class="in"></i>입력 칸</span><span><i class="pv"></i>전회 값 (아직 확인 안 함)</span><span><i class="au"></i>자동 계산</span><button data-act="v34all" id="v34All" hidden>전회 값 그대로 모두 확인</button></div>
+    <div class="v34scroll"><table class="v34t"><colgroup><col style="width:78px"><col><col style="width:27%"><col style="width:150px"><col style="width:258px"><col style="width:86px"></colgroup>
+      <thead><tr><th scope="col">구분</th><th scope="col">평가항목</th><th scope="col">점검자 의견</th><th scope="col">보수필요 유무</th><th scope="col">평가결과</th><th scope="col">상태점수</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <h4>안전등급</h4>
+    <div class="v34scroll"><table class="v34t"><colgroup><col style="width:220px"><col style="width:300px"><col></colgroup><tbody>
+      <tr><td>안전등급</td><td class="au"><span class="v34big" id="v34Grade"></span></td><td class="fx" id="v34Chg"></td></tr>
+      <tr><td>긴급점검·진단 필요성</td><td class="in" data-x>${seg('emg')}</td><td></td></tr>
+      <tr><td>안전조치 필요성</td><td class="in" data-x>${seg('msr')}</td><td></td></tr>
+      <tr><td>중대결함 등</td><td class="in" data-x colspan="2"><input data-ckx="major" autocomplete="off" aria-label="중대결함 등" placeholder="예: 중대 결함 없음"></td></tr>
+      ${V34_GROUPS.map(([n],k)=>`<tr><td>${n} 상태점수</td><td class="au" id="v34S${k}"></td><td class="fx" id="v34F${k}"></td></tr>`).join('')}
+      <tr><td>종합 상태점수</td><td class="au" id="v34ST"></td><td class="fx" id="v34FT"></td></tr></tbody></table></div>
+    ${dl('v34dlN',V34_NEEDS)}</div>`;
+  document.querySelectorAll('#v34Body tr[data-i]').forEach(tr=>{const it=ck.items[+tr.dataset.i];tr.querySelector('[data-ck="op"]').value=it.op||'';tr.querySelector('[data-ck="need"]').value=it.need||'';});
+  $('#v34Body [data-ckx="major"]').value=ck.major||'';
+  v34Sync();$('#v34Pop').hidden=false;}
+function v34Sync(){const f=F(),ck=v34Ck(f);if(!ck)return;const c=v34Calc(ck),p=v34Prev(f),f2=v=>v==null?'':v.toFixed(2);let npv=0; // 입력 칸은 건드리지 않고 표시만 고친다
+  document.querySelectorAll('#v34Body tr[data-i]').forEach(tr=>{const i=+tr.dataset.i,it=ck.items[i],q=p&&p.items[i];if(it.pv)npv++;
+    tr.querySelectorAll('td.in').forEach(td=>td.classList.toggle('pv',!!it.pv));
+    tr.querySelectorAll('[data-ckg]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.ckg===it.gr?'true':'false'));
+    tr.querySelector('[data-sc]').innerHTML=(c.sc[i]==null?(it.gr==='-'?'-':''):c.sc[i])+(it.pv?'<small>전회 값</small>':(q&&q.gr&&q.gr!==it.gr?`<small>전회 ${esc(q.gr)}</small>`:''));});
+  document.querySelectorAll('#v34Body td[data-x]').forEach(td=>td.classList.toggle('pv',!!ck.pvx));if(ck.pvx)npv++;
+  document.querySelectorAll('#v34Body [data-ckx][data-v]').forEach(b=>b.setAttribute('aria-pressed',ck[b.dataset.ckx]===b.dataset.v?'true':'false'));
+  $('#v34Grade').textContent=c.grade||'—';$('#v34Chg').textContent=p&&p.grade?`${v34Change(c.grade,p.grade)}${c.grade?' · ':''}전차 등급 ${p.grade}`:'';
+  c.g.forEach((g,k)=>{$('#v34S'+k).textContent=f2(g.avg);$('#v34F'+k).textContent=g.fx;});$('#v34ST').textContent=f2(c.tot);$('#v34FT').textContent=c.fx;
+  $('#v34All').hidden=!npv;const nb=ck.items.filter(it=>!it.pv&&!it.gr).length;
+  $('#v34Note').textContent=[npv?`확인하지 않은 전회 값 ${npv}곳`:'',nb?`평가결과 빈 항목 ${nb}개`:''].filter(Boolean).join(' · ')||'모든 항목을 넣었어요';}
+function v34Touch(ck){ck.src='app';save();v34Sync();}
+function v34Close(skip){$('#v34Pop').hidden=true;$('#v34Body').innerHTML='';if(!skip)renderAll();}
+async function v34Copy(){const ck=v34Ck(F());if(!ck)return;const cl=s=>String(s||'').replace(/[\t\r\n]+/g,' '),txt=ck.items.map(it=>[cl(it.op),cl(it.need),it.gr||''].join('\t')).join('\r\n');
+  let ok=false;try{await navigator.clipboard.writeText(txt);ok=true;}catch(e){try{const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();ok=document.execCommand('copy');ta.remove();}catch(_){}}
+  toast(ok?'복사했어요. 회사 엑셀 점검결과 시트의 D4 칸을 누르고 붙여 넣으세요 (18줄 × 3칸)':'복사하지 못했어요. 브라우저가 복사를 막았어요');}
+function v34Roll(f){const ck=f&&f.doc&&f.doc.ck;if(!ck)return;const c=v34Calc(ck); // 다음 회차 시작: 금회 체크리스트 → 전회 보고서 값. 금회 것은 지워서 다음에 열 때 전회 값(보라색)으로 다시 만든다
+  f.prev.doc=f.prev.doc||{};const ir=f.prev.doc.inspectionResult=Object.assign({},f.prev.doc.inspectionResult||{});
+  ir.checklists=Object.assign({},ir.checklists||{},{safetyGrade:c.grade,emergencyInspection:ck.emg||'',safetyMeasure:ck.msr||'',majorDefect:ck.major||'',checklist:ck.items.map(it=>({inspectorOpinion:it.op||'',repairNecessity:it.need||'',evaluationResult:it.gr||''}))});
+  delete f.doc.ck;if(!Object.keys(f.doc).length)delete f.doc;}
+function v34FromXl(f,u8){if(typeof XLSX==='undefined'||!f||!u8)return 0;if(f.doc&&f.doc.ck&&f.doc.ck.src==='app')return 0; // 회사 엑셀의 점검결과 시트(맨 위 표 = 그 회차 값). 앱에서 고친 체크리스트는 덮어쓰지 않는다
+  const sn=XLSX.read(u8,{type:'array',bookSheets:true}).SheetNames.find(n=>String(n).replace(/\s/g,'')==='점검결과');if(!sn)return 0;
+  const ws=XLSX.read(u8,{type:'array',sheets:sn}).Sheets[sn];if(!ws)return 0;
+  const A=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:null,blankrows:true}),key=v=>String(v==null?'':v).replace(/\s+/g,''),s=v=>v==null?'':String(v).replace(/_x000d_/gi,'').replace(/\r/g,'').trim();
+  let hr=-1,ci=null;for(let r=0;r<Math.min(A.length,12);r++){const h=(A[r]||[]).map(key),c={item:h.indexOf('평가항목'),op:h.indexOf('점검자의견'),need:h.indexOf('보수필요유무'),gr:h.indexOf('평가결과')};if(c.item>=0&&c.gr>=0){hr=r;ci=c;break;}}
+  if(hr<0)return 0;const ck=v34Blank();let n=0;
+  for(let r=hr+1;r<Math.min(A.length,hr+40);r++){const a=A[r]||[],m=s(a[ci.item]).match(/^(\d{1,2})\./);
+    if(m&&+m[1]>=1&&+m[1]<=18){const it=ck.items[+m[1]-1];it.op=ci.op>=0?s(a[ci.op]):'';it.need=ci.need>=0?s(a[ci.need]):'';it.gr=v34Gr(a[ci.gr]);n++;continue;}
+    const lab=key(a[ci.item]),val=ci.op>=0?s(a[ci.op]):'';
+    if(lab.startsWith('긴급점검'))ck.emg=val;else if(lab.startsWith('안전조치'))ck.msr=val;else if(lab.startsWith('중대결함'))ck.major=val;
+    else if(lab.startsWith('종합결론'))break;}
+  if(n<18)return 0;ck.src='xlsm';f.doc=f.doc||{};f.doc.ck=ck;return n;}
+document.addEventListener('click',e=>{
+  if(e.target===$('#v34Pop')){v34Close();return;}
+  const g=e.target.closest('[data-ckg]');
+  if(g){const ck=v34Ck(F()),tr=g.closest('tr');if(!ck||!tr)return;const it=ck.items[+tr.dataset.i],v=g.dataset.ckg;
+    if(it.pv&&it.gr===v)delete it.pv;else{it.gr=it.gr===v?'':v;delete it.pv;} // 보라색 칸에서 같은 등급을 누르면 '전회와 같음'으로 확인
+    v34Touch(ck);return;}
+  const x=e.target.closest('[data-ckx][data-v]');
+  if(x){const ck=v34Ck(F());if(!ck)return;const k=x.dataset.ckx;ck[k]=ck[k]===x.dataset.v&&!ck.pvx?'':x.dataset.v;delete ck.pvx;v34Touch(ck);return;}
+  const a=e.target.closest('[data-act]');if(!a)return;
+  switch(a.dataset.act){
+    case 'v34open':$('#v31Pop').hidden=true;if(!$('#v33Pop').hidden)v33Close(true);v34Open();break;
+    case 'v34close':v34Close();break;
+    case 'v34all':{const ck=v34Ck(F());if(!ck)break;ck.items.forEach(it=>{delete it.pv;});delete ck.pvx;v34Touch(ck);toast('전회 값을 그대로 확인했어요');break;}
+    case 'v34copy':v34Copy();break;
+  }});
+$('#v34Pop').addEventListener('input',e=>{const t=e.target,ck=v34Ck(F());if(!ck)return;
+  if(t.dataset.ck){const tr=t.closest('tr');if(!tr)return;const it=ck.items[+tr.dataset.i];it[t.dataset.ck]=t.value;delete it.pv;v34Touch(ck);}
+  else if(t.dataset.ckx==='major'){ck.major=t.value;delete ck.pvx;v34Touch(ck);}});
+$('#v34Pop').addEventListener('keydown',e=>{const t=e.target;if(e.key!=='Enter'||e.isComposing||!t.dataset||!t.dataset.ck)return;e.preventDefault();
+  let tr=t.closest('tr');tr=e.shiftKey?tr.previousElementSibling:tr.nextElementSibling;const nx=tr&&tr.querySelector(`[data-ck="${t.dataset.ck}"]`);if(nx){nx.focus();nx.select();}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#modal').hidden&&!$('#v34Pop').hidden)v34Close();});
+try{if(document.fonts&&document.fonts.load)document.fonts.load("700 20px 'Pretendard Variable'");}catch(e){} /*V34-TYPE: 그림 내보내기(캔버스)에서도 같은 글꼴이 쓰이게 미리 읽어 둔다*/
+/*V34-END*/
 /*V33-START: 넓은 화면(PC) 왼쪽 목록 창(V33-WIDE), 결함 표(V33-TABLE), 번호·점 크기(V33-SIZE), 번호 원만 있는 번호(V33-BUBBLE), 검사 항목 추가(V33-CHECK).
   도면에 새 항목 dotK(점 크기 배수, 없으면 1), szK(위치도를 불러온 뒤 크기를 바꾼 배수. 원본 보존 내보내기가 이 층을 다시 그릴지 정함).
   결함에 새 항목 noGeom(위치도에 번호 원만 있던 번호. 화면·CAD에 점을 그리지 않음), xlRepDiff(위치도는 회색인데 엑셀 비고에 보수완료가 없었음).
@@ -1777,7 +1935,7 @@ function v33Side(){const el=$('#v33Side');if(!el)return;const f=F(),d=D(),on=v33
     <div class="dl">${show.length?`<ul class="list">${show.map(x=>`<li><button data-pick="${x.id}" aria-current="${x.id===sel}"><span class="badge" style="--c:${v30Ink(x,x.color||HEX[x.type])}">${x.no}</span>
       <span class="t"><b>${esc([x.member,x.name].filter(Boolean).join(' ')||TYPE_LABEL[x.type])}</b><span>${esc([x.hideLabel?'추가 위치':'',x.noGeom?'번호 원만':qtyText(d,x),isRepaired(x)?'보수 완료':''].filter(Boolean).join(' · '))}</span></span>${flag(x)}</button></li>`).join('')}</ul>`
       :`<p class="muted" style="padding:10px 4px">${d?(defs.length?'여기에 해당하는 결함이 없어요.':'이 층에는 아직 결함이 없어요.'):'도면이 없어요.'}</p>`}</div>
-    <div class="ft"><button class="btn" data-act="v33table">결함 표</button><button class="btn" data-act="v33size">번호·점 크기</button></div>`;
+    <div class="ft"><button class="btn" data-act="v33table">결함 표</button><button class="btn" data-act="v34open">체크리스트</button><button class="btn" data-act="v33size">번호 크기</button></div>`;
   const dl=el.querySelector('.dl');dl.scrollTop=top;
   if(sel&&V33.last!==sel){const b=dl.querySelector('[aria-current="true"]');if(b&&b.scrollIntoView)b.scrollIntoView({block:'nearest'});}
   V33.last=sel;}
