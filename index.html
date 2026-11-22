@@ -329,13 +329,14 @@ main{display:flex;position:relative;min-height:0}
 <body>
 <div id="app">
   <header class="top"><!--V28-UI: 왼쪽 저장 상태, 가운데 동·층 알약, 오른쪽 목록·출력·파일·설정-->
-    <div class="l"><span class="save"><i aria-hidden="true"></i><span id="status"></span></span><span id="srcBadge" hidden title="불러온 원본 DXF를 바탕으로 결함만 바꿔 내보내요">원본 보존</span><!--V21-SRC--></div>
+    <div class="l"><button class="tbtn" id="v33SideBtn" data-act="v33side" aria-pressed="false" title="왼쪽 층·결함 창 열고 닫기">층·결함 창</button><!--V33-WIDE--><span class="save"><i aria-hidden="true"></i><span id="status"></span></span><span id="srcBadge" hidden title="불러온 원본 DXF를 바탕으로 결함만 바꿔 내보내요">원본 보존</span><!--V21-SRC--></div>
     <div class="c">
       <button class="pill" data-act="floorpop" aria-expanded="false" aria-haspopup="true" aria-label="동·층 고르기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="1"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></svg><span class="pf" id="pillFac">시설물 없음</span><span class="sep"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 4l9 5-9 5-9-5z"/><path d="M3 14l9 5 9-5"/></svg><b id="pillFl">도면 없음</b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg></button>
       <div class="fpop" id="floorPop" hidden><section><h5>동 (시설물)</h5><div id="facList"></div></section><section><h5>층</h5><div id="flList"></div></section></div>
       <select id="facSel" aria-label="시설물 선택" hidden></select>
     </div>
     <div class="r">
+      <button class="tbtn" id="v33TableBtn" data-act="v33table" aria-haspopup="dialog">결함 표</button><!--V33-TABLE-->
       <button class="tbtn" data-act="list" aria-expanded="false">목록</button>
       <button class="tbtn" data-act="export" aria-haspopup="dialog">출력</button>
       <button class="tbtn" data-act="menu" aria-expanded="false" aria-haspopup="true">파일·설정</button>
@@ -353,14 +354,17 @@ main{display:flex;position:relative;min-height:0}
         <button data-act="newfac">새 시설물</button>
         <button data-act="renfac">시설물 이름 바꾸기</button>
         <button data-act="taskinfo">과업 정보<small>학교·건물, 점검 연도·시기·구분</small></button><!--V31-TASK-->
+        <button data-act="v33table">결함 표<small>모든 층의 결함을 한 표에서 보고 고쳐요. 검사에 걸린 칸을 표시해요</small></button><!--V33-TABLE-->
         <button data-act="precheck">내보내기 전 검사<small>빈칸, 번호, 확인하지 않은 전회 결함을 찾아요</small></button><!--V31-CHECK-->
         <button data-act="nextround">다음 회차 시작<small>금회 사진을 전회 사진으로 넘기고 모든 결함을 다시 확인하게 해요</small></button><!--V32-ROUND-->
         <hr><h5>설정</h5>
         <button data-act="settings">도면 설정·도곽<small>도면 이름·종류·회전·축척, CAD 크기, 현장명·로고</small></button>
+        <button data-act="v33size">번호·점 크기<small>번호 원과 점 크기를 이 층만 또는 모든 층에 맞춰요</small></button><!--V33-SIZE-->
       </div>
     </div>
   </header>
   <main>
+    <aside id="v33Side" aria-label="층과 결함 목록"></aside><!--V33-WIDE-->
     <div id="stage">
       <div id="world" hidden>
         <img id="img" alt="" draggable="false">
@@ -398,6 +402,7 @@ main{display:flex;position:relative;min-height:0}
       <div id="hint"></div>
       <button id="scaleBadge" data-tool="scale" hidden title="눌러서 축척 지정"></button>
       <button class="fitbtn" id="fitBtn" data-act="fit" title="도면 전체 보기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>화면 맞춤</button>
+      <div id="v33Size" role="group" aria-label="번호·점 크기" hidden></div><!--V33-SIZE-->
       <nav id="tabs" aria-label="도면"></nav>
     </div>
     <aside id="panel" aria-label="결함 정보" hidden></aside>
@@ -456,6 +461,88 @@ main{display:flex;position:relative;min-height:0}
 #modal .card .field label{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}
 #modal .card select.in{appearance:auto}
 </style>
+<style>/*V33-WIDE·V33-TABLE·V33-SIZE*/
+#v33Side,#v33SideBtn,#v33TableBtn{display:none}
+@media (min-width:1100px){#v33TableBtn{display:inline-block}}
+@media (min-width:1200px) and (orientation:landscape){
+  #v33SideBtn{display:inline-block}
+  #v33SideBtn[aria-pressed="true"]{background:var(--ink);color:var(--chrome);border-color:var(--ink)}
+  body.v33side #v33Side{display:flex;flex-direction:column;width:300px;flex:none;min-height:0;background:var(--chrome);border-right:1px solid var(--rule)}
+  body.v33side #tabs{display:none} /*층은 왼쪽 목록 창에서 고름*/
+}
+body.v33sz #hint{display:none} /*크기 창이 열려 있는 동안 안내 띠를 가림*/
+#v33Side .sh{padding:10px 12px 8px;border-bottom:1px solid var(--rule)}
+#v33Side .sh b{display:block;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#v33Side .sh small{font-size:13px;color:var(--muted)}
+#v33Side .fl{flex:none;max-height:36%;overflow-y:auto;padding:6px;border-bottom:1px solid var(--rule)}
+#v33Side .fl button{display:flex;align-items:center;gap:8px;width:100%;min-height:40px;border:0;border-radius:8px;background:transparent;text-align:left;padding:4px 10px;font-size:15px}
+#v33Side .fl button:hover{background:var(--hover)}
+#v33Side .fl button[aria-current="true"]{font-weight:700;background:var(--hover);box-shadow:inset 3px 0 0 var(--accent)}
+#v33Side .fl button.add{color:var(--accent)}
+#v33Side .fl .n{margin-left:auto;font-size:12px;color:var(--muted);font-weight:400;white-space:nowrap}
+#v33Side .flt{flex:none;display:flex;gap:4px;padding:8px 8px 4px}
+#v33Side .flt button{flex:1;min-height:36px;border:1px solid var(--rule);border-radius:8px;background:transparent;font-size:13px;white-space:nowrap;padding:0 4px}
+#v33Side .flt button[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink);font-weight:700}
+#v33Side .dl{flex:1;overflow-y:auto;padding:0 8px 8px;min-height:0}
+#v33Side .list button{min-height:48px;gap:10px;border-bottom:1px solid var(--rule);border-radius:0;padding:5px 4px}
+#v33Side .list button[aria-current="true"]{background:var(--hover);box-shadow:inset 3px 0 0 var(--sel)}
+#v33Side .list .t b{font-size:14px}
+#v33Side .list .t span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v33flag{flex:none;height:22px;border-radius:11px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;padding:0 7px;white-space:nowrap}
+.v33flag.must{background:var(--ink);color:var(--chrome)}
+.v33flag.see{border:1px solid var(--muted);color:var(--muted)}
+#v33Side .ft{flex:none;display:flex;gap:6px;padding:8px;border-top:1px solid var(--rule)}
+#v33Side .ft .btn{flex:1;height:40px;padding:0 6px;font-size:14px;white-space:nowrap}
+#v33Pop{position:fixed;inset:0;z-index:41;background:rgba(15,20,25,.45);display:flex;align-items:stretch;justify-content:center;padding:16px}
+#v33Pop[hidden]{display:none}
+#v33Pop .dlg{width:min(1500px,100%);height:100%}
+.v33bar{flex:none;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--rule)}
+.v33bar select,.v33bar input{height:40px;border:1px solid var(--rule);border-radius:8px;background:var(--bg);padding:0 10px}
+.v33bar input{flex:1 1 180px;min-width:120px}
+.v33bar .seg{flex:none}
+.v33bar .seg button{height:38px;padding:0 12px;white-space:nowrap}
+.v33bar .tg{height:40px;padding:0 12px;border:1px solid var(--rule);border-radius:8px;background:transparent;white-space:nowrap}
+.v33bar .tg[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink);font-weight:700}
+.v33bar .cnt{font-size:13px;color:var(--muted);white-space:nowrap}
+#v33Body{flex:1;overflow:auto;min-height:0}
+.v33t{border-collapse:separate;border-spacing:0;width:100%;font-size:14px}
+.v33t th{position:sticky;top:0;z-index:2;background:var(--bg);text-align:left;font-weight:600;font-size:13px;color:var(--muted);padding:8px;border-bottom:1px solid var(--rule);white-space:nowrap}
+.v33t td{padding:2px 4px;border-bottom:1px solid var(--rule);vertical-align:middle;white-space:nowrap}
+.v33t td.tx{padding:6px 8px}
+.v33t td small{color:var(--muted);font-size:12px}
+.v33t input{width:100%;min-width:76px;height:36px;border:1px solid transparent;border-radius:6px;background:transparent;padding:0 6px}
+.v33t td[data-c="note"] input,.v33t td[data-c="remark"] input,.v33t td[data-c="name"] input{min-width:150px}
+.v33t input:hover{border-color:var(--rule)}
+.v33t input:focus{border-color:var(--sel);background:var(--chrome)}
+.v33t td.must{box-shadow:inset 0 0 0 2px var(--unrep)}
+.v33t td.see{box-shadow:inset 0 -3px 0 var(--star)}
+.v33t .go{min-width:40px;height:34px;padding:0 8px;border:2px solid var(--c);border-radius:17px;background:#fff;color:var(--c);font-weight:700;font-variant-numeric:tabular-nums}
+.v33t .st{height:34px;padding:0 10px;border-radius:8px;border:1px solid var(--rule);background:transparent;font-size:13px;font-weight:600}
+.v33t .st.unrep{color:var(--unrep);border-color:var(--unrep)}
+.v33t .st.rep{color:var(--rep-ink);border-color:var(--rep-ink)}
+.v33t tr.orph td{color:var(--muted)}
+.v33t tr.cur td{background:var(--hover)}
+.v33key{display:inline-block;width:14px;height:14px;vertical-align:-2px;margin:0 4px 0 10px;border-radius:3px}
+.v33key.must{box-shadow:inset 0 0 0 2px var(--unrep)}
+.v33key.see{box-shadow:inset 0 -3px 0 var(--star)}
+#v33Size{position:absolute;right:12px;top:12px;z-index:7;width:min(340px,calc(100% - 110px));background:var(--chrome);border:1px solid var(--rule);border-radius:12px;padding:12px 14px;box-shadow:0 12px 30px rgba(0,0,0,.18)}
+#v33Size[hidden]{display:none}
+#v33Size h4{margin:0 0 2px;font-size:17px}
+#v33Size small{display:block;font-size:13px;color:var(--muted)}
+#v33Size .lb{margin:10px 0 0}
+#v33Size .row{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;gap:6px;align-items:center}
+#v33Size .row button{height:44px;border:1px solid var(--rule);border-radius:8px;background:transparent;font-size:20px;font-weight:700}
+#v33Size .seg{margin-top:10px}
+#v33Size .seg button{height:40px}
+#v33Size label.ck{display:flex;align-items:center;gap:8px;min-height:40px;font-size:14px}
+#v33Size label.ck input{width:20px;height:20px}
+</style>
+<div id="v33Pop" hidden><div class="dlg" role="dialog" aria-modal="true" aria-labelledby="v33T"><!--V33-TABLE: 결함 표-->
+  <div class="hd"><h2 id="v33T">결함 표</h2><button class="x" data-act="v33tclose" aria-label="닫기">×</button></div>
+  <div class="v33bar" id="v33Bar"></div>
+  <div id="v33Body"></div>
+  <div class="ft"><span class="note"><span class="v33key must" aria-hidden="true"></span>고칠 것<span class="v33key see" aria-hidden="true"></span>확인할 것 · 칸에 마우스를 올리면 이유가 보여요. 번호를 누르면 도면의 그 결함으로 가요.</span><button class="btn" data-act="precheck">검사 보기</button><button class="btn primary" data-act="v33tclose">닫기</button></div>
+</div></div>
 <div id="v31Pop" hidden><div class="dlg" role="dialog" aria-modal="true" aria-labelledby="v31T"><!--V31-CHECK: 내보내기 전 검사-->
   <div class="hd"><h2 id="v31T">내보내기 전 검사</h2><button class="x" data-act="v31close" aria-label="닫기">×</button></div>
   <div class="bd" id="v31Body"></div>
@@ -785,8 +872,8 @@ function renderOverlay(){
       /*V13-HATCH: 영역은 항상 빗금 (hatchOff 무시)*/s+=`<path d="${hatchSegs(x,y,w,h,L*0.3).map(q=>`M${q[0].toFixed(1)},${q[1].toFixed(1)}L${q[2].toFixed(1)},${q[3].toFixed(1)}`).join('')}" stroke="${c}" stroke-width="${sw*0.45}" fill="none"/>`; // V12-HATCH
     }else{
       const p=def.pts[0];
-      if(on)s+=`<circle cx="${p[0]}" cy="${p[1]}" r="${L*0.72}" fill="none" stroke="var(--sel)" stroke-width="${sw*1.4}"/>`;
-      s+=`<circle cx="${p[0]}" cy="${p[1]}" r="${L*0.35}" fill="${c}"/>`;
+      if(on)s+=`<circle cx="${p[0]}" cy="${p[1]}" r="${Math.max(L*0.72,L*0.35*v33Dot(d)+L*0.3)}" fill="none" stroke="var(--sel)" stroke-width="${sw*1.4}"/>`;
+      if(!def.noGeom)s+=`<circle cx="${p[0]}" cy="${p[1]}" r="${L*0.35*v33Dot(d)}" fill="${c}"/>`; /*V33-SIZE·V33-BUBBLE*/
     }
     const an=anchorOf(def),lp=labelPos(def),r=L*0.75,dd=dist(an,lp);
     if(!def.hideLabel){
@@ -810,7 +897,7 @@ function renderDraft(){
     const p=g.p;
     s+=`<line x1="0" y1="${p[1]}" x2="${d.w}" y2="${p[1]}" stroke="var(--sel)" stroke-width="${sw*0.7}" stroke-dasharray="${L*0.6} ${L*0.4}"/>`;
     s+=`<line x1="${p[0]}" y1="0" x2="${p[0]}" y2="${d.h}" stroke="var(--sel)" stroke-width="${sw*0.7}" stroke-dasharray="${L*0.6} ${L*0.4}"/>`;
-    s+=`<circle cx="${p[0]}" cy="${p[1]}" r="${L*0.35}" fill="${HEX.point}"/>`;
+    s+=`<circle cx="${p[0]}" cy="${p[1]}" r="${L*0.35*v33Dot(d)}" fill="${HEX.point}"/>`; /*V33-SIZE*/
   }else if(g.kind==='line'&&g.seg){
     s+=`<line x1="${g.anchor[0]}" y1="${g.anchor[1]}" x2="${g.seg.end[0]}" y2="${g.seg.end[1]}" stroke="${HEX.line}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${sw*3} ${sw*2}"/>`;
   }else if(g.kind==='free'&&g.pts.length>1){ /*V25-FREE*/
@@ -848,7 +935,7 @@ function setTool(t){tool=t;scaleTmp=null;gesture=null;bendId=null;renderDraft();
 
 function chips(arr,cur,field){return arr.map(v=>`<button class="chip${v===cur?' on':''}" data-set="${field}" data-v="${esc(v)}">${esc(v)}</button>`).join('');}
 function renderPanel(){ /*V28-UI: 시트형. 결함을 고르면 결함 시트, '목록'을 누르면 목록·도면 설정 시트, 둘 다 아니면 닫힘(도면을 넓게)*/
-  const d=D(),def=d&&selDef();
+  const d=D(),def=d&&selDef();v33Side(); /*V33-WIDE*/
   panel.hidden=!(def||d&&V28.list);
   {const lb=document.querySelector('.tbtn[data-act="list"]');if(lb)lb.setAttribute('aria-expanded',d&&V28.list&&!def?'true':'false');}
   if(panel.hidden){panel.innerHTML='';delete panel.dataset.sel;return;}
@@ -947,7 +1034,7 @@ function hitTest(p){
   for(let i=d.defects.length-1;i>=0;i--){const def=d.defects[i];if(!def.hideLabel&&dist(p,labelPos(def))<=L*0.75+tol*0.5)return {def,part:'label'};}
   for(let i=d.defects.length-1;i>=0;i--){
     const def=d.defects[i];
-    if(def.type==='point'&&dist(p,def.pts[0])<=L*0.35+tol)return {def,part:'geom'};
+    if(def.type==='point'&&dist(p,def.pts[0])<=L*0.35*v33Dot(d)/*V33-SIZE*/+tol)return {def,part:'geom'};
     if(def.type==='line'){for(let j=1;j<def.pts.length;j++)if(segDist(p,def.pts[j-1],def.pts[j])<=tol)return {def,part:'geom'};}
     if(def.type==='area'){const [a,b]=def.pts;if(p[0]>=Math.min(a[0],b[0])-tol&&p[0]<=Math.max(a[0],b[0])+tol&&p[1]>=Math.min(a[1],b[1])-tol&&p[1]<=Math.max(a[1],b[1])+tol)return {def,part:'geom'};}
   }
@@ -994,7 +1081,7 @@ function startPinch(){
   gesture={kind:'pinch',d0:Math.hypot(a.x-b.x,a.y-b.y)||1,m0:[(a.x+b.x)/2,(a.y+b.y)/2],s0:view.s,tx0:view.tx,ty0:view.ty};
 }
 stage.addEventListener('pointerdown',e=>{
-  if(e.target.closest('#empty,#sState,#diagBtn,#freeBtn,.island,#lineOpt,#fitBtn,#scaleBadge,#tabs'))return; /*V28-UI: 도구 섬·화면 맞춤·축척·층 띠도 도면 위에 있음*/ /*V25-FREE: 도면 위 단추는 그리기·포인터 붙잡기에서 뺌(붙잡으면 click이 stage로 가서 단추가 안 눌림)*/
+  if(e.target.closest('#empty,#sState,#diagBtn,#freeBtn,.island,#lineOpt,#fitBtn,#scaleBadge,#tabs,#v33Size'))return; /*V28-UI: 도구 섬·화면 맞춤·축척·층 띠도 도면 위에 있음*/ /*V25-FREE: 도면 위 단추는 그리기·포인터 붙잡기에서 뺌(붙잡으면 click이 stage로 가서 단추가 안 눌림)*/
   const d=D();if(!d)return;
   try{stage.setPointerCapture(e.pointerId);}catch(_){}
   ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY,type:e.pointerType});
@@ -1165,7 +1252,7 @@ document.addEventListener('click',async e=>{
     case 'bend':{const def=selDef();if(!def)return;if(bendId===def.id){bendId=null;}else{setTool('line');sel=def.id;bendId=def.id;toast('화면 아무 곳에서나 끌면 끝점에서 90도로 꺾여 이어져요');}renderOverlay();renderPanel();break;}
     /*V13-HATCH: sethatch 처리 제거 (버튼 없음)*/
     case 'togglelabel':{const def=selDef();if(!def)return;def.hideLabel=!def.hideLabel;save();renderOverlay();renderPanel();break;}
-    case 'setcolor':{const def=selDef();if(!def)return;pushUndo(d);def.color=a.dataset.v;save();renderOverlay();renderPanel();break;}
+    case 'setcolor':{const def=selDef();if(!def)return;pushUndo(d);def.color=a.dataset.v;for(const x of d.defects)if(x.no===def.no)delete x.xlRepDiff; /*V33-CHECK: 눌러서 정한 것으로 봄*/save();renderOverlay();renderPanel();break;}
     case 'undo':undo();break;
     case 'fit':fit();break;
     case 'pen':S.prefs.penOnly=!S.prefs.penOnly;save();renderTool();toast(S.prefs.penOnly?'펜슬 전용: 손가락은 이동과 확대만 해요':'손가락으로도 그릴 수 있어요');break;
@@ -1468,7 +1555,7 @@ function drawDefectsCanvas(c,d){
     else if(def.type==='area'){const [a,b]=def.pts,x=Math.min(a[0],b[0]),y=Math.min(a[1],b[1]),w=Math.abs(a[0]-b[0]),h=Math.abs(a[1]-b[1]);
       c.globalAlpha=.16;c.fillRect(x,y,w,h);c.globalAlpha=1;c.strokeRect(x,y,w,h);
       /*V13-HATCH: 항상 빗금*/{c.lineWidth=sw*0.45;c.beginPath();for(const q of hatchSegs(x,y,w,h,L*0.3)){c.moveTo(q[0],q[1]);c.lineTo(q[2],q[3]);}c.stroke();c.lineWidth=sw;}} /*V12-HATCH*/
-    else{c.beginPath();c.arc(def.pts[0][0],def.pts[0][1],L*0.35,0,Math.PI*2);c.fill();}
+    else if(!def.noGeom){c.beginPath();c.arc(def.pts[0][0],def.pts[0][1],L*0.35*v33Dot(d),0,Math.PI*2);c.fill();} /*V33-SIZE·V33-BUBBLE*/
     const an=anchorOf(def),lp=labelPos(def),r=L*0.75,dd=dist(an,lp);
     if(def.hideLabel)continue;
     if(dd>r){c.strokeStyle='#5B6570';c.lineWidth=sw*0.55;c.beginPath();c.moveTo(an[0],an[1]);c.lineTo(lp[0]-(lp[0]-an[0])*r/dd,lp[1]-(lp[1]-an[1])*r/dd);c.stroke();c.strokeStyle=col;}
@@ -1503,6 +1590,7 @@ function v32AfterXl(f,res,used){let n=0;const nm=v=>{const s=typeof v==='string'
     const pv=nm(row['전회차파일명']),cur=nm(row['파일이름']);
     for(const def of d.defects){if(def.no!==no||!used.has(def.id))continue;
       if(cur)def.xlPhoto=cur;else delete def.xlPhoto;
+      {const rm=row['비고']==null?'':String(row['비고']);if(isRepaired(def)&&!rm.includes('보수완료'))def.xlRepDiff=true;else delete def.xlRepDiff;} /*V33-CHECK: 위치도 색과 엑셀 비고가 다름*/
       if(!pv)continue;
       const old=def.prev&&v30Stem(def.prev.photo)===v30Stem(pv)?def.prev:null;
       def.prev={photo:pv,no:pv.replace(/\.[A-Za-z0-9]+$/,'')};if(old&&old.pid)def.prev.pid=old.pid;
@@ -1627,7 +1715,9 @@ function v31Check(f){const must=[],see=[],G={},grp=(arr,k,t,h)=>G[k]||(arr.push(
     for(const [no,xs] of byNo){const vis=xs.filter(x=>!x.hideLabel);
       if(vis.length>1)for(const x of vis)M('dup','같은 번호의 번호 원이 둘 이상이에요','다른 결함이면 위치순 번호 정리를, 같은 결함의 추가 위치면 번호 원 숨기기를 누르세요.').items.push(lab(x));
       if(!vis.length)M('nolabel','번호 원이 하나도 없는 번호','이 번호는 위치도에 번호가 보이지 않아요. 한 곳은 번호 원을 표시하세요.').items.push(lab(xs[0]));
-      if(anyPhoto&&!v29PhotosOf(d,no).length)W('photo','사진이 없는 번호','결함표의 사진번호·파일이름 칸이 빈칸으로 나가요.').items.push(lab(vis[0]||xs[0]));}
+      if(anyPhoto&&!v29PhotosOf(d,no).length)W('photo','사진이 없는 번호','결함표의 사진번호·파일이름 칸이 빈칸으로 나가요.').items.push(lab(vis[0]||xs[0]));
+      /*V33-CHECK*/if(xs.every(x=>x.noGeom))W('nogeom','표시 없이 번호 원만 있는 번호','위치도에 번호 원만 있고 결함 표시(선·영역·점)가 없어요. 표시가 빠진 것인지 확인하세요.').items.push(lab(vis[0]||xs[0]));
+      if(xs.some(x=>x.xlRepDiff&&isRepaired(x)))W('repdiff','위치도는 회색인데 엑셀 비고에 보수완료가 없어요','그대로 내보내면 비고에 (보수완료)가 붙어요. 맞으면 보수 완료를, 아니면 미보수를 한 번 눌러 정하세요.').items.push(lab(vis[0]||xs[0]));}
     const max=Math.max(...byNo.keys()),gap=[];for(let i=1;i<max;i++)if(!byNo.has(i))gap.push(i);
     if(gap.length)W('gap','비어 있는 번호','결함을 지워서 번호가 건너뛰었어요. 목록의 위치순 번호 정리로 다시 매길 수 있어요.').items.push({did:d.id,lab:`${d.name}: ${gap.slice(0,12).join(', ')}${gap.length>12?` 외 ${gap.length-12}개`:''}번`});}
   if(!anyPhoto&&fls.some(d=>d.defects.length))W('photo0','사진을 붙인 결함이 없어요','결함표의 사진번호·파일이름 칸이 모두 빈칸으로 나가요.').items.push({lab:'사진 없음'});
@@ -1655,6 +1745,178 @@ function v31Go(did,defId){const f=F(),d=f&&f.drawings.find(x=>x.id===did);if(!d)
   requestAnimationFrame(()=>{fit();if(def)centerOn(anchorOf(def));});}
 document.addEventListener('click',e=>{const p=$('#v31Pop');if(p&&e.target===p)p.hidden=true;}); // 검사 화면 바깥(어두운 곳)을 누르면 닫힘
 /*V31-END*/
+/*V33-START: 넓은 화면(PC) 왼쪽 목록 창(V33-WIDE), 결함 표(V33-TABLE), 번호·점 크기(V33-SIZE), 번호 원만 있는 번호(V33-BUBBLE), 검사 항목 추가(V33-CHECK).
+  도면에 새 항목 dotK(점 크기 배수, 없으면 1), szK(위치도를 불러온 뒤 크기를 바꾼 배수. 원본 보존 내보내기가 이 층을 다시 그릴지 정함).
+  결함에 새 항목 noGeom(위치도에 번호 원만 있던 번호. 화면·CAD에 점을 그리지 않음), xlRepDiff(위치도는 회색인데 엑셀 비고에 보수완료가 없었음).
+  설정에 새 항목 side(false = 왼쪽 목록 창 접음, 이 기기에만 저장). 옛 백업에는 이 항목들이 없고, 없으면 v32c와 똑같이 동작한다*/
+const V33={sf:'all',last:null,t:{fl:'all',st:'all',bad:false,q:''},cnt:[0,0],size:null};
+const v33MQ=window.matchMedia('(min-width:1200px) and (orientation:landscape)');
+const V33_COL={member:'member',name:'name',scale:'qty',prev:'prev',miss:'prev',width:'width',photo:'photo',dup:'no',nolabel:'no',nogeom:'no',repdiff:'st'}; // 검사 묶음 → 표의 칸
+function v33Dot(d){const k=d?+d.dotK:0;return k>0?k:1;}
+function v33Resized(d,cur){return (d.szK>0&&Math.abs(d.szK-1)>1e-3)||(v33Dot(d)!==1&&cur.some(x=>x.type==='point'));}
+function v33SideOn(){return v33MQ.matches&&S.prefs.side!==false&&!!F();}
+function v33Flags(f){const m=new Map(),c=v31Check(f); // 결함 id → [{kind:'must'|'see', k:묶음, t:묶음 제목}]
+  for(const [kind,gs] of [['must',c.must],['see',c.see]])for(const g of gs)for(const it of g.items)if(it.def){if(!m.has(it.def))m.set(it.def,[]);m.get(it.def).push({kind,k:g.k,t:g.t});}
+  return {m,c};}
+function v33Sum(n){return n.must||n.see?`고칠 것 ${n.must}건 · 확인할 것 ${n.see}건`:'검사에 걸린 것이 없어요';}
+/* ----- V33-WIDE: 왼쪽 목록 창 ----- */
+function v33Side(){const el=$('#v33Side');if(!el)return;const f=F(),d=D(),on=v33SideOn();
+  document.body.classList.toggle('v33side',on);
+  {const b=$('#v33SideBtn');if(b)b.setAttribute('aria-pressed',on?'true':'false');}
+  if(!on){if(el.firstChild)el.innerHTML='';return;}
+  const {m,c}=v33Flags(f),n=v31Count(c),old=el.querySelector('.dl'),top=old?old.scrollTop:0;
+  const defs=d?[...d.defects].sort((a,b)=>a.no-b.no||(a.hideLabel?1:0)-(b.hideLabel?1:0)):[];
+  const show=defs.filter(x=>V33.sf==='all'||(V33.sf==='un'?!isRepaired(x):m.has(x.id)));
+  const flag=x=>{const fl=m.get(x.id);if(!fl)return '';const must=fl.some(q=>q.kind==='must');
+    return `<span class="v33flag ${must?'must':'see'}" title="${esc([...new Set(fl.map(q=>q.t))].join(', '))}">${must?'고침':'확인'}</span>`;};
+  const sb=(k,t)=>`<button data-v33sf="${k}" aria-pressed="${V33.sf===k}">${t}</button>`;
+  el.innerHTML=`<div class="sh"><b>${esc(f.name)}</b><small>${esc(v33Sum(n))}</small></div>
+    <div class="fl">${sortFloors(f.drawings).map(x=>{const un=x.defects.filter(y=>!isRepaired(y)).length;
+      return `<button data-draw="${x.id}" aria-current="${x.id===S.curD}">${esc(x.name)}<span class="n">미보수 ${un} · 전체 ${x.defects.length}</span></button>`;}).join('')}<button class="add" data-act="adddraw">＋ 층 추가</button></div>
+    <div class="flt" role="group" aria-label="결함 거르기">${sb('all','전체 '+defs.length)}${sb('un','미보수')}${sb('bad','검사에 걸림')}</div>
+    <div class="dl">${show.length?`<ul class="list">${show.map(x=>`<li><button data-pick="${x.id}" aria-current="${x.id===sel}"><span class="badge" style="--c:${v30Ink(x,x.color||HEX[x.type])}">${x.no}</span>
+      <span class="t"><b>${esc([x.member,x.name].filter(Boolean).join(' ')||TYPE_LABEL[x.type])}</b><span>${esc([x.hideLabel?'추가 위치':'',x.noGeom?'번호 원만':qtyText(d,x),isRepaired(x)?'보수 완료':''].filter(Boolean).join(' · '))}</span></span>${flag(x)}</button></li>`).join('')}</ul>`
+      :`<p class="muted" style="padding:10px 4px">${d?(defs.length?'여기에 해당하는 결함이 없어요.':'이 층에는 아직 결함이 없어요.'):'도면이 없어요.'}</p>`}</div>
+    <div class="ft"><button class="btn" data-act="v33table">결함 표</button><button class="btn" data-act="v33size">번호·점 크기</button></div>`;
+  const dl=el.querySelector('.dl');dl.scrollTop=top;
+  if(sel&&V33.last!==sel){const b=dl.querySelector('[aria-current="true"]');if(b&&b.scrollIntoView)b.scrollIntoView({block:'nearest'});}
+  V33.last=sel;}
+/* ----- V33-TABLE: 결함 표. 한 줄 = (층, 번호). 회사 결함표와 같은 묶음이고, 고치면 그 번호의 모든 위치에 들어간다(메모는 첫 위치만) ----- */
+function v33Rows(f){const rows=[];
+  for(const d of sortFloors(f.drawings)){const by=new Map();
+    for(const x of [...d.defects].sort((a,b)=>a.no-b.no||(a.hideLabel?1:0)-(b.hideLabel?1:0))){if(!by.has(x.no))by.set(x.no,[]);by.get(x.no).push(x);}
+    for(const [no,xs] of by)rows.push({d,no,xs,p:xs[0]});
+    for(const o of f.xlOrphans||[])if(v24FindDrawing(f,o.floor)===d)rows.push({d,orph:o});}
+  for(const o of f.xlOrphans||[])if(!v24FindDrawing(f,o.floor))rows.push({orph:o});
+  return rows;}
+function v33RowFlags(r,m){const o={};if(r.orph){o.no={cls:'see',why:['전회 자료에만 있고 도면에 없는 번호']};return o;}
+  for(const x of r.xs)for(const q of m.get(x.id)||[]){const col=V33_COL[q.k];if(!col)continue;const c=o[col]||(o[col]={cls:'see',why:[]});if(q.kind==='must')c.cls='must';if(!c.why.includes(q.t))c.why.push(q.t);}
+  return o;}
+function v33Open(){const f=F();if(!f){toast('먼저 시설물을 만드세요');return;}
+  const T=V33.t;if(T.fl!=='all'&&!f.drawings.some(d=>d.id===T.fl))T.fl='all';
+  const seg=(k,t)=>`<button data-v33ts="${k}" class="${T.st===k?'on':''}">${t}</button>`;
+  const dl=(id,arr)=>`<datalist id="${id}">${arr.map(v=>`<option value="${esc(v)}"></option>`).join('')}</datalist>`;
+  $('#v33Bar').innerHTML=`<select data-v33t="fl" aria-label="층 고르기"><option value="all">모든 층</option>${sortFloors(f.drawings).map(d=>`<option value="${d.id}"${T.fl===d.id?' selected':''}>${esc(d.name)}</option>`).join('')}</select>
+    <div class="seg" role="group" aria-label="보수 여부">${seg('all','전체')}${seg('un','미보수')}${seg('rep','보수 완료')}</div>
+    <button class="tg" data-v33tb="1" aria-pressed="${T.bad}">검사에 걸린 것만</button>
+    <input data-v33t="q" type="search" placeholder="찾기: 부재, 유형, 실, 비고, 메모" value="${esc(T.q)}" aria-label="찾기">
+    <span class="cnt" id="v33Cnt"></span>
+    ${dl('v33dlM',CO_MEMBERS)}${dl('v33dlN',[...new Set([].concat(CO_NAMES.line,CO_NAMES.point,CO_NAMES.area))])}${dl('v33dlR',CO_ROOMS)}${dl('v33dlK',CO_REMARKS)}`;
+  $('#v33T').textContent='결함 표 · '+f.name;
+  v33Body();$('#v33Pop').hidden=false;}
+function v33Body(){const f=F();if(!f)return;const T=V33.t,{m,c}=v33Flags(f),n=v31Count(c),rows=v33Rows(f),q=T.q.trim().toLowerCase();
+  const PV={same:'그대로 있음',rep:'보수 완료',miss:'못 찾음'};
+  const vis=rows.filter(r=>{const p=r.p,fl=v33RowFlags(r,m);
+    if(T.fl!=='all'&&!(r.d&&r.d.id===T.fl))return false;
+    if(T.st!=='all'&&(r.orph||(T.st==='rep')!==isRepaired(p)))return false;
+    if(T.bad&&!Object.keys(fl).length)return false;
+    if(q){const w=r.orph?r.orph.raw||{}:null;
+      const s=(r.orph?[r.orph.floor,r.orph.no,w['실'],w['부재'],w['유형및형상'],w['비고']]:[r.d.name,r.no,p.member,p.name,p.room,p.remark,p.note]).filter(v=>v!=null).join(' ').toLowerCase();if(!s.includes(q))return false;}
+    r.fl=fl;return true;});
+  const td=(r,col,inner,tx)=>{const x=r.fl[col];return `<td data-c="${col}"${x||tx?` class="${[tx?'tx':'',x?x.cls:''].filter(Boolean).join(' ')}"`:''}${x?` title="${esc(x.why.join(', '))}"`:''}>${inner}</td>`;};
+  const inp=(r,k,list,ph)=>`<input data-tf="${k}" value="${esc(r.p[k]==null?'':r.p[k])}"${list?` list="${list}"`:''}${k==='width'?' inputmode="decimal"':''} aria-label="${esc(r.d.name)} ${r.no}번 ${ph}" autocomplete="off">`;
+  $('#v33Body').innerHTML=vis.length?`<table class="v33t"><thead><tr><th>층</th><th>번호</th><th>보수 여부</th><th>부재</th><th>유형 및 형상</th><th>폭(mm)</th><th>수량</th><th>실</th><th>비고</th><th>사진</th><th>전회</th><th>메모</th></tr></thead><tbody>${vis.map(r=>{
+    if(r.orph){const o=r.orph,w=o.raw||{},tt=v=>esc(v==null?'':v);
+      return `<tr class="orph"><td class="tx">${tt(o.floor)}</td>${td(r,'no',`${tt(o.no)} <small>위치 없음</small>`,1)}<td class="tx">${String(w['비고']||'').includes('보수완료')?'보수 완료':'미보수'}</td><td class="tx">${tt(w['부재'])}</td><td class="tx">${tt(w['유형및형상'])}</td><td class="tx">${tt(w['폭(mm)'])}</td><td class="tx">${tt(w['길이(m)'])}</td><td class="tx">${tt(w['실'])}</td><td class="tx">${tt(w['비고'])}</td><td class="tx">—</td><td class="tx">${tt(w['전회차파일명']||'—')}</td><td class="tx"></td></tr>`;}
+    const d=r.d,p=r.p,rep=isRepaired(p),nph=v29PhotosOf(d,r.no).length,pv=r.xs.find(x=>x.prev);
+    return `<tr data-did="${d.id}" data-no="${r.no}"${r.xs.some(x=>x.id===sel)?' class="cur"':''}><td class="tx">${esc(d.name)}</td>
+      ${td(r,'no',`<button class="go" data-act="v33go" data-did="${d.id}" data-def="${p.id}" style="--c:${v30Ink(p,p.color||HEX[p.type])}" aria-label="${esc(d.name)} ${r.no}번 도면에서 보기">${r.no}</button>${r.xs.length>1?` <small>+${r.xs.length-1}곳</small>`:''}`)}
+      ${td(r,'st',`<button class="st ${rep?'rep':'unrep'}" data-act="v33st">${rep?'보수 완료':'미보수'}</button>`)}
+      ${td(r,'member',inp(r,'member','v33dlM','부재'))}${td(r,'name',inp(r,'name','v33dlN','유형 및 형상'))}${td(r,'width',inp(r,'width','','폭'))}
+      ${td(r,'qty',esc(p.noGeom?'번호 원만':qtyText(d,p)),1)}${td(r,'room',inp(r,'room','v33dlR','실'))}${td(r,'remark',inp(r,'remark','v33dlK','비고'))}
+      ${td(r,'photo',nph?`금회 ${nph}장`:'없음',1)}${td(r,'prev',pv?(pv.prev.state?PV[pv.prev.state]:'확인 안 함')+(pv.prev.pid?' · 사진':''):'—',1)}${td(r,'note',inp(r,'note','','메모'))}</tr>`;}).join('')}</tbody></table>`
+    :'<p class="muted" style="padding:24px">여기에 해당하는 결함이 없어요.</p>';
+  V33.cnt=[vis.length,rows.length];$('#v33Cnt').textContent=`${vis.length}줄 / 전체 ${rows.length}줄 · ${v33Sum(n)}`;}
+function v33Reflag(){const f=F();if(!f)return;const {m,c}=v33Flags(f),by=new Map(v33Rows(f).filter(r=>!r.orph).map(r=>[r.d.id+'|'+r.no,r])); // 표를 다시 그리지 않고 칸 표시만 고침(입력 중인 칸이 사라지지 않게)
+  document.querySelectorAll('#v33Body tr[data-did]').forEach(tr=>{const r=by.get(tr.dataset.did+'|'+tr.dataset.no);if(!r)return;const fl=v33RowFlags(r,m);
+    tr.querySelectorAll('td[data-c]').forEach(td=>{const x=fl[td.dataset.c];td.classList.toggle('must',!!x&&x.cls==='must');td.classList.toggle('see',!!x&&x.cls==='see');if(x)td.title=x.why.join(', ');else td.removeAttribute('title');});
+    const g=tr.querySelector('.go');if(g)g.style.setProperty('--c',v30Ink(r.p,r.p.color||HEX[r.p.type]));});
+  $('#v33Cnt').textContent=`${V33.cnt[0]}줄 / 전체 ${V33.cnt[1]}줄 · ${v33Sum(v31Count(c))}`;}
+function v33Close(skip){$('#v33Pop').hidden=true;$('#v33Body').innerHTML='';if(!skip)renderAll();}
+/* ----- V33-SIZE: 번호·점 크기. 표시 크기(번호 원·선·점)를 배수로 바꾼다. 도면의 번호·표시 크기(labelSize)와, 따로 적어 둔 CAD 크기(cadR·cadDonut·cadRectW·cadLeaderW)에 같은 배수를 곱한다.
+   점 크기는 그 위에 따로 곱하는 배수(dotK). 취소하면 창을 열 때 값으로 돌아간다 ----- */
+function v33PaperDia(f,d){const Sc=formScaleOf(f);if(!(Sc>0))return null;return 2*(d.cadR>0?d.cadR:0.75*d.labelSize*cadM(d,Sc))/Sc;}
+function v33SizeOpen(){const f=F(),d=D();if(!f||!d){toast('먼저 도면을 여세요');return;}
+  if(V33.size)v33SizeClose(true);
+  V33.size={k:1,dot:1,all:false,eq:false,base:new Map(f.drawings.map(x=>[x.id,{labelSize:x.labelSize,cadR:x.cadR,cadDonut:x.cadDonut,cadRectW:x.cadRectW,cadLeaderW:x.cadLeaderW,dotK:x.dotK,szK:x.szK}]))};
+  v33SizeDraw();}
+function v33SizeApply(){const z=V33.size,f=F(),cur=D();if(!z||!f||!cur)return;const Sc=formScaleOf(f);
+  const R0=x=>{const b=z.base.get(x.id);return b?(b.cadR>0?b.cadR:0.75*b.labelSize*cadM(x,Sc)):0;};
+  for(const x of f.drawings){const b=z.base.get(x.id);if(!b)continue;
+    for(const k of ['labelSize','cadR','cadDonut','cadRectW','cadLeaderW','dotK','szK']){if(b[k]==null)delete x[k];else x[k]=b[k];}
+    if(x!==cur&&!z.all)continue;
+    let k=z.k;if(x!==cur&&z.eq&&R0(x)>0&&R0(cur)>0)k=z.k*R0(cur)/R0(x);
+    if(Math.abs(k-1)>1e-9){x.labelSize=Math.round(b.labelSize*k*100)/100;for(const q of ['cadR','cadDonut','cadRectW','cadLeaderW'])if(b[q]>0)x[q]=Math.round(b[q]*k*1e4)/1e4;x.szK=Math.round((b.szK>0?b.szK:1)*k*1e6)/1e6;}
+    const dk=(b.dotK>0?b.dotK:1)*z.dot;if(Math.abs(dk-1)>1e-9)x.dotK=Math.round(dk*1e4)/1e4;else delete x.dotK;}
+  renderOverlay();}
+function v33SizeDraw(){const z=V33.size,el=$('#v33Size');document.body.classList.toggle('v33sz',!!z);if(!z){el.hidden=true;el.innerHTML='';return;}const f=F(),multi=f.drawings.length>1;
+  el.innerHTML=`<h4>번호·점 크기</h4><small id="v33SzInfo"></small>
+    <div class="lb">표시 크기 (번호 원·선·점)<span class="v" id="v33SzK"></span></div>
+    <div class="row"><button data-act="v33zm" aria-label="표시 작게">−</button><input type="range" min="50" max="250" step="5" value="${Math.round(z.k*100)}" data-v33z="k" aria-label="표시 크기"><button data-act="v33zp" aria-label="표시 크게">＋</button></div>
+    <div class="lb">점만 따로<span class="v" id="v33SzD"></span></div>
+    <div class="row"><button data-act="v33dm" aria-label="점 작게">−</button><input type="range" min="50" max="300" step="10" value="${Math.round(z.dot*100)}" data-v33z="dot" aria-label="점 크기"><button data-act="v33dp" aria-label="점 크게">＋</button></div>
+    ${multi?`<div class="seg" role="group" aria-label="적용할 층"><button data-act="v33zone" class="${z.all?'':'on'}">이 층만</button><button data-act="v33zall" class="${z.all?'on':''}">모든 층</button></div>
+    <label class="ck"><input type="checkbox" data-v33z="eq"${z.eq?' checked':''}${z.all?'':' disabled'}>모든 층의 번호 원을 이 층 크기에 맞추기</label>`:''}
+    <small>화면과 CAD 위치도에 함께 적용돼요. 취소하면 처음 크기로 돌아가요.</small>
+    <div class="btnrow" style="margin-top:10px"><button class="btn" data-act="v33zcancel">취소</button><button class="btn primary" data-act="v33zok">완료</button></div>`;
+  el.hidden=false;v33SizeText();}
+function v33SizeText(){const z=V33.size,f=F(),d=D();if(!z||!d)return;const dia=v33PaperDia(f,d);
+  $('#v33SzK').textContent=Math.round(z.k*100)+'%';$('#v33SzD').textContent=Math.round(z.dot*100)+'%';
+  $('#v33SzInfo').textContent=d.name+(dia?` · 도곽(가로 297mm) 기준 번호 원 지름 약 ${dia.toFixed(1)}mm`:'');}
+function v33SizeClose(keep){const z=V33.size;if(!z)return;
+  if(!keep){z.k=1;z.dot=1;v33SizeApply();}
+  const ch=keep&&(Math.abs(z.k-1)>1e-9||Math.abs(z.dot-1)>1e-9||(z.all&&z.eq));
+  V33.size=null;v33SizeDraw();
+  if(ch){save();renderPanel();toast(z.all?'모든 층의 표시 크기를 바꿨어요':'이 층의 표시 크기를 바꿨어요');}}
+function v33SizeStep(key,dv,lo,hi){const z=V33.size;if(!z)return;z[key]=Math.min(hi,Math.max(lo,Math.round((z[key]+dv)*100)/100));
+  const r=document.querySelector(`#v33Size [data-v33z="${key}"]`);if(r)r.value=Math.round(z[key]*100);v33SizeApply();v33SizeText();}
+/* ----- 누름·입력 ----- */
+document.addEventListener('click',e=>{ // 층·시설물을 바꾸거나 파일을 불러오기 전에 크기 창은 지금 값으로 닫는다 (기준 값이 그 층 것이라서)
+  if(V33.size&&e.target.closest('[data-fl],[data-draw],[data-fac],[data-act="v31go"],[data-act="v33go"],[data-act="restore"],[data-act="importcad"],[data-act="roundimp"],[data-act="deldraw"],[data-act="rotl"],[data-act="rotr"],[data-act="newfac"],[data-act="undo"]'))v33SizeClose(true);},true);
+document.addEventListener('click',e=>{
+  const sf=e.target.closest('[data-v33sf]');if(sf){V33.sf=sf.dataset.v33sf;v33Side();return;}
+  const ts=e.target.closest('[data-v33ts]');if(ts){V33.t.st=ts.dataset.v33ts;ts.parentNode.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===ts));v33Body();return;}
+  const tb=e.target.closest('[data-v33tb]');if(tb){V33.t.bad=!V33.t.bad;tb.setAttribute('aria-pressed',V33.t.bad?'true':'false');v33Body();return;}
+  if(e.target===$('#v33Pop')){v33Close();return;}
+  const a=e.target.closest('[data-act]');if(!a)return;const z=V33.size;
+  switch(a.dataset.act){
+    case 'v33side':S.prefs.side=!v33SideOn();save();v33Side();requestAnimationFrame(fit);break;
+    case 'v33table':v33Open();break;
+    case 'v33tclose':v33Close();break;
+    case 'precheck':if(!$('#v33Pop').hidden)v33Close(true);break; // 표에서 '검사 보기'를 누르면 표를 닫고 검사 화면으로 (검사 화면은 원래 처리에서 열림)
+    case 'v33go':v33Close(true);v31Go(a.dataset.did,a.dataset.def);break;
+    case 'v33st':{const tr=a.closest('tr'),f=F(),d=f&&tr&&f.drawings.find(x=>x.id===tr.dataset.did);if(!d)break;
+      const xs=d.defects.filter(x=>x.no===+tr.dataset.no).sort((p,q)=>(p.hideLabel?1:0)-(q.hideLabel?1:0));if(!xs.length)break;
+      const rep=!isRepaired(xs[0]);pushUndo(d);for(const x of xs){x.color=rep?'#808080':'#FF0000';delete x.xlRepDiff;}
+      save();a.className='st '+(rep?'rep':'unrep');a.textContent=rep?'보수 완료':'미보수';v33Reflag();break;}
+    case 'v33size':v33SizeOpen();break;
+    case 'v33zm':v33SizeStep('k',-0.1,0.5,2.5);break;
+    case 'v33zp':v33SizeStep('k',0.1,0.5,2.5);break;
+    case 'v33dm':v33SizeStep('dot',-0.1,0.5,3);break;
+    case 'v33dp':v33SizeStep('dot',0.1,0.5,3);break;
+    case 'v33zone':if(z){z.all=false;z.eq=false;v33SizeApply();v33SizeDraw();}break;
+    case 'v33zall':if(z){z.all=true;v33SizeApply();v33SizeDraw();}break;
+    case 'v33zcancel':v33SizeClose(false);break;
+    case 'v33zok':v33SizeClose(true);break;
+  }});
+$('#v33Size').addEventListener('input',e=>{const t=e.target,z=V33.size;if(!z)return;const k=t.dataset.v33z;
+  if(k==='k')z.k=(+t.value||100)/100;else if(k==='dot')z.dot=(+t.value||100)/100;else if(k==='eq')z.eq=t.checked;else return;
+  v33SizeApply();v33SizeText();});
+$('#v33Pop').addEventListener('input',e=>{const t=e.target;
+  if(t.dataset.v33t==='q'){V33.t.q=t.value;v33Body();return;}
+  const k=t.dataset.tf;if(!k)return;const tr=t.closest('tr'),f=F(),d=f&&tr&&f.drawings.find(x=>x.id===tr.dataset.did);if(!d)return;
+  const xs=d.defects.filter(x=>x.no===+tr.dataset.no).sort((p,q)=>(p.hideLabel?1:0)-(q.hideLabel?1:0));
+  xs.forEach((x,i)=>{if(k==='note'&&i)return;x[k]=t.value;});
+  save();v33Reflag();});
+$('#v33Pop').addEventListener('change',e=>{const t=e.target;if(t.dataset.v33t==='fl'){V33.t.fl=t.value;v33Body();}});
+$('#v33Pop').addEventListener('keydown',e=>{const t=e.target; // Enter = 같은 칸의 아랫줄, Shift+Enter = 윗줄 (엑셀처럼)
+  if(e.key!=='Enter'||e.isComposing||!t.dataset||!t.dataset.tf)return;e.preventDefault();
+  let tr=t.closest('tr');do{tr=e.shiftKey?tr.previousElementSibling:tr.nextElementSibling;}while(tr&&!tr.dataset.did);
+  const nx=tr&&tr.querySelector(`input[data-tf="${t.dataset.tf}"]`);if(nx){nx.focus();nx.select();}});
+document.addEventListener('keydown',e=>{if(e.key!=='Escape'||!$('#modal').hidden)return;
+  if(!$('#v33Pop').hidden)v33Close();else if(V33.size)v33SizeClose(false);});
+v33MQ.addEventListener('change',()=>{renderAll();requestAnimationFrame(fit);});
+/*V33-END*/
 /*V30-PREV-START: 전회 자료 불러오기와 현장 확인 (P1-5).
   회사 엑셀이 만든 인수 파일(XML, 뿌리 safetyInspectionReport)을 읽는다.
   시설물에 새 항목 prev = {file, at, seq, doc}. doc = XML 전체를 그대로 옮긴 값(이름: 글자 | 묶음 | 목록). 문서 화면(v33~)이 여기서 읽는다.
@@ -1994,11 +2256,11 @@ function buildCadMulti(items,site,logo,formS){ // V14: formS = 시설물 공통 
       for(const p of pts){g(E,10,N(p[0]));g(E,20,N(p[1]));if(bulge)g(E,42,'1.0');}};
     /*V11-SIZE: 도면별 CAD 크기(cadR 번호 원 반지름, cadDonut 도넛 크기, CAD 단위)가 있으면 그 값, 없으면 v10처럼 번호·표시 크기에서 계산.
       ANSI31 해치 배율은 회사 원본처럼 100 (축척 없는 픽셀 단위 도면은 v10 계산 유지) */
-    const L=d.labelSize,R=d.cadR>0?d.cadR:0.75*L*m,TH=0.9525*R,DD=d.cadDonut>0?d.cadDonut:0.504*R,LW=0.0249*R,RW=d.cadRectW>0?d.cadRectW:0.1244*R,HS=d.pxPerM?100:0.1244*R;
+    const L=d.labelSize,R=d.cadR>0?d.cadR:0.75*L*m,TH=0.9525*R,DD=(d.cadDonut>0?d.cadDonut:0.504*R)*v33Dot(d)/*V33-SIZE*/,LW=0.0249*R,RW=d.cadRectW>0?d.cadRectW:0.1244*R,HS=d.pxPerM?100:0.1244*R;
     const LDW=d.cadLeaderW>0?d.cadLeaderW:LW; /*V12-WIDTH: 영역 선 폭(RW)·지시선 폭(LDW)은 도면 설정값, 없으면 번호 크기 비례. 균열선 폭(LW)은 그대로*/
     for(const def of [...d.defects].sort((a,b)=>a.no-b.no)){
       const col=/^#80808/i.test(def.color||'')?8:null;
-      if(def.type==='point'){const c=WP(def.pts[0][0],def.pts[0][1]);lwp([[c[0]+DD/2,c[1]],[c[0]-DD/2,c[1]]],true,DD,col,true);}
+      if(def.type==='point'){if(!def.noGeom/*V33-BUBBLE*/){const c=WP(def.pts[0][0],def.pts[0][1]);lwp([[c[0]+DD/2,c[1]],[c[0]-DD/2,c[1]]],true,DD,col,true);}}
       else if(def.type==='line'){lwp(def.pts.map(p=>WP(p[0],p[1])),v26Closed(def.pts),LW,col,false);} /*V26-SHAPE*/
       else{const [a,b]=def.pts,p1=WP(Math.min(a[0],b[0]),Math.max(a[1],b[1])),p2=WP(Math.max(a[0],b[0]),Math.min(a[1],b[1]));
         const rc=[[p1[0],p1[1]],[p2[0],p1[1]],[p2[0],p2[1]],[p1[0],p2[1]]];
@@ -2120,11 +2382,11 @@ function v21Ents(E,H,d,list,WP,owner){
   const head=(type,col)=>{g(0,type);g(5,H());g(330,owner);g(100,'AcDbEntity');g(8,'결함');if(col!=null)g(62,col);};
   const lwp=(pts,closed,width,col,bulge)=>{head('LWPOLYLINE',col);g(100,'AcDbPolyline');g(90,pts.length);g(70,closed?1:0);g(43,N(width));
     for(const p of pts){g(10,N(p[0]));g(20,N(p[1]));if(bulge)g(42,'1.0');}};
-  const L=d.labelSize,R=d.cadR>0?d.cadR:0.75*L*m,TH=0.9525*R,DD=d.cadDonut>0?d.cadDonut:0.504*R,LW=0.0249*R,RW=d.cadRectW>0?d.cadRectW:0.1244*R,HS=100;
+  const L=d.labelSize,R=d.cadR>0?d.cadR:0.75*L*m,TH=0.9525*R,DD=(d.cadDonut>0?d.cadDonut:0.504*R)*v33Dot(d)/*V33-SIZE*/,LW=0.0249*R,RW=d.cadRectW>0?d.cadRectW:0.1244*R,HS=100;
   const LDW=d.cadLeaderW>0?d.cadLeaderW:LW;
   for(const def of [...list].sort((a,b)=>a.no-b.no)){
     const col=/^#80808/i.test(def.color||'')?8:null;
-    if(def.type==='point'){const c=WP(def.pts[0][0],def.pts[0][1]);lwp([[c[0]+DD/2,c[1]],[c[0]-DD/2,c[1]]],true,DD,col,true);}
+    if(def.type==='point'){if(!def.noGeom/*V33-BUBBLE*/){const c=WP(def.pts[0][0],def.pts[0][1]);lwp([[c[0]+DD/2,c[1]],[c[0]-DD/2,c[1]]],true,DD,col,true);}}
     else if(def.type==='line'){lwp(def.pts.map(p=>WP(p[0],p[1])),v26Closed(def.pts),LW,col,false);} /*V26-SHAPE*/
     else{const [a,b]=def.pts,p1=WP(Math.min(a[0],b[0]),Math.min(a[1],b[1])),p2=WP(Math.max(a[0],b[0]),Math.max(a[1],b[1]));
       const rc=[[p1[0],p1[1]],[p2[0],p1[1]],[p2[0],p2[1]],[p1[0],p2[1]]];
@@ -2179,7 +2441,7 @@ async function exportCadSrc(f,zipBase){
   for(const d of f.drawings)for(const [G,gr] of Object.entries(d.src.groups||{})){const nd={d,G:+G,h:gr.h,changed:false};nodes.push(nd);
     for(const x of gr.h){if(!nodeOfH.has(x))nodeOfH.set(x,[]);nodeOfH.get(x).push(nd);}
     const cur=d.defects.filter(x=>x.srcNo===+G);
-    if(v21Sig(cur)!==gr.sig||d.defects.some(x=>x.no===+G&&x.srcNo!==+G))nd.changed=true;}
+    if(v21Sig(cur)!==gr.sig||d.defects.some(x=>x.no===+G&&x.srcNo!==+G)||v33Resized(d,cur)/*V33-SIZE*/)nd.changed=true;}
   const nodeOf=(d,G)=>nodes.find(n=>n.d===d&&n.G===G);
   const del=new Set();let grow=true,skipIns=0;
   while(grow){grow=false;
@@ -2674,6 +2936,10 @@ function buildDrawings(res){
         if(defs.some((o,oi)=>oi!==di&&gDist(far,o._g)+bs[bi].r*0.3<dd))continue;best=bi;bd=dd;}}
       if(best<0)bs.forEach((b,bi)=>{const dd=gDist(b.c,d._g);if(best<0||dd<bd){best=bi;bd=dd;}}); /*V16-NEAREST: 번호 없는 결함은 거리·색 제한 없이 가장 가까운 번호의 같은 번호 추가 위치로*/
       if(best>=0){d.no=bs[best].no;d.hideLabel=true;ud.add(di);}});
+    /*V33-BUBBLE: 표시(선·영역·점)와 이어지지 않고 남은 번호 원 = 위치도에 번호 원만 있는 번호. 번호 원 자리에 표시 없는 점 결함(noGeom)을 둔다.
+      같은 번호의 결함이 이미 있으면 만들지 않는다. 화면과 CAD에는 번호 원만 그린다*/
+    bs.forEach((b,bi)=>{if(ub.has(bi)||defs.some(d=>d.no===b.no))return;
+      defs.push({id:uid(),no:b.no,type:'point',pts:[P(b.c)],lx:0,ly:0,member:'',name:'',width:'',qtyOverride:'',note:'',color:b.color===8?'#808080':'#FF0000',noGeom:true,lblMoved:true});ub.add(bi);});
     const rpx=bs.map(b=>b.r/mm).sort((a,b)=>a-b);
     const L=rpx.length?rpx[Math.floor(rpx.length/2)]/0.75:Math.max(10,Math.round(Math.max(w,h)/60));
     let nx=defs.reduce((m,d)=>Math.max(m,d.no),0),nNew=0,nNote=0;
@@ -2771,6 +3037,7 @@ async function importCadFile(file){
     S.prefs.penOnly=!!(st.prefs&&st.prefs.penOnly);
     S.prefs.diag=!!(st.prefs&&st.prefs.diag);
     S.prefs.free=!!(st.prefs&&st.prefs.free); /*V25-FREE*/
+    if(st.prefs&&st.prefs.side===false)S.prefs.side=false; /*V33-WIDE: 왼쪽 목록 창을 접어 둠*/
     if(st.prefs&&Array.isArray(st.prefs.favs))S.prefs.favs=st.prefs.favs; /*V28-UI*/
     S.prefs.last=Object.assign(JSON.parse(JSON.stringify(DEFAULT_LAST)),st.prefs&&st.prefs.last||{});
   }catch(e){}}
