@@ -2012,8 +2012,9 @@ function v31Go(did,defId){const f=F(),d=f&&f.drawings.find(x=>x.id===did);if(!d)
 document.addEventListener('click',e=>{const p=$('#v31Pop');if(p&&e.target===p)p.hidden=true;}); // 검사 화면 바깥(어두운 곳)을 누르면 닫힘
 /*V31-END*/
 /*V35-START: 화면 정리(V35-UI는 스타일만), 바로 저장(V35-SAVE), Esc(V35-ESC), 업데이트 안내(V35-NEWS), 파일 끌어다 놓기(V35-DROP). 저장 값은 바뀌지 않는다*/
-const V35={dirty:false},V35_VER='v38'; /*V38: 버전 표시*/
+const V35={dirty:false},V35_VER='v38b'; /*V38B: 버전 표시*/
 const V35_NEWS=[
+ {v:'v38b',d:'2026-11-23',items:['새 빈 양식에 맞췄어요: 기술자 10명, 요약표 7줄씩, 공정표 그림 칸. 전에 쓰던 양식도 그대로 돼요','새 양식을 쓰려면 보고서 출력 탭에서 "다른 양식 불러오기"로 한 번 다시 불러오세요']},
  {v:'v38',d:'2026-11-23',items:['문서 작성에 보고서 출력 탭이 생겼어요. 회사 빈 양식(_빈워드.docx)을 불러오면 워드 보고서 본문을 만들어요','양식은 이 기기에만 저장돼요. 한 번 불러오면 다음부터는 그대로 써요','회사 엑셀을 불러오면 용역명·점검기간·금액·기술자, 내진·치장벽돌·설계도서, 전차점검 내용도 같이 가져와요','문서용 사진(과업지시서, 위치도, 부위별·체크리스트 사진 등)은 폴더나 여러 장을 고르면 파일 이름으로 자리를 찾아요','값이 없는 자리는 [확인필요]로 남고, 만들기 전에 목록으로 보여 줘요']},
  {v:'v37',d:'2026-11-23',items:['문서 작성에 탭이 생겼어요: 체크리스트·안전등급, 실시결과 요약표, 종합결론','실시결과 요약표를 결함에서 자동으로 만들어요. 회사 엑셀 점검표에 붙여 넣을 수 있어요','종합결론 초안을 체크리스트 의견과 결함에서 만들어요. 줄마다 고칠 수 있고, 근거가 없는 자리는 [확인필요]로 남아요','고친 뒤에 결함이 바뀌면 주황색으로 알려 줘요','회사 엑셀을 불러오면 준공연도·용도·층수도 가져와요']},
  {v:'v36',d:'2026-11-23',items:['도면 아래에 작업 띠가 생겼어요: 불러오기, 전회 자료, 검사, 결함 표, 문서 작성, 출력. 메뉴에 들어가지 않아도 보여요','검사 단추에 걸린 건수가 보여요','위 막대의 결함 표와 출력은 작업 띠로 옮겼어요','파일·설정 메뉴는 시설물·설정으로 바뀌었고, 시설물과 설정만 남겼어요','축척 표시와 화면 맞춤은 작업 띠 바로 위로 올렸어요']},
@@ -2659,15 +2660,18 @@ async function v38Build(f,onStep){const tpl=await v38Tpl();if(!tpl)throw new Err
   { // T#2 기술자 명단, T#3 기술자 현황
     const tr=D.tech.rows.length?D.tech.rows:[{role:'책임기술자',name:v38need('기술자 명단'),qual:'',part:''}];
     grow(2,1,tr.length,2);tr.forEach((q,i)=>{const c=cells(rows(2)[2+i]),part=v38s(q.part).length>=10?v38s(q.part).replace(' 및 ',' 및\n'):v38s(q.part); /*긴 참여 현황은 '및' 뒤에서 줄을 바꾼다(완료 보고서와 같게)*/[q.role,q.name,q.qual,D.period2,part].forEach((v,k)=>v38SetCell(c[k],v));});drop(2,2+tr.length);
-    const n3=Math.min(tr.length,6);tr.slice(0,6).forEach((q,i)=>{const c=cells(rows(3)[17+i]);[q.role,q.name,D.period2,q.qual].forEach((v,k)=>v38SetCell(c[k],v));});drop(3,17+n3,23);}
+    const r3=rows(3),tx=r=>v38Text(r).replace(/\s/g,'');let h3=r3.findIndex(r=>tx(r).includes('기술등급')),e3=h3<0?-1:r3.findIndex((r,i)=>i>h3&&tx(r).startsWith('라.'));if(h3<0||e3<0){h3=16;e3=23;} /*V38B: 기술자 칸을 글로 찾는다(옛 양식 6줄, 새 양식 10줄)*/
+    const n3=Math.min(tr.length,e3-h3-1);tr.slice(0,n3).forEach((q,i)=>{const c=cells(r3[h3+1+i]);[q.role,q.name,D.period2,q.qual].forEach((v,k)=>v38SetCell(c[k],v));});drop(3,h3+1+n3,e3);}
   const conParas=(upto)=>{const out=[];let head=[];for(const [kind,k] of V37_SEC){if(kind==='h'){if(k.startsWith(upto))break;head=[['big',k]];continue;}if(kind==='s'){head=head.slice(0,head.length&&head[0][0]==='big'?1:0).concat([['small',k]]);continue;}
       const v=v38s(D.con[k]);if(!v)continue;if(head.length){if(out.length)out.push(['small','']);out.push(...head);head=[];}out.push(['item',v]);}return out;};
-  { const cp=conParas('4.2');v38Paras(C(3,13,1),cp,st);v38Paras(C(77,1,2),cp,st); // 종합결론 (번호는 떼고 넣는다. 스타일이 글머리표를 붙인다)
+  { const cp=conParas('4.2'),rm=rows(3).findIndex(r=>v38Text(cells(r)[0]||r).replace(/\s/g,'')==='점검주요결과'); /*V38B*/v38Paras(C(3,rm<0?13:rm,1),cp,st);v38Paras(C(77,1,2),cp,st); // 종합결론 (번호는 떼고 넣는다. 스타일이 글머리표를 붙인다)
     v38Paras(C(41,0,1),['o1','o2','o3','o4'].map(k=>v38s(D.con[k])).filter(Boolean).map(t=>['prev',t]),st);v38SetCell(C(41,1,1),v38s(D.con.f43));
     v38SetCell(C(79,0,2),v38s(D.con.f42));v38SetCell(C(81,0,2),v38s(D.con.f43));v38SetCell(C(83,0,2),v38s(D.con.f44));}
   { // T#4 요약표: 구조체 5줄 + 비구조체 5줄, 빈 줄 삭제(묶음마다 한 줄은 남김)
-    const del=[];[0,1].forEach(g=>{const rs=D.sum.slice(g*5,g*5+5).filter(q=>v38s(q.t)||v38s(q.m));const use=rs.length?rs:[{t:'-',m:'-'}];
-      use.forEach((q,i)=>{const c=cells(rows(4)[2+g*5+i]);if(i===0)v38SetCell(c[0],D.sumLab[g]);v38SetCell(c[1],v38s(q.t));v38SetCell(c[2],v38s(q.m));});for(let i=use.length;i<5;i++)del.push(rows(4)[2+g*5+i]);});
+    const del=[],r4=rows(4),isStart=r=>{const c=cells(r)[0],p=c&&v38kids(c,'tcPr')[0],m=p&&v38kids(p,'vMerge')[0];return !!m&&m.getAttributeNS(V38_WNS,'val')==='restart';};
+    let gs=r4.map((r,i)=>i>=2&&isStart(r)?i:-1).filter(i=>i>=0);if(gs.length!==2)gs=[2,7]; /*V38B: 묶음의 첫 줄을 병합 구조로 찾는다(옛 양식 5+5줄, 새 양식 7+7줄)*/const ge=[gs[1],r4.length];
+    [0,1].forEach(g=>{const cap=ge[g]-gs[g],rs=D.sum.slice(g*5,g*5+5).filter(q=>v38s(q.t)||v38s(q.m)).slice(0,cap);const use=rs.length?rs:[{t:'-',m:'-'}];
+      use.forEach((q,i)=>{const c=cells(r4[gs[g]+i]);if(i===0)v38SetCell(c[0],D.sumLab[g]);v38SetCell(c[1],v38s(q.t));v38SetCell(c[2],v38s(q.m));});for(let i=use.length;i<cap;i++)del.push(r4[gs[g]+i]);});
     del.forEach(r=>r.parentNode.removeChild(r));}
   if(D.seis){D.seis.slice(0,6).forEach((q,i)=>{const c=cells(rows(5)[5+i]);q.forEach((v,k)=>v38SetCell(c[1+k],v||'-'));});v38SetCell(C(6,1,0),D.seisOp||v38need('내진 종합의견'));}else v38SetCell(C(6,1,0),v38need('내진보강시설 점검표'));
   if(D.brick){const z0=v=>(v===''||v==='0'||v==null)?'-':String(v),b=D.brick,c=cells(rows(10)[4]),pvOnly=D.src.brick==='pv';
@@ -2702,7 +2706,8 @@ async function v38Build(f,onStep){const tpl=await v38Tpl();if(!tpl)throw new Err
   { // T#86 층별 결함조사 위치도: 고른 그림이 있으면 그것, 없으면 앱이 그린 도면
     if(slots.map.length)await single(86,slots.map,'map','fit');
     else{const ds=sortFloors(f.drawings),blobs=[];for(const d of ds){const b=await v38MapOf(f,d);if(b)blobs.push({file:b});}await single(86,blobs,'map','fit');if(!blobs.length)log.miss.push('층별 결함조사 위치도');else log.mapOwn=blobs.length;}}
-  if(slots.sched.length){const old=T[18],nt=new DOMParser().parseFromString(`<w:tbl xmlns:w="${V38_WNS}"><w:tblPr><w:tblW w:w="5670" w:type="dxa"/><w:tblInd w:w="1271" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="12" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="12" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="12" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="12" w:space="0" w:color="auto"/></w:tblBorders><w:tblLayout w:type="fixed"/><w:tblCellMar><w:left w:w="0" w:type="dxa"/><w:right w:w="0" w:type="dxa"/></w:tblCellMar><w:tblCaption w:val="과업수행일정"/></w:tblPr><w:tblGrid><w:gridCol w:w="9072"/></w:tblGrid><w:tr><w:trPr><w:cantSplit/><w:trHeight w:val="1701"/></w:trPr><w:tc><w:tcPr><w:tcW w:w="9072" w:type="dxa"/><w:tcMar><w:left w:w="0" w:type="dxa"/><w:right w:w="0" w:type="dxa"/></w:tcMar></w:tcPr><w:p><w:pPr><w:jc w:val="center"/></w:pPr></w:p></w:tc></w:tr></w:tbl>`,'application/xml').documentElement;
+  if(slots.sched.length&&rows(18).length===1&&cells(rows(18)[0]).length===1)await pic(C(18,0,0),fileOf(slots.sched[0]),'sched','fit'); /*V38B: 새 양식은 그림 한 칸*/
+  else if(slots.sched.length){const old=T[18],nt=new DOMParser().parseFromString(`<w:tbl xmlns:w="${V38_WNS}"><w:tblPr><w:tblW w:w="5670" w:type="dxa"/><w:tblInd w:w="1271" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="12" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="12" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="12" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="12" w:space="0" w:color="auto"/></w:tblBorders><w:tblLayout w:type="fixed"/><w:tblCellMar><w:left w:w="0" w:type="dxa"/><w:right w:w="0" w:type="dxa"/></w:tblCellMar><w:tblCaption w:val="과업수행일정"/></w:tblPr><w:tblGrid><w:gridCol w:w="9072"/></w:tblGrid><w:tr><w:trPr><w:cantSplit/><w:trHeight w:val="1701"/></w:trPr><w:tc><w:tcPr><w:tcW w:w="9072" w:type="dxa"/><w:tcMar><w:left w:w="0" w:type="dxa"/><w:right w:w="0" w:type="dxa"/></w:tcMar></w:tcPr><w:p><w:pPr><w:jc w:val="center"/></w:pPr></w:p></w:tc></w:tr></w:tbl>`,'application/xml').documentElement;
     const neu=xml.importNode(nt,true);old.parentNode.replaceChild(neu,old);T[18]=neu;await pic(C(18,0,0),fileOf(slots.sched[0]),'sched','fit');}else log.miss.push('공정표 그림');
   { // T#87 외관조사 사진첩: 사진번호가 있는 결함만
     const al=defs.filter(it=>it.ph),findPrev=it=>{const k=it.prev.name.toLowerCase(),s=k.replace(/\.[a-z0-9]+$/,'');return slots.prev.find(q=>q.key===k)||slots.prev.find(q=>q.stem===s);};
