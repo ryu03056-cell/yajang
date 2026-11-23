@@ -397,7 +397,7 @@ main{display:flex;position:relative;min-height:0}
         <i class="sp" aria-hidden="true"></i>
         <button class="tbtn" data-act="precheck" id="v36Chk" aria-haspopup="dialog" title="빈칸, 번호, 확인하지 않은 전회 결함을 찾아요"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="5" width="14" height="16" rx="2"/><path d="M9 5V3.5h6V5"/><path d="M9 13.2l2.2 2.2 4.2-4.4"/></svg><span>검사</span><b id="v36N" hidden></b></button>
         <button class="tbtn" id="v33TableBtn" data-act="v33table" aria-haspopup="dialog" title="모든 층의 결함을 한 표에서 보고 고쳐요"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="14" rx="1.5"/><path d="M4 10h16M4 14.5h16M10 5v14"/></svg><span>결함 표</span></button><!--V33-TABLE: 위 막대에서 옮김-->
-        <button class="tbtn" data-act="v34open" aria-haspopup="dialog" title="체크리스트와 안전등급"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/></svg><span>문서 작성</span></button>
+        <button class="tbtn" data-act="v34open" aria-haspopup="dialog" title="체크리스트, 실시결과 요약표, 종합결론"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/></svg><span>문서 작성</span></button>
         <i class="sp" aria-hidden="true"></i>
         <button class="tbtn" data-act="export" aria-haspopup="dialog" title="CAD, 결함표, 사진, 백업을 내보내요"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V5M8 9l4-4 4 4"/><path d="M4 16v3h16v-3"/></svg><span>출력</span></button><!--위 막대에서 옮김-->
       </div>
@@ -593,9 +593,12 @@ body.v33sz #hint{display:none} /*크기 창이 열려 있는 동안 안내 띠�
 .v34big{font-size:var(--f-xl);font-weight:700}
 </style>
 <div id="v34Pop" hidden><div class="dlg" role="dialog" aria-modal="true" aria-labelledby="v34T"><!--V34-DOC: 체크리스트 / 안전등급-->
-  <div class="hd"><h2 id="v34T">체크리스트 / 안전등급</h2><button class="x" data-act="v34close" aria-label="닫기">×</button></div>
+  <div class="hd"><h2 id="v34T">문서 작성</h2><button class="x" data-act="v34close" aria-label="닫기">×</button></div>
+  <div class="v37tabs" id="v37Tabs" role="tablist" aria-label="문서"><!--V37-TAB-->
+    <button role="tab" data-v37tab="ck" aria-selected="true">체크리스트·안전등급</button><button role="tab" data-v37tab="sum" aria-selected="false">실시결과 요약표</button><button role="tab" data-v37tab="con" aria-selected="false">종합결론</button></div>
   <div id="v34Body"></div>
-  <div class="ft"><span class="note" id="v34Note"></span><button class="btn" data-act="v34copy">엑셀에 붙여 넣기용 복사</button><button class="btn primary" data-act="v34close">닫기</button></div>
+  <div id="v37Body" hidden></div><!--V37-SUM, V37-CON-->
+  <div class="ft"><span class="note" id="v34Note"></span><button class="btn" data-act="v37copy" id="v37Copy" hidden>전체 복사</button><button class="btn" data-act="v34copy">엑셀에 붙여 넣기용 복사</button><button class="btn primary" data-act="v34close">닫기</button></div>
 </div></div>
 <style>/*V35-UI: 젠트릭스 웹 방식. 이 묶음이 앞의 규칙을 덮는다. 상태 색(빨강 미보수, 회색 보수 완료, 보라 전회 미확인)과 도면 위 표시는 그대로*/
 :root{--f-s:13px;--f-m:16px;--f-l:18px;--f-xl:21px;
@@ -728,6 +731,42 @@ body.v35drag::after{content:'여기에 놓으면 열어요 · 위치도(zip, dxf
   .menu .v36also button{min-height:34px}
 }
 #v33Side .ft .btn{flex:1}
+</style>
+<style>/*V37-TAB, V37-SUM, V37-CON: 종이는 v34와 같은 흰 종이. 자동 = 회색, 직접 고침 = 파랑, 어긋남 = 주황*/
+.v37tabs{display:flex;gap:4px;padding:0 20px;background:var(--chrome);border-bottom:1px solid var(--rule);overflow-x:auto}
+.v37tabs button{flex:none;min-height:44px;padding:0 14px;border:0;border-bottom:2px solid transparent;background:transparent;color:var(--muted);font-size:var(--f-m);font-weight:600}
+.v37tabs button:hover{color:var(--ink)}
+.v37tabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+#v37Body{flex:1;overflow:auto;min-height:0;padding:20px;background:var(--bg)}
+#v37Body[hidden],#v34Body[hidden]{display:none}
+.v37t{min-width:640px}
+.v37t th.grp small{display:block;font-weight:400;font-size:var(--f-s);color:#555}
+.v37sum:not(.own) .v37t td.in{background:#F0F0EE}
+.v37warn{margin:14px 0 0;padding:10px 14px;border:1px solid #E0B252;background:#FFF8E6;border-radius:6px;color:#5B4300;font-size:var(--f-s);line-height:1.5}
+.v37warn ul{margin:4px 0 0;padding-left:18px}
+.v34key i.st{background:#FFF1D6;border-color:#C98A00}
+.v37ov{display:flex;flex-wrap:wrap;gap:8px 16px;margin:0 0 4px}
+.v37ov label{display:flex;align-items:center;gap:6px;font-size:var(--f-s);color:#333}
+.v37ov input{height:40px;width:76px;border:1px solid #9AA3AD;border-radius:4px;padding:0 8px;background:#EAF2FB;color:#111;font-size:var(--f-m)}
+.v37ov input[data-ov="use"]{width:230px}
+.v37ov input:focus{border-color:#0A84D6;background:#fff;outline:0}
+.v37con h4{margin:22px 0 8px}
+.v37con h5{margin:12px 0 6px;font-size:var(--f-m);font-weight:600;color:#111}
+.v37ln{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:6px;align-items:start;margin:0 0 6px}
+.v37ln .no{padding-top:8px;text-align:center;color:#111;font-weight:600;font-size:var(--f-l)}
+.v37ln textarea{display:block;width:100%;min-height:44px;border:1px solid #C9CCCA;border-radius:4px;background:#F0F0EE;color:#111;padding:8px 10px;font:inherit;font-size:var(--f-m);line-height:1.55;resize:none;overflow:hidden}
+.v37ln.ed textarea{background:#EAF2FB}
+.v37ln.st textarea{background:#FFF1D6;border-color:#C98A00}
+.v37ln textarea:focus{border-color:#0A84D6;background:#fff;outline:0}
+.v37ln textarea::placeholder{color:#8A8F94}
+.v37ln .rs{min-height:44px;padding:0 10px;border:1px solid #9AA3AD;border-radius:6px;background:#fff;color:#333;font-size:var(--f-s)}
+.v37ln .rs[hidden],.v37ln .was[hidden]{display:none}
+.v37ln .was{grid-column:2/4;margin:0 0 4px;font-size:var(--f-s);color:#7A5200;line-height:1.5}
+.v37prev{margin-top:26px;padding-top:12px;border-top:1px solid #C9CCCA;font-size:var(--f-s);color:#333;line-height:1.55}
+.v37prev summary{cursor:pointer;font-weight:600;min-height:40px;display:flex;align-items:center}
+.v37prev h6{margin:10px 0 2px;font-size:var(--f-s);font-weight:600}
+.v37prev p{margin:0 0 4px}
+@media (hover:hover) and (pointer:fine){.v37tabs button{min-height:40px}.v37ln .rs{min-height:38px}}
 </style>
 <div id="v31Pop" hidden><div class="dlg" role="dialog" aria-modal="true" aria-labelledby="v31T"><!--V31-CHECK: 내보내기 전 검사-->
   <div class="hd"><h2 id="v31T">내보내기 전 검사</h2><button class="x" data-act="v31close" aria-label="닫기">×</button></div>
@@ -1674,6 +1713,7 @@ async function v24ImportXls(file){
     if(gray)rep++;}
   const v32n=v32AfterXl(f,res,used); /*V32-ROUND*/
   try{v34FromXl(f,v34buf);}catch(e){console.error(e);} /*V34-DOC*/
+  try{v37FromXl(f,v34buf);}catch(e){console.error(e);} /*V37-CON: 개요 시트의 준공연월일·용도·층수*/
   f.xlOrphans=orphans;f.xlFile={name:file.name,sheet:res.sheet,at:new Date().toISOString()};
   const noRow=[];for(const d of sortFloors(f.drawings)){const s=new Set();for(const x of [...d.defects].sort((a,b)=>a.no-b.no))if(!used.has(x.id)&&!s.has(x.no)){s.add(x.no);noRow.push(d.name+' '+x.no+'번');}}
   save();renderAll();
@@ -1842,7 +1882,7 @@ async function v32NextRound(){const f=F();if(!f||!f.drawings.some(d=>d.defects.l
         xl['전회차파일명']=ph?code+'.jpg':'-';def.xl=xl;if(!def.xlSet)def.xlSet={};
         def.prev=ph?{photo:code+'.jpg',no:code,pid:ph.id}:{photo:'',no:''};delete def.photos;delete def.xlPhoto;}}}
   f.prev=Object.assign({},f.prev||{},{file:'앱에서 넘김',at:new Date().toISOString(),seq:base.year?base.year+'_'+(base.half==='2'?'2':'1'):((f.prev||{}).seq||''),from:'app'});
-  if(!f.prev.doc)f.prev.doc={};v34Roll(f); /*V34-DOC*/
+  if(!f.prev.doc)f.prev.doc={};v37Roll(f); /*V37: 체크리스트를 넘기기 전에*/v34Roll(f); /*V34-DOC*/
   f.task=next;sel=null;save();renderAll();
   await modal(`<h4>${esc(lab(next))} 점검을 시작해요</h4>
     <p>결함 번호 ${nNo}개가 전회 결함이 됐어요. 그중 <b>${nPh}개</b>에 전회 사진이 있어요.</p>
@@ -1913,6 +1953,9 @@ function v31Check(f){const must=[],see=[],G={},grp=(arr,k,t,h)=>G[k]||(arr.push(
         else if(!it.gr)W('ckblank','체크리스트 평가결과가 빈 항목','해당 없는 항목은 - 를 누르세요.').items.push({lab:(i+1)+'번',act:'v34open'});});
       if(ck.pvx)W('ckprev','체크리스트에 확인하지 않은 전회 값','보라색 칸은 전회 보고서 값이에요. 평가결과를 한 번 눌러 확인하거나 고치세요.').items.push({lab:'필요성·중대결함',act:'v34open'});
       if(!ck.emg||!ck.msr)W('ckmeta','긴급점검·안전조치 필요성이 비어 있어요','체크리스트 아래 표에서 있음, 없음 중 하나를 누르세요.').items.push({lab:'체크리스트 열기',act:'v34open'});}}
+  {const dc=f.doc||{}; /*V37: 직접 고친 요약표·종합결론이 지금 결함과 어긋났는지. 고친 것이 있을 때만 본다*/
+    if(dc.sum&&Array.isArray(dc.sum.rows)&&dc.sum.a!==v37SumKey(v37SumAuto(f).rows))W('sumstale','요약표를 고친 뒤 결함이 바뀌었어요','문서 작성의 실시결과 요약표에서 지금 결함으로 만든 표와 비교하세요.').items.push({lab:'요약표 열기',act:'v37sum'});
+    if(dc.con&&dc.con.t){const a=v37ConAuto(f).t;if(Object.keys(dc.con.t).some(k=>dc.con.t[k].a!==a[k]))W('constale','종합결론을 고친 뒤 자동 문장이 바뀐 줄이 있어요','문서 작성의 종합결론에서 주황색 줄을 확인하세요.').items.push({lab:'종합결론 열기',act:'v37con'});}}
   for(const o of f.xlOrphans||[])W('orphan','전회 자료에만 있고 도면에 없는 번호','위치도에 번호가 없어서 위치를 알 수 없어요.').items.push({lab:`${o.floor} ${o.no}번`});
   return {must,see};}
 function v31Count(c){const n=a=>a.reduce((s,g)=>s+g.items.length,0);return {must:n(c.must),see:n(c.see)};}
@@ -1938,8 +1981,9 @@ function v31Go(did,defId){const f=F(),d=f&&f.drawings.find(x=>x.id===did);if(!d)
 document.addEventListener('click',e=>{const p=$('#v31Pop');if(p&&e.target===p)p.hidden=true;}); // 검사 화면 바깥(어두운 곳)을 누르면 닫힘
 /*V31-END*/
 /*V35-START: 화면 정리(V35-UI는 스타일만), 바로 저장(V35-SAVE), Esc(V35-ESC), 업데이트 안내(V35-NEWS), 파일 끌어다 놓기(V35-DROP). 저장 값은 바뀌지 않는다*/
-const V35={dirty:false},V35_VER='v36'; /*V36: 버전 표시*/
+const V35={dirty:false},V35_VER='v37'; /*V37: 버전 표시*/
 const V35_NEWS=[
+ {v:'v37',d:'2026-11-23',items:['문서 작성에 탭이 생겼어요: 체크리스트·안전등급, 실시결과 요약표, 종합결론','실시결과 요약표를 결함에서 자동으로 만들어요. 회사 엑셀 점검표에 붙여 넣을 수 있어요','종합결론 초안을 체크리스트 의견과 결함에서 만들어요. 줄마다 고칠 수 있고, 근거가 없는 자리는 [확인필요]로 남아요','고친 뒤에 결함이 바뀌면 주황색으로 알려 줘요','회사 엑셀을 불러오면 준공연도·용도·층수도 가져와요']},
  {v:'v36',d:'2026-11-23',items:['도면 아래에 작업 띠가 생겼어요: 불러오기, 전회 자료, 검사, 결함 표, 문서 작성, 출력. 메뉴에 들어가지 않아도 보여요','검사 단추에 걸린 건수가 보여요','위 막대의 결함 표와 출력은 작업 띠로 옮겼어요','파일·설정 메뉴는 시설물·설정으로 바뀌었고, 시설물과 설정만 남겼어요','축척 표시와 화면 맞춤은 작업 띠 바로 위로 올렸어요']},
  {v:'v35',d:'2026-11-22',items:['화면을 젠트릭스 웹 방식으로 정리했어요: 흰 바탕에 파란 강조, 글자 크기 네 단계. PC에서는 촘촘하게, 아이패드에서는 누르기 쉬운 크기 그대로예요','화면을 떠나거나 앱을 내릴 때 바로 저장해요','출력, 검사, 메뉴도 Esc로 닫혀요','PC에서 위치도(zip, dxf), 엑셀, 전회 자료(xml), 백업(json) 파일을 끌어다 놓으면 열려요','위 막대의 버전 표시를 누르면 이 안내가 열려요']},
  {v:'v34',d:'2026-11-22',items:['글꼴을 프리텐다드로 바꿨어요. 인터넷이 없어도 같은 글꼴이에요','체크리스트 / 안전등급: 평가결과를 누르면 상태점수와 안전등급이 계산돼요 (도면 아래 작업 띠의 문서 작성)','회사 엑셀을 불러오면 점검결과 시트의 체크리스트도 들어오고, 엑셀에 붙여 넣을 수 있게 복사해요']},
@@ -2016,6 +2060,331 @@ if(window.ResizeObserver)new ResizeObserver(()=>{v36CloseAll();v36Fit();}).obser
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(v36Fit);
 requestAnimationFrame(v36Fit);
 /*V36-END*/
+/*V37-START: 문서 화면 2 = 실시결과 요약표(V37-SUM), 종합결론 초안(V37-CON), 문서 작성 화면의 탭(V37-TAB).
+  규칙의 근거: 회사 종합결론 작성 규칙(팀 스킬 stoneng의 3~6장, 10장, 부록 A·H)과 회사 엑셀 매크로 stonResultGrade.
+  자동으로 만든 값은 저장하지 않고 열 때마다 결함과 체크리스트에서 다시 만든다.
+  저장하는 것: 직접 고친 요약표(f.doc.sum), 직접 고친 종합결론 줄(f.doc.con.t), 건물 정보(f.doc.ov). 아무것도 고치지 않으면 백업은 v36과 같다 */
+const V37={tab:'ck',auto:null};
+const V37_METHOD={'구조체|균열(0.3mm 이상)':'주입식 균열보수 공법(건식부)','구조체|균열(0.3mm 미만)':'표면처리공법','구조체|누수흔적/백화':'주입식 균열보수 공법(습윤부)','구조체|철근노출':'방청처리 후 단면복구공법','구조체|철골부재 도장박리 및 부식':'주의관찰 후 재도장 등 보수실시',
+  '비구조체|균열(0.3mm 이상)':'V or U 컷팅 후 탄성실링재 충전공법','비구조체|균열(0.3mm 미만)':'표면처리공법','비구조체|치장벽돌 균열':'탄성실링재 충전공법','비구조체|치장벽돌 줄눈탈락':'줄눈 재시공','비구조체|치장벽돌 백화':'손상부위 세척 및 발수재 등 도포',
+  '비구조체|마감재':'부분 보수 및 교체','비구조체|도장':'손상부위 재도장','비구조체|방수층':'손상부위 방수층 재시공','비구조체|물고임':'배수드레인 청소 및 주기적 관찰','비구조체|누수흔적/백화':'주의관찰 및 보수',
+  '비구조체|무근 콘크리트 열화':'열화부 제거 후 단면복구','비구조체|금속부 녹발생':'녹 제거 후 방청 도장','비구조체|보도블럭 침하 및 단차':'바닥 평탄화 및 재포장'};
+const V37_ORDER={'구조체':['균열(0.3mm 이상)','균열(0.3mm 미만)','누수흔적/백화','철근노출','철골부재 도장박리 및 부식'],
+  '비구조체':['균열(0.3mm 이상)','균열(0.3mm 미만)','치장벽돌 균열','치장벽돌 줄눈탈락','치장벽돌 백화','마감재','도장','방수층','물고임','누수흔적/백화','무근 콘크리트 열화','금속부 녹발생','보도블럭 침하 및 단차']};
+const V37_MK=['박리','박락','들뜸','탈락','파손','고정불량'],V37_DK=['열화','박리','박락'];
+const V37_MERGE=[['마감재','도장','부분 보수 및 교체, 손상부위 재도장'],['방수층','물고임','손상부위 방수층 재시공'],['치장벽돌 균열','치장벽돌 줄눈탈락','탄성실링재 충전 및 줄눈 재시공'],['누수흔적/백화','치장벽돌 백화','주의관찰 및 보수']];
+const V37_GRADE={A:'문제점이 없는 최상의 상태',B:'보조부재에 경미한 결함이 발생하였으나 기능 발휘에는 지장이 없으며 내구성 증진을 위하여 보수가 필요한 상태',
+  C:'주요부재에 경미한 결함 또는 보조부재에 광범위한 결함이 발생하였으나 전체적인 시설물의 안전에는 지장이 없으며, 주요부재에 내구성, 기능성 저하 방지를 위한 보수가 필요하거나 보조부재에 간단한 보강이 필요한 상태',
+  D:'주요부재에 결함이 발생하여 긴급한 보수·보강이 필요하며 사용제한 여부를 결정하여야 하는 상태',E:'주요부재에 발생한 심각한 결함으로 인하여 시설물의 안전에 위험이 있어 즉각 사용을 금지하고 보강 또는 개축을 하여야 하는 상태'};
+const V37_FIX={o1:'해당 건축물에 대하여 정기안전점검을 실시한 결과, 전반적으로 양호한 상태인 것으로 조사되었다.',
+  o3:'본 건축물의 경우, 유지관리가 적절히 이루어지고 있으나 발생된 결함 부위에 대해서는 장기간 방치 시 내구성 저하, 미관상 불쾌감 및 불안감 등의 요소가 될 수 있으므로 건축물의 사용성 및 내구성 확보 등을 고려하여 제시된 공법(표면처리공법, 충전공법, 단면복구공법, 주입식 균열 보수공법 등)에 따른 적절한 보수조치가 필요할 것으로 사료된다.',
+  f42:'금번 정기안전점검 시 외관상 구조적 결함 및 특이할만한 문제점은 조사되지 않았으며, 정밀안전점검, 정밀안전진단은 필요하지 않을 것으로 판단된다.',
+  f43:'금번 정기안전점검 시 발생된 결함은 구조적으로 문제는 없으나, 사용성 및 내구성, 미관성 확보를 위해 보고서에 수록된 보수방안을 참조하여 보수하는 것이 바람직할 것으로 판단된다.',
+  f44:'향후 보수 부위에 대하여 관리주체의 지속적인 주의․관찰이 요망되며, 시설물의 사용시 제한된 하중보다 과하중 사용, 용도변경, 구조변경 등 외부 하중증가 요인으로 인하여 부득이하게 설계 내하력을 초과하여 사용할 경우 안전진단기관의 구조안전성을 확인 받은 후 사용하여야 할 것으로 사료된다.'};
+const V37_SEC=[['h','1. 사전조사 결과'],['l','pre'],['h','2. 결함조사 결과'],['s','1) 주요시설'],['l','a1'],['l','a2'],['l','a3'],['l','a4'],['s','2) 일반시설'],['l','b1'],['l','b2'],['l','b3'],['l','b4'],['s','3) 부대시설'],['l','c1'],['l','c2'],['l','c3'],
+  ['h','3. 시설물 안전등급 결과'],['l','g'],['h','4. 책임기술자 종합의견'],['l','o1'],['l','o2'],['l','o3'],['l','o4'],['h','4.2 정밀안전점검 및 진단의 필요성'],['l','f42'],['h','4.3 유지관리 특별 요구사항'],['l','f43'],['h','4.4 기타(건의사항)'],['l','f44']];
+const V37_KEYS=V37_SEC.filter(x=>x[0]==='l').map(x=>x[1]),V37_CIRC='①②③④⑤⑥';
+const V37_HINT={a4:'철골부재가 없으면 비워 둡니다',b4:'적치물이 없으면 비워 둡니다',c1:'옹벽·비탈면이 없으면 비워 둡니다',c3:'환기구·점검로가 없으면 비워 둡니다',o4:'특이사항, 조사 불가, 진행성 균열이 있을 때만 씁니다'};
+const v37s=v=>String(v==null?'':v).replace(/_x000d_/gi,'').replace(/\r/g,'').trim();
+function v37Defs(f){const out=[]; // 금회 결함: 번호마다 한 줄(결함 표와 같은 묶음) + 엑셀에만 있는 번호
+  for(const r of v33Rows(f)){
+    if(r.orph){const w=r.orph.raw||{},rem=v37s(w['비고']);out.push({fl:v37s(r.orph.floor),room:v37s(w['실']),mem:v37s(w['부재']),typ:v37s(w['유형및형상']),w:v37s(w['폭(mm)']),rem,rep:rem.includes('보수완료')});}
+    else{const p=r.p,rem=v37s(p.remark);out.push({fl:v37s(r.d.name),room:v37s(p.room),mem:v37s(p.member),typ:v37s(p.name),w:v37s(p.width),rem,rep:isRepaired(p)||rem.includes('보수완료')});}}
+  return out;}
+/* ---------- V37-SUM: 실시결과 요약표. 팀 스킬 부록 H(extras_extract2.py)의 요약표 부분을 그대로 옮김 ---------- */
+function v37SumAuto(f){const cnt={},sub={'마감재':[],'도장':[],'방수층':[],'철근노출':[]},other=[],nowidth=[],warn=[];let used=0;
+  const add=(g,k)=>{cnt[g+'|'+k]=(cnt[g+'|'+k]||0)+1;},subadd=(k,t)=>{if(!sub[k].includes(t))sub[k].push(t);};
+  for(const d of v37Defs(f)){if(d.rep||d.typ==='상태양호'||d.typ==='')continue;used++;
+    const rc=d.typ.includes('철근노출')||(d.typ.includes('박락')&&d.typ.includes('콘크리트')&&!d.mem.includes('무근'));
+    const g=(d.rem.replace(/ /g,'')==='구조체'||rc)?'구조체':'비구조체',brick=d.mem.includes('치장벽돌');
+    for(let part of d.typ.replace(/(수직|수평|경사)\s*\/\s*/g,'').split(/[\/,]+/)){part=part.replace(/\s+/g,'');const p=part;if(!p)continue; // 수직/경사균열 → 균열 1건
+      if(p.includes('균열')){if(brick&&g==='비구조체'){add(g,'치장벽돌 균열');continue;}
+        const w=d.w!==''&&isFinite(+d.w)?+d.w:NaN;
+        if(isNaN(w)){add(g,'균열(0.3mm 미만)');nowidth.push(`${d.fl} ${d.room} ${d.mem}`);}else add(g,w>=0.3?'균열(0.3mm 이상)':'균열(0.3mm 미만)');}
+      else if(['손상없음','상태양호','양호'].some(k=>p.includes(k)))continue;
+      else if(p.includes('철근노출')){add('구조체','철근노출');subadd('철근노출','철근노출');}
+      else if(p.includes('콘크리트박락')&&!d.mem.includes('무근')){add('구조체','철근노출');subadd('철근노출','콘크리트 박락');}
+      else if(g==='구조체'&&['재료분리','단면손실','천공'].some(k=>p.includes(k))){add('구조체','철근노출');subadd('철근노출',['재료분리','단면손실','천공'].find(k=>p.includes(k)));}
+      else if(d.room.includes('옥상')&&d.mem.includes('바닥')&&(p.includes('손상')||p.includes('들뜸'))){add('비구조체','방수층');subadd('방수층',p.includes('손상')?'손상':'들뜸');}
+      else if(d.mem.includes('철골')&&(p.includes('부식')||p.includes('녹')||p.includes('도장')))add('구조체','철골부재 도장박리 및 부식');
+      else if(brick&&p.includes('줄눈'))add('비구조체','치장벽돌 줄눈탈락');
+      else if(brick&&(p.includes('백화')||p.includes('백태')))add('비구조체','치장벽돌 백화');
+      else if(p.includes('도장')){add('비구조체','도장');const x=p.split('도장').join('');subadd('도장',x==='탈락'?'박락':x);}
+      else if(p.includes('물고임'))add('비구조체','물고임');
+      else if(p.includes('방수')){add('비구조체','방수층');for(const k of ['들뜸','손상','박리','파손','균열'])if(p.includes(k))subadd('방수층',k);}
+      else if(p.includes('녹')||p.includes('부식'))add('비구조체','금속부 녹발생');
+      else if(V37_MK.some(k=>p.includes(k))){add('비구조체','마감재');subadd('마감재',V37_MK.find(k=>p.includes(k)));}
+      else if(p.includes('열화'))add('비구조체',d.mem.includes('무근')?'무근 콘크리트 열화':'도장');
+      else if(['누수','백화','백태','오염'].some(k=>p.includes(k)))add(g,'누수흔적/백화');
+      else if(p.includes('침하')||p.includes('단차'))add('비구조체','보도블럭 침하 및 단차');
+      else other.push(`${d.fl} ${d.room} ${d.mem} ${part}`);}}
+  const uniq=a=>[...new Set(a)].sort();
+  if(other.length)warn.push('분류하지 못한 결함(직접 판단해 넣으세요): '+uniq(other).join('; '));
+  if(nowidth.length)warn.push(`폭이 없는 균열 ${nowidth.length}건은 0.3mm 미만으로 넣었어요: `+uniq(nowidth).slice(0,5).join('; '));
+  const label=k=>{
+    if(k==='마감재')return '마감재 '+V37_MK.filter(x=>sub['마감재'].includes(x)).join('·');
+    if(k==='도장')return '도장 '+V37_DK.filter(x=>sub['도장'].includes(x)).join('·');
+    if(k==='방수층')return sub['방수층'].length?'방수층 '+sub['방수층'].join('·'):'방수층 손상';
+    if(k==='철근노출'){let xs=['콘크리트 박락','철근노출','재료분리','단면손실','천공'].filter(x=>sub['철근노출'].includes(x));if(!xs.length)xs=['철근노출'];
+      return xs.length===2&&xs.includes('콘크리트 박락')&&xs.includes('철근노출')?'콘크리트 박락 및 철근노출':xs.join('/');}
+    return k;};
+  const cand={};
+  for(const g of ['구조체','비구조체']){let items=V37_ORDER[g].filter(k=>(g+'|'+k) in cnt).map(k=>[k,label(k),V37_METHOD[g+'|'+k],cnt[g+'|'+k]]);
+    for(const [a,b,meth] of V37_MERGE){if(items.length<=5)break; // 5줄을 넘으면 정해진 쌍부터 합친다
+      const ia=items.findIndex(x=>x[0]===a),ib=items.findIndex(x=>x[0]===b);if(ia<0||ib<0)continue;
+      const lab=(a==='누수흔적/백화'&&b==='치장벽돌 백화')?items[ia][1]:items[ia][1]+' 및 '+items[ib][1];
+      items[ia]=[a,lab,meth,items[ia][3]+items[ib][3]];items.splice(ib,1);}
+    if(items.length>5){const keep=items.filter(x=>x[0].startsWith('균열')),rest=items.filter(x=>!x[0].startsWith('균열')).sort((x,y)=>y[3]-x[3]); // 균열 줄은 남기고 건수 많은 순
+      for(const x of rest.slice(0,5-keep.length))keep.push(x);const dropped=items.filter(x=>!keep.includes(x));items=items.filter(x=>keep.includes(x));
+      warn.push(`${g} 5줄을 넘어 건수가 적은 항목을 뺐어요(필요하면 직접 바꿔 넣으세요): `+dropped.map(x=>`${x[1]}(${x[3]}건)`).join(', '));}
+    cand[g]=items.map(x=>x.slice(1));}
+  const rows=[];for(const g of ['구조체','비구조체'])for(let i=0;i<5;i++){const it=cand[g][i];rows.push({t:it?it[0]:'',m:it?it[1]:''});}
+  return {rows,cand,warn,used};}
+const v37SumKey=rows=>JSON.stringify((rows||[]).map(r=>[r.t||'',r.m||'']));
+function v37SumNow(f){const a=v37SumAuto(f),st=f.doc&&f.doc.sum&&Array.isArray(f.doc.sum.rows)&&f.doc.sum.rows.length===10?f.doc.sum:null; // 직접 고친 표가 있으면 그것, 없으면 자동
+  return {rows:st?st.rows:a.rows,auto:a,own:!!st,stale:!!st&&st.a!==v37SumKey(a.rows)};}
+/* ---------- V37-CON: 종합결론 초안 ---------- */
+function v37Ov(f){const o=Object.assign({built:'',use:'',up:'',down:''},(f.doc&&f.doc.ov)||{}),p=((f.prev||{}).doc||{}).overview||{},s=v=>typeof v==='string'?v.trim():(typeof v==='number'?String(v):''),fc=p.floorCount||{};
+  if(!o.built)o.built=(s(p.completionDate).match(/^\d{4}/)||[''])[0];if(!o.use)o.use=s(p.usage);if(!o.up)o.up=s(fc.aboveGroundFloorCount);if(!o.down)o.down=s(fc.underGroundFloorCount);return o;}
+function v37Josa(w,a,b){const m=String(w).match(/[가-힣](?=[^가-힣]*$)/);if(!m)return b;return (m[0].charCodeAt(0)-0xAC00)%28?a:b;} // 받침 있으면 a(은), 없으면 b(는)
+function v37Join(a){a=a.filter(Boolean);return a.length<=1?(a[0]||''):a.length===2?a.join(' 및 '):a.slice(0,-1).join(', ')+' 및 '+a[a.length-1];}
+function v37Mem(d){let m=d.mem.replace(/\s+/g,' ').trim();if(!m||m==='-')return '';
+  if(m==='보')return d.room.includes('계단')?'보':'천장 보';if(m==='슬래브'||m==='천장슬래브')return '천장 슬래브';if(m==='계단참'||m==='계단슬래브')return '계단 슬래브';
+  if(m==='천장마감재')return '천장 마감재';if(m==='처마 슬래브')return '처마';if(m==='패드')return '콘크리트 패드';return m;}
+function v37Tok(typ){const out=[]; // 유형 → 보고서 표기(방향 생략, 띄어쓰기 통일)
+  for(let p of String(typ).replace(/\s*\([^)]*\)/g,'').replace(/(수직|수평|경사)\s*\/\s*/g,'').split(/[\/,]+/)){p=p.replace(/\s+/g,' ').trim();if(!p||/양호|손상없음/.test(p))continue;
+    if(p.includes('균열'))p=p.includes('망상')?'망상균열':'균열';
+    else{p=p.replace(/백태/g,'백화').replace(/^(도장|미장)\s*(열화|박리|박락|탈락|들뜸)$/,(m,a,b)=>a+' '+(b==='탈락'?'박락':b)).replace(/^녹\s*발생$/,'녹발생');}
+    if(!out.includes(p))out.push(p);}
+  return out;}
+function v37Class(d){const b=d.rem.replace(/ /g,''),t=d.typ,m=d.mem,r=d.room; // 팀 스킬 부록 A classify()를 옮김. 구조체(마감면)은 규칙 4장대로 주요시설 ②
+  if(d.rep)return 'x';if(/^상태\s*양호$/.test(t)||t==='')return 'x';
+  if(t.includes('철근노출')||(t.includes('박락')&&t.includes('콘크리트')))return 'a3';
+  if(b==='구조체'||b.includes('마감면'))return 'a2';
+  if(t.includes('지반침하')||t.includes('보도블럭')||t.includes('침하'))return 'a1';
+  if(m.includes('파라펫')||m.includes('난간'))return 'c2';
+  if(m.includes('환기구')||m.includes('점검로'))return 'c3';
+  if((r==='옥상'&&(m==='바닥'||m===''||m==='-'))||m.includes('방수'))return 'b1';
+  if(r.startsWith('외부')||(m+t).includes('치장벽돌')||['인방','처마','금속판넬'].includes(m))return 'b2';
+  return 'b3';}
+function v37Floors(set,f,ov){const nm=d=>v24Floor(d).replace(/\(.*?\)/g,''),all=f.drawings.map(d=>floorRank(d.name)); // 층 묶음: 지상 전 층, 지하1층 및 지상 전 층 …
+  const N=+ov.up||Math.max(0,...all.filter(r=>r[0]===1).map(r=>-r[1])),B=+ov.down||Math.max(0,...all.filter(r=>r[0]===2&&Number.isInteger(r[1])).map(r=>r[1]));
+  const G=new Set(),BS=new Set(),etc=[];let roof=false;
+  for(const x of set){const n=nm(x),r=floorRank(n);if(r[0]===0)roof=true;else if(r[0]===1)G.add(-r[1]);else if(r[0]===2&&Number.isInteger(r[1]))BS.add(r[1]);else if(n&&!etc.includes(n))etc.push(n);}
+  const bs=[...BS].sort((a,b)=>b-a).map(n=>`지하${n}층`),gs=[...G].sort((a,b)=>a-b).map(n=>`지상${n}층`);
+  const allG=N>=2&&G.size>=N&&[...Array(N)].every((_,i)=>G.has(i+1)),allB=B>=1&&BS.size>=B;let base='';
+  if(allG&&allB&&!etc.length)base=B===1?'지하1층 및 지상 전 층':'전 층에 걸쳐';
+  else if(allG)base=v37Join([...bs,...etc,'지상 전 층']);
+  else if(N>=3&&G.size===N-1&&!G.has(1))base=v37Join([...bs,...etc,'지상1층을 제외한 지상 전 층']);
+  else return v37Join([...bs,...gs,...etc,roof?'지붕층':'']);
+  return roof?(base==='전 층에 걸쳐'?'지붕층을 포함한 전 층에 걸쳐':'지붕층을 포함한 '+base):base;}
+function v37Top(ds,n){const mc=v37Stat(ds).mc,all=[...mc.entries()].sort((p,q)=>q[1]-p[1]),pick=all.filter(x=>x[1]>=2).slice(0,n),use=(pick.length?pick:all.slice(0,1)).map(x=>x[0]); // 한두 곳뿐인 부재는 뺀다
+  return {mems:use,ds:use.length?ds.filter(d=>use.includes(v37Mem(d))):ds};}
+function v37Stat(ds){const mc=new Map(),tc=new Map(),fl=new Set(),ws=[];
+  for(const d of ds){const m=v37Mem(d);if(m)mc.set(m,(mc.get(m)||0)+1);if(d.fl)fl.add(d.fl);
+    for(const t of v37Tok(d.typ)){tc.set(t,(tc.get(t)||0)+1);if(t==='균열'&&d.w!==''&&isFinite(+d.w))ws.push(+d.w);}}
+  return {mc,tc,fl,ws};}
+function v37Types(tc,ws,o){o=o||{};let ts=[...tc.entries()].sort((a,b)=>(b[0]==='균열')-(a[0]==='균열')||b[1]-a[1]).map(x=>x[0]);
+  const drop=o.drop||[],kept=ts.filter(t=>!drop.includes(t));if(kept.length)ts=kept;ts=ts.slice(0,o.max||4);
+  return ts.map(t=>t==='균열'&&o.width&&ws.length?`균열(${Math.min(...ws)===Math.max(...ws)?Math.min(...ws):Math.min(...ws)+'~'+Math.max(...ws)}mm)`:t);}
+function v37Clause(ds,f,ov,o){o=o||{};const s=v37Stat(ds),ord=o.order||[]; // "…에서 … 등이 발생된 상태로 조사되었" 까지 (끝말은 부르는 쪽이 붙임)
+  const mems=[...s.mc.entries()].sort((a,b)=>{const ia=ord.indexOf(a[0]),ib=ord.indexOf(b[0]);return (ia<0?99:ia)-(ib<0?99:ib)||b[1]-a[1];}).map(x=>x[0]).slice(0,o.maxMem||4);
+  const loc=o.noLoc?'':v37Floors(s.fl,f,ov),where=[loc,(o.pre||'')+v37Join(mems)].filter(Boolean).join(' ')||o.fallback||'일부 구간';
+  return `${where}에서 ${v37Join(v37Types(s.tc,s.ws,o))} 등이 발생된 상태로 조사되었`;}
+const V37_GOOD=/^(전반적으로\s*)?(상태\s*)?양호(함|한\s*상태)?\.?$/;
+function v37St(ck,i){if(!ck)return 'unk';const it=ck.items[i-1],op=v37s(it.op);if(op==='-'||it.gr==='-')return 'na';if(!op)return 'unk';return V37_GOOD.test(op)?'good':'bad';}
+function v37Body(op){return v37s(op).replace(/[.\s]+$/,'').replace(/\s*(등)?\s*(이|가)?\s*(일부\s*)?발생(됨|함)?$/,'').trim();}
+function v37Bad(op){const b=v37Body(op);return /설치$/.test(b)?`${b}된 상태로 조사되었`:`${b} 등이 발생된 상태로 조사되었`;}
+const v37Need=n=>`[확인필요: 체크리스트 ${n}번]`;
+function v37Pair(ck,items){const live=items.map(x=>Object.assign({st:v37St(ck,x.i),op:ck?ck.items[x.i-1].op:''},x)).filter(x=>x.st!=='na'); // 체크리스트 의견 여러 개를 한 문장으로
+  if(!live.length)return '';const unk=live.filter(x=>x.st==='unk');if(unk.length)return v37Need(unk.map(x=>x.i).join('·'));
+  const bad=live.filter(x=>x.st==='bad'),good=live.filter(x=>x.st==='good'),gn=v37Join(good.map(x=>x.good)),gs=gn?`${gn}${v37Josa(gn,'은','는')} 양호한 상태로 조사되었다.`:'';
+  if(!bad.length)return gs;
+  if(bad.length===1)return v37Bad(bad[0].op)+(gs?'으며, '+gs:'다.');
+  return bad.map((x,k)=>v37Bad(x.op)+(k<bad.length-1?'으며, ':'다.')).join('')+(gs?' 또한, '+gs:'');}
+function v37ConAuto(f){const ck=f.doc&&f.doc.ck?f.doc.ck:null,ov=v37Ov(f),t={},notes=[],ds=v37Defs(f),by={};
+  for(const d of ds){const c=v37Class(d);if(c==='x')continue;(by[c]=by[c]||[]).push(d);}
+  const D=k=>by[k]||[],st=i=>v37St(ck,i),op=i=>ck?ck.items[i-1].op:'',conflict=(i,n,what)=>notes.push(`체크리스트 ${i}번은 양호인데 ${what} 결함이 ${n}건 있어서 결함을 썼어요.`);
+  if(!ck)notes.push('체크리스트가 아직 없어요. 체크리스트·안전등급 탭을 먼저 채우면 [확인필요] 자리가 채워져요.');
+  // 1. 사전조사
+  {const y=+((f.task&&f.task.year)||v31TaskGuess(f).year),b=+ov.built,n=y&&b&&y>=b?y-b:null;
+    if(n==null)notes.push('준공연도가 없어 경과 연수를 계산하지 못했어요. 위 칸에 넣으세요.');if(!ov.use)notes.push('용도가 없어요. 위 칸에 넣으세요.');
+    t.pre=`본 점검대상 건축물은 준공 후 약 ${n==null?'[확인필요: 준공연도]':n}년이 경과한 건축물로서 ${ov.use||'[확인필요: 용도]'} 용도로 사용 중이며, 관련 도서 및 현장 점검을 통해 구조·용도 변경 여부 및 과하중 요인을 조사한 결과 구조 안전에 영향을 미칠 만한 용도 변경 사항은 조사되지 않았다.`;}
+  // 가-① 지반
+  {const s=st(1),tail='침하 등으로 인한 구조적 변위는 양호한 상태로 조사되었다.';
+    t.a1=s==='unk'?v37Need(1):s==='bad'?v37Bad(op(1))+'으나, '+tail:D('a1').length?v37Clause(D('a1'),f,ov,{noLoc:true,fallback:'시설물 주변 바닥'})+'으나, '+tail:s==='na'?'':tail;}
+  // 가-② 구조부재
+  {const a=D('a2'),s2=st(2),s3=st(3);
+    if(a.length){if(s2==='good')conflict(2,a.length,'구조체');
+      t.a2=v37Clause(a,f,ov,{order:['기둥','천장 보','보','천장 슬래브','계단 슬래브','벽체'],width:true,max:3,drop:['도장 열화','도장 박리','도장 박락','오염','변색']})+(s3==='good'?'으며, 구조부재의 변형 상태는 양호한 상태로 조사되었다.':'다.');}
+    else t.a2=s2==='unk'?v37Need(2):s2==='bad'?`주요 구조부재에서 ${v37Body(op(2))} 등이 발생된 상태로 조사되었다.`:s2==='na'?'':'주요 구조부재의 균열, 누수 및 변형 상태는 양호한 상태로 조사되었다.';}
+  // 가-③ 박락·철근노출
+  {const a=D('a3'),s=st(4);
+    if(a.length){if(s==='good')conflict(4,a.length,'철근노출·박락');const x=v37Stat(a),ty=[];
+      if([...x.tc.keys()].some(k=>k.includes('철근노출')))ty.push('철근노출');if([...x.tc.keys()].some(k=>k.includes('박락')))ty.push('콘크리트 박락');
+      const mems=[...x.mc.keys()].slice(0,4),where=[v37Floors(x.fl,f,ov),v37Join(mems)].filter(Boolean).join(' ')||'일부 구조부재';
+      t.a3=`${where}에서 ${v37Join(ty.length?ty:v37Types(x.tc,x.ws))} 등이 발생된 상태로 조사되었다.`;}
+    else t.a3=s==='unk'?v37Need(4):s==='bad'?`주요 구조부재에서 ${v37Body(op(4))} 등이 발생된 상태로 조사되었다.`:s==='na'?'':'주요 구조부재의 철근노출 및 콘크리트 박락 상태는 양호한 상태로 조사되었다.';}
+  // 가-④ 철골: 5~7번 중 평가된 항목이 있을 때만
+  {const on=ck&&[5,6,7].some(i=>ck.items[i-1].gr&&ck.items[i-1].gr!=='-'),lv=[5,6,7].filter(i=>st(i)!=='na');
+    if(!on)t.a4='';
+    else if(lv.some(i=>st(i)==='unk'))t.a4=v37Need(lv.filter(i=>st(i)==='unk').join('·'));
+    else{const nm={5:'접합부',6:'변형',7:'부식'},bad=lv.filter(i=>st(i)==='bad'),good=lv.filter(i=>st(i)==='good');
+      t.a4=!bad.length?`철골부재의 ${v37Join(good.map(i=>nm[i]))} 상태는 양호한 상태로 조사되었다.`:`철골부재에서 ${v37Join(bad.map(i=>v37Body(op(i))))} 등이 발생된 상태로 조사되었`+(good.length?`으며, 철골부재의 ${v37Join(good.map(i=>nm[i]))} 상태는 양호한 상태로 조사되었다.`:'다.');}}
+  // 나-① 방수층
+  {const a=D('b1'),s=st(8);
+    if(a.length&&s==='good')conflict(8,a.length,'옥상·방수층');
+    t.b1=s==='unk'?v37Need(8):s==='bad'?v37Bad(op(8))+'다.':a.length?v37Clause(a,f,ov,{fallback:'옥상 바닥'})+'다.':s==='na'?'':'옥상 및 지붕 방수층은 전반적으로 양호한 상태로 조사되었다.';}
+  // 나-② 외부 마감재
+  {const a=D('b2'),s=st(9),drop=['오염','변색','망상균열'];
+    if(a.length){if(s==='good')conflict(9,a.length,'외부 마감재');const br=a.filter(d=>d.mem.includes('치장벽돌')),rest=a.filter(d=>!d.mem.includes('치장벽돌')),cl=[];
+      if(br.length){const x=v37Stat(br);cl.push(`외부 마감재(치장벽돌)에서 ${v37Join(v37Types(x.tc,x.ws,{drop,max:3}))} 등이 발생된 상태로 조사되었`);}
+      if(rest.length){const tp=v37Top(rest,2),x=v37Stat(tp.ds),mems=tp.mems.map(y=>y.replace(/^외부\s*/,''));
+        cl.push(`외부 ${v37Join(mems)||'마감재'}에서 ${v37Join(v37Types(x.tc,x.ws,{drop,max:3}))} 등이 발생된 상태로 조사되었`);}
+      t.b2=cl.join('으며, ')+'다.';}
+    else t.b2=s==='unk'?v37Need(9):s==='bad'?v37Bad(op(9))+'다.':s==='na'?'':'외부 마감재 및 치장재는 양호한 상태로 조사되었다.';}
+  // 나-③ 내부 마감면·이질재 접합부
+  {const a=D('b3'),s10=st(10),s11=st(11),drop=['오염','변색','망상균열'];
+    if(a.length){if(s10==='good'&&s11==='good')conflict('10·11',a.length,'내부 마감면');
+      const wall=a.filter(d=>v37Mem(d)==='벽체'||d.mem.includes('조적')),rest=a.filter(d=>!wall.includes(d)),het=a.some(d=>d.rem.includes('이질')),cl=[],loc=v37Floors(v37Stat(a).fl,f,ov);
+      if(wall.length){const x=v37Stat(wall),ty=v37Types(x.tc,x.ws,{drop,max:3});if(het&&ty.includes('균열'))ty.splice(ty.indexOf('균열')+1,0,'이질재 접합부 균열');
+        cl.push(`${loc?loc+' ':''}내부 ${/조적/.test(op(11))?'조적벽체':'벽체'}에서 ${v37Join(ty.slice(0,4))} 등이 발생된 상태로 조사되었`);}
+      if(rest.length){const tp=v37Top(rest,2),x=v37Stat(tp.ds),mems=tp.mems;
+        cl.push(`${!wall.length&&loc?loc+' ':''}${v37Join(mems)||'내부 마감재'}에서 ${v37Join(v37Types(x.tc,x.ws,{drop,max:3}))} 등이 발생된 상태로 조사되었`);}
+      t.b3=cl.join('으며, ')+'다.';}
+    else if(s10==='unk'||s11==='unk')t.b3=v37Need([10,11].filter(i=>st(i)==='unk').join('·'));
+    else{const bad=[10,11].filter(i=>st(i)==='bad');
+      t.b3=bad.length?`내부 마감면에서 ${v37Join(bad.map(i=>v37Body(op(i))))} 등이 발생된 상태로 조사되었다.`:(s10==='na'&&s11==='na')?'':'내부 마감면 및 이질재 접합부는 양호한 상태로 조사되었다.';}}
+  // 나-④ 적치물
+  {const s=st(12),o=v37s(op(12)).replace(/[.\s]+$/,'');
+    t.b4=s==='na'?'':s==='unk'?v37Need(12):s==='good'?'용도변경 및 물품 적치 등으로 인한 과하중 상태는 양호한 상태로 조사되었다.':`${o}${/설치$/.test(o)?'된':''} 상태로 조사되었으며, 이로 인한 하부층 구조부재에 결함 및 손상은 없는 것으로 확인되었다.`;}
+  // 다-①②③
+  t.c1=v37Pair(ck,[{i:13,good:'옹벽, 석축 및 담장의 배수 및 손상 상태'},{i:14,good:'비탈면의 배수 및 손상 상태'}]);
+  {const a=D('c2');if(a.length&&st(15)!=='bad'&&st(16)!=='bad'){if(st(15)==='good'||st(16)==='good')conflict('15·16',a.length,'난간·파라펫');t.c2=v37Clause(a,f,ov)+'다.';}
+    else t.c2=v37Pair(ck,[{i:15,good:'외부 난간 및 파라펫의 설치 및 손상 상태'},{i:16,good:'내부 난간의 설치 및 손상 상태'}]);}
+  t.c3=st(17)==='good'&&st(18)==='good'?'환기구 및 점검로의 손상 상태는 양호한 상태로 조사되었다.':v37Pair(ck,[{i:17,good:'환기구의 손상 상태'},{i:18,good:'점검로의 손상 상태'}]);
+  // 3. 안전등급 (회사 엑셀 매크로 stonResultGrade와 같은 문장)
+  const c=ck?v34Calc(ck):{tot:null,grade:''};
+  t.g=c.grade&&c.tot!=null?`금회 정기점검 결과, 제3종 시설물 평가 매뉴얼에 따른 안전등급별 종합상태 점수는 ${c.tot.toFixed(2)}점에 해당되며 등급은 "${c.grade}등급(${V37_GRADE[c.grade]})"으로 조사되었다.`:'[확인필요: 체크리스트 평가결과를 넣으면 점수와 등급이 들어가요]';
+  // 4. 종합의견
+  const low=c.grade&&'CDE'.includes(c.grade);
+  t.o1=!c.grade?'[확인필요: 안전등급]':low?'[확인필요: C등급 이하 — 1) 문구 지정 필요]':V37_FIX.o1;
+  {const sx=v37Stat([...D('a2'),...D('a3')]),A=v37Types(sx.tc,sx.ws,{max:4}),B=[],b2=D('b2'),b3=D('b3'),het=ds.some(d=>!d.rep&&(d.rem.includes('이질')||d.mem.includes('조적')));
+    if(D('a3').length&&!A.some(x=>x.includes('철근노출')||x.includes('박락')))A.push(...v37Types(v37Stat(D('a3')).tc,[],{max:1}));
+    if(b2.some(d=>v37Tok(d.typ).includes('균열')))B.push('외부 마감재 균열');
+    if(b3.some(d=>v37Tok(d.typ).includes('균열')))B.push(het?'조적벽체 및 이질재 접합부 균열':'내부 벽체 균열');
+    {const x=v37Stat([...D('b1'),...b2,...b3,...D('c2'),...D('c3')]);x.tc.delete('균열');for(const y of v37Types(x.tc,[],{drop:['오염','변색','망상균열'],max:3}))B.push(y);}
+    t.o2=!A.length&&!B.length?'':`결함조사 결과 '구조부재 결함: ${A.length?A.join(', ')+' 등':'발생하지 않음'} / 비구조부재 결함: ${B.length?B.join(', ')+' 등':'발생하지 않음'}' 등이 발생된 상태로 조사되었다. 상기 결함들은 콘크리트의 일반적인 재료적 특성(건조수축, 온도응력 등), 개구부 응력집중, ${het?'이질재 접합부(콘크리트+조적) 성질차이, ':''}공용 연수 증가에 따른 건축물의 노후화 등의 복합적인 요인에 의해 발생된 것으로 조사되었다.`;
+    if(!t.o2)notes.push('결함이 없어 종합의견 2)를 비웠어요.');}
+  t.o3=V37_FIX.o3;t.o4='';t.f42=low?'[확인필요: C등급 이하 — 4.2 문구 지정 필요]':V37_FIX.f42;t.f43=V37_FIX.f43;t.f44=V37_FIX.f44;
+  return {t,notes};}
+function v37ConNow(f){const a=v37ConAuto(f),own=(f.doc&&f.doc.con&&f.doc.con.t)||{},t={},ed={},stale={}; // 줄마다: 직접 고친 문장이 있으면 그것, 없으면 자동
+  for(const k of V37_KEYS){const o=k!=='g'&&own[k];t[k]=o?o.v:a.t[k];if(o){ed[k]=true;if(o.a!==a.t[k])stale[k]=true;}}
+  return {t,auto:a.t,notes:a.notes,ed,stale};}
+function v37ConNums(t){const no={};let n=0;for(const [kind,k] of V37_SEC){if(kind!=='l'){n=0;continue;}
+    if(k==='pre'||k==='g'||k[0]==='f'){no[k]='';continue;}if(!v37s(t[k])){no[k]='';continue;}no[k]=k[0]==='o'?(++n)+')':V37_CIRC[n++]||'';}
+  return no;}
+function v37ConText(f){const c=v37ConNow(f),no=v37ConNums(c.t),out=[];let head=[]; // 보고서에 들어갈 글 (빈 줄과 빈 소제목은 빼고 번호를 당김)
+  for(const [kind,k] of V37_SEC){if(kind==='h'){head=[k];continue;}if(kind==='s'){head=head.slice(0,1).concat(k);continue;}
+    const v=v37s(c.t[k]);if(!v)continue;if(head.length){out.push(...head);head=[];}out.push((no[k]?no[k]+' ':'')+v);}
+  return out.join('\n');}
+/* ---------- 회사 엑셀에서 건물 정보(준공연도, 용도, 층수) ---------- */
+function v37FromXl(f,u8){if(typeof XLSX==='undefined'||!f||!u8)return 0;if(f.doc&&f.doc.ov&&f.doc.ov.src==='app')return 0; // 앱에서 넣은 값은 덮어쓰지 않는다
+  const sn=XLSX.read(u8,{type:'array',bookSheets:true}).SheetNames.find(n=>String(n).replace(/\s/g,'')==='개요');if(!sn)return 0;
+  const ws=XLSX.read(u8,{type:'array',sheets:sn}).Sheets[sn];if(!ws)return 0;
+  const A=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:null,blankrows:true}),o={};let n=0;
+  const year=v=>{if(v==null||v==='')return '';if(v instanceof Date)return String(v.getFullYear());if(typeof v==='number'&&v>3000)return String(new Date(Date.UTC(1899,11,30)+Math.round(v)*86400000).getUTCFullYear());const m=String(v).match(/(19|20)\d{2}/);return m?m[0]:'';};
+  for(let r=0;r<Math.min(A.length,40);r++){const a=A[r]||[];for(let c=0;c<Math.min(a.length,4);c++){const lab=String(a[c]==null?'':a[c]).replace(/\s+/g,'');
+      if(lab==='용도'&&!o.use){o.use=v37s(a[c+1]);break;}if(lab==='준공연월일'&&!o.built){o.built=year(a[c+1]);break;}
+      if(lab==='층수'&&!o.up){o.up=v37s(a[c+1]);o.down=v37s(a[c+2]);break;}}}
+  for(const k of ['built','use','up','down'])if(o[k])n++;else delete o[k];if(!n)return 0;
+  o.src='xlsm';f.doc=f.doc||{};f.doc.ov=o;return n;}
+/* ---------- 다음 회차 시작: 직접 고친 요약표·종합결론만 전회 보고서 값으로 넘긴다 (v34Roll보다 먼저 불러야 체크리스트를 쓸 수 있다) ---------- */
+function v37Roll(f){const dc=f&&f.doc;if(!dc)return;f.prev.doc=f.prev.doc||{};
+  if(dc.sum&&Array.isArray(dc.sum.rows)){const it=f.prev.doc.inspectionTable=Object.assign({},f.prev.doc.inspectionTable||{});
+    it.executiveSummaryTables={executiveSummaryTable:dc.sum.rows.map(r=>({defectType:r.t||'',repairMethod:r.m||''}))};delete dc.sum;}
+  if(dc.con&&dc.con.t&&Object.keys(dc.con.t).length){const c=v37ConNow(f),no=v37ConNums(c.t),arr=[],ir=f.prev.doc.inspectionResult=Object.assign({},f.prev.doc.inspectionResult||{});
+    for(const [kind,k] of V37_SEC){if(k[0]==='f'||/^4\.[234]/.test(k))continue;
+      if(kind!=='l')arr.push({title:k,content:'',siteOpinion:''});else if(v37s(c.t[k]))arr.push({title:'',content:(no[k]?no[k]+' ':'')+v37s(c.t[k]),siteOpinion:''});}
+    ir.comprehensiveConclusions={comprehensiveConclusion:arr};
+    ir.otherMatters=Object.assign({},ir.otherMatters||{},{necessity:v37s(c.t.f42),requirements:v37s(c.t.f43),suggestions:v37s(c.t.f44)});}
+  delete dc.con;}
+function v37Prev(f){const ir=(((f.prev||{}).doc||{}).inspectionResult)||{},cc=ir.comprehensiveConclusions,arr=cc?v30Arr(cc.comprehensiveConclusion):[],om=ir.otherMatters||{},out=[];
+  for(const x of arr){const tt=typeof x==='object'&&x?v37s(typeof x.title==='string'?x.title:''):'',ct=typeof x==='object'&&x?v37s(typeof x.content==='string'?x.content:''):'';if(tt)out.push({h:tt});if(ct)out.push({p:ct});}
+  for(const [h,k] of [['4.2 정밀안전점검 및 진단의 필요성','necessity'],['4.3 유지관리 특별 요구사항','requirements'],['4.4 기타(건의사항)','suggestions']])if(typeof om[k]==='string'&&om[k].trim()){out.push({h});out.push({p:om[k].trim()});}
+  return out;}
+/* ---------- V37-TAB: 화면 ---------- */
+function v37Clean(f){if(f.doc&&!Object.keys(f.doc).length)delete f.doc;}
+function v37Tab(k){const f=F();if(!f)return;V37.tab=k;
+  document.querySelectorAll('#v37Tabs [data-v37tab]').forEach(b=>b.setAttribute('aria-selected',b.dataset.v37tab===k?'true':'false'));
+  $('#v34Body').hidden=k!=='ck';$('#v37Body').hidden=k==='ck';
+  document.querySelector('#v34Pop [data-act="v34copy"]').hidden=k!=='ck';const cp=$('#v37Copy');cp.hidden=k==='ck';cp.textContent=k==='sum'?'엑셀에 붙여 넣기용 복사':'전체 복사';
+  if(k==='ck'){$('#v37Body').innerHTML='';v34Sync();}else if(k==='sum')v37SumDraw();else v37ConDraw();}
+function v37SumDraw(){const f=F(),n=v37SumNow(f),rows=n.rows;
+  const tr=(i)=>`<tr data-i="${i}">${i%5===0?`<th class="grp" rowspan="5" scope="rowgroup">${i<5?'구조체<small>(천장 보, 기둥, 슬래브)</small>':'비구조체<small>(비내력벽, 마감재, 바닥 등)</small>'}</th>`:''}
+    <td class="in"><input data-sm="t" autocomplete="off" aria-label="${i<5?'구조체':'비구조체'} ${i%5+1}번째 줄 결함종류"></td><td class="in"><input data-sm="m" list="v37dlM" autocomplete="off" aria-label="${i<5?'구조체':'비구조체'} ${i%5+1}번째 줄 보수방법"></td></tr>`;
+  $('#v37Body').innerHTML=`<div class="v34paper v37sum"><h3>정기안전점검 실시결과 요약표</h3>
+    <p class="v34meta">${esc(v31TaskLabel(f)||f.name)} · <span id="v37SumSrc"></span></p>
+    <div class="v34key"><span><i class="au"></i>결함에서 자동으로 만든 줄</span><span><i class="in"></i>직접 고친 표</span><button data-act="v37regen" id="v37Regen" hidden>결함에서 다시 만들기</button></div>
+    <div style="overflow-x:auto"><table class="v34t v37t"><colgroup><col style="width:210px"><col><col></colgroup>
+      <thead><tr><th scope="col">부재</th><th scope="col">결함종류</th><th scope="col">보수방법</th></tr></thead><tbody>${rows.map((_,i)=>tr(i)).join('')}</tbody></table></div>
+    <div id="v37SumWarn"></div>
+    <datalist id="v37dlM">${[...new Set(Object.values(V37_METHOD).concat(V37_MERGE.map(x=>x[2])))].map(v=>`<option value="${esc(v)}"></option>`).join('')}</datalist></div>`;
+  document.querySelectorAll('#v37Body tr[data-i]').forEach(tr=>{const r=rows[+tr.dataset.i]||{};tr.querySelector('[data-sm="t"]').value=r.t||'';tr.querySelector('[data-sm="m"]').value=r.m||'';});
+  v37SumSync();}
+function v37SumSync(){const f=F(),n=v37SumNow(f);
+  $('#v37Body .v37sum').classList.toggle('own',n.own);$('#v37Regen').hidden=!n.own;
+  $('#v37SumSrc').textContent=n.own?(n.stale?'직접 고친 표예요. 고친 뒤에 결함이 바뀌어 자동 표가 달라졌어요':'직접 고친 표예요'):`지금 결함 ${n.auto.used}건에서 만들었어요. 결함을 고치면 따라 바뀌어요`;
+  const w=n.auto.warn.slice();if(n.own&&n.stale)w.unshift('지금 결함으로 만든 표: '+(n.auto.rows.filter(r=>r.t).map(r=>r.t).join(', ')||'결함 없음'));
+  $('#v37SumWarn').innerHTML=w.length?`<div class="v37warn"><b>확인할 것</b><ul>${w.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:'';
+  const k=n.rows.filter(r=>r.t).length;$('#v34Note').textContent=[`${k}줄`,n.auto.warn.length?`확인할 것 ${n.auto.warn.length}가지`:'',n.own&&n.stale?'결함이 바뀌었어요':''].filter(Boolean).join(' · ');}
+function v37ConDraw(){const f=F(),c=v37ConNow(f),ov=v37Ov(f),pv=v37Prev(f);V37.auto=c.auto;
+  const line=k=>`<div class="v37ln" data-k="${k}"><span class="no" aria-hidden="true"></span><textarea data-con="${k}" rows="1" ${k==='g'?'readonly aria-label="안전등급 문장 (자동)"':`aria-label="${k} 문장"`}${V37_HINT[k]?` placeholder="${esc(V37_HINT[k])}"`:''}></textarea><button class="rs" data-act="v37reset" data-k="${k}" hidden>자동으로</button><p class="was" hidden></p></div>`;
+  $('#v37Body').innerHTML=`<div class="v34paper v37con"><h3>종합결론 및 건의</h3>
+    <p class="v34meta">${esc(v31TaskLabel(f)||f.name)} · 체크리스트와 결함에서 만든 초안이에요. 읽고 고쳐 쓰세요</p>
+    <div class="v34key"><span><i class="au"></i>자동으로 만든 문장</span><span><i class="in"></i>직접 고친 문장</span><span><i class="st"></i>고친 뒤 자동 문장이 바뀐 줄</span></div>
+    <div class="v37ov"><label>준공연도<input data-ov="built" inputmode="numeric" maxlength="4" autocomplete="off"></label><label>용도<input data-ov="use" autocomplete="off"></label><label>지상 층수<input data-ov="up" inputmode="numeric" maxlength="2" autocomplete="off"></label><label>지하 층수<input data-ov="down" inputmode="numeric" maxlength="2" autocomplete="off"></label></div>
+    <div id="v37Notes"></div>
+    ${V37_SEC.map(([kind,k])=>kind==='h'?`<h4>${esc(k)}</h4>`:kind==='s'?`<h5>${esc(k)}</h5>`:line(k)).join('')}
+    ${pv.length?`<details class="v37prev"><summary>전회 보고서의 종합결론 보기</summary>${pv.map(x=>x.h?`<h6>${esc(x.h)}</h6>`:`<p>${esc(x.p)}</p>`).join('')}</details>`:''}</div>`;
+  for(const k of ['built','use','up','down'])$('#v37Body [data-ov="'+k+'"]').value=ov[k]||'';
+  document.querySelectorAll('#v37Body [data-con]').forEach(ta=>{ta.value=c.t[ta.dataset.con]||'';});
+  v37ConSync();}
+function v37Grow(ta){ta.style.height='auto';ta.style.height=Math.max(44,ta.scrollHeight+2)+'px';}
+function v37ConSync(fill){const f=F(),c=v37ConNow(f);V37.auto=c.auto;const cur={};let need=0;
+  document.querySelectorAll('#v37Body .v37ln').forEach(ln=>{const k=ln.dataset.k,ta=ln.querySelector('textarea');
+    if((fill||k==='g')&&!c.ed[k]&&document.activeElement!==ta)ta.value=c.t[k]||''; // 고치지 않은 줄은 자동 문장을 따라간다
+    cur[k]=ta.value;ln.classList.toggle('ed',!!c.ed[k]);ln.classList.toggle('st',!!c.stale[k]);ln.querySelector('.rs').hidden=!c.ed[k];
+    const was=ln.querySelector('.was');was.hidden=!c.stale[k];was.textContent=c.stale[k]?'지금 자동 문장: '+(c.auto[k]||'(없음)'):'';
+    if(ta.value.includes('[확인필요'))need++;v37Grow(ta);});
+  const no=v37ConNums(cur);document.querySelectorAll('#v37Body .v37ln').forEach(ln=>{ln.querySelector('.no').textContent=no[ln.dataset.k]||'';});
+  $('#v37Notes').innerHTML=c.notes.length?`<div class="v37warn"><b>확인할 것</b><ul>${c.notes.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:'';
+  const ne=Object.keys(c.ed).length,ns=Object.keys(c.stale).length;
+  $('#v34Note').textContent=[need?`[확인필요] ${need}곳`:'',ne?`직접 고친 문장 ${ne}줄`:'고친 문장 없음',ns?`자동 문장이 바뀐 줄 ${ns}줄`:''].filter(Boolean).join(' · ');}
+async function v37Copy(){const f=F();if(!f)return;const cl=s=>String(s||'').replace(/[\t\r\n]+/g,' '),sum=V37.tab==='sum';
+  const txt=sum?v37SumNow(f).rows.map(r=>cl(r.t)+'\t'+cl(r.m)).join('\r\n'):v37ConText(f);let ok=false;
+  try{await navigator.clipboard.writeText(txt);ok=true;}catch(e){try{const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();ok=document.execCommand('copy');ta.remove();}catch(_){}}
+  toast(!ok?'복사하지 못했어요. 브라우저가 복사를 막았어요':sum?'복사했어요. 회사 엑셀 점검표 시트의 D4 칸을 누르고 붙여 넣으세요 (10줄 × 2칸)':'종합결론 전체를 복사했어요');}
+$('#v34Pop').addEventListener('click',async e=>{const t=e.target.closest('[data-v37tab],[data-act]');if(!t)return;const f=F();if(!f)return;
+  if(t.dataset.v37tab){v37Tab(t.dataset.v37tab);return;}const a=t.dataset.act;
+  if(a==='v37copy'){v37Copy();return;}
+  if(a==='v37regen'){if(!await confirmBox('결함에서 다시 만들기','직접 고친 요약표를 지우고 지금 결함으로 다시 만들어요.','다시 만들기'))return;
+    if(f.doc){delete f.doc.sum;v37Clean(f);}save();if(V37.tab==='sum')v37SumDraw();return;}
+  if(a==='v37reset'){const k=t.dataset.k;if(f.doc&&f.doc.con&&f.doc.con.t){delete f.doc.con.t[k];if(!Object.keys(f.doc.con.t).length)delete f.doc.con;v37Clean(f);}
+    save();const ta=document.querySelector(`#v37Body [data-con="${k}"]`);if(ta)ta.value=v37ConAuto(f).t[k]||'';v37ConSync();}});
+$('#v34Pop').addEventListener('input',e=>{const t=e.target,f=F();if(!f||!t.dataset)return;
+  if(t.dataset.sm){const n=v37SumNow(f),tr=t.closest('tr');if(!tr)return;f.doc=f.doc||{}; // 한 칸이라도 고치면 표 전체를 직접 고친 표로 저장
+    if(!n.own)f.doc.sum={rows:n.auto.rows.map(r=>({t:r.t,m:r.m})),src:'app'};f.doc.sum.rows[+tr.dataset.i][t.dataset.sm]=t.value;f.doc.sum.a=v37SumKey(n.auto.rows);
+    if(v37SumKey(f.doc.sum.rows)===f.doc.sum.a){delete f.doc.sum;v37Clean(f);} // 자동 표와 같아지면 저장을 지운다
+    save();v37SumSync();return;}
+  if(t.dataset.con&&t.dataset.con!=='g'){const k=t.dataset.con,au=v37ConAuto(f).t[k]||'';
+    if(t.value===au){if(f.doc&&f.doc.con&&f.doc.con.t){delete f.doc.con.t[k];if(!Object.keys(f.doc.con.t).length)delete f.doc.con;v37Clean(f);}}
+    else{f.doc=f.doc||{};f.doc.con=f.doc.con||{t:{}};f.doc.con.t=f.doc.con.t||{};f.doc.con.t[k]={v:t.value,a:au};}
+    save();v37ConSync();return;}
+  if(t.dataset.ov){const cur=v37Ov(f);cur[t.dataset.ov]=t.value.trim();f.doc=f.doc||{};f.doc.ov={built:cur.built,use:cur.use,up:cur.up,down:cur.down,src:'app'};save();v37ConSync(true);}});
+document.addEventListener('click',e=>{const a=e.target.closest('[data-act]');if(!a)return;const k=a.dataset.act; // 검사 화면의 단추에서 탭을 바로 연다
+  if(k==='v37sum'||k==='v37con'){$('#v31Pop').hidden=true;if(!$('#v33Pop').hidden)v33Close(true);v34Open();if(!$('#v34Pop').hidden)v37Tab(k==='v37sum'?'sum':'con');}});
+/*V37-END*/
 /*V34-START: 문서 화면 1 = 체크리스트 / 안전등급 (V34-DOC).
   시설물에 새 항목 doc={ck:{items:[{op,need,gr,pv?}×18], emg, msr, major, pvx?, src}}.
     op 점검자 의견, need 보수필요 유무, gr 평가결과('a'~'e', '-' = 해당 없음, '' = 아직 안 넣음), pv = 전회 보고서에서 온 값이고 아직 확인 안 함(보라색)
@@ -2073,7 +2442,7 @@ function v34Open(){const f=F();if(!f){toast('먼저 시설물을 만드세요');
     ${dl('v34dlN',V34_NEEDS)}</div>`;
   document.querySelectorAll('#v34Body tr[data-i]').forEach(tr=>{const it=ck.items[+tr.dataset.i];tr.querySelector('[data-ck="op"]').value=it.op||'';tr.querySelector('[data-ck="need"]').value=it.need||'';});
   $('#v34Body [data-ckx="major"]').value=ck.major||'';
-  v34Sync();$('#v34Pop').hidden=false;}
+  v34Sync();$('#v34Pop').hidden=false;v37Tab('ck'); /*V37-TAB: 열 때는 늘 체크리스트 탭*/}
 function v34Sync(){const f=F(),ck=v34Ck(f);if(!ck)return;const c=v34Calc(ck),p=v34Prev(f),f2=v=>v==null?'':v.toFixed(2);let npv=0; // 입력 칸은 건드리지 않고 표시만 고친다
   document.querySelectorAll('#v34Body tr[data-i]').forEach(tr=>{const i=+tr.dataset.i,it=ck.items[i],q=p&&p.items[i];if(it.pv)npv++;
     tr.querySelectorAll('td.in').forEach(td=>td.classList.toggle('pv',!!it.pv));
