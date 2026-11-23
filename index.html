@@ -810,6 +810,10 @@ button.v39open{cursor:pointer}button.v39open:hover{background:var(--soft)}
 .v39none{padding:28px 4px;text-align:center;color:var(--muted);font-size:var(--f-m)}
 .v39link{min-height:44px;padding:10px 4px;border:0;background:transparent;color:var(--accent);font-size:var(--f-s);text-decoration:underline;cursor:pointer}
 #v39Trash{margin-top:8px}.v39foot{margin:14px 4px 0;font-size:var(--f-s);color:var(--muted)}
+/*V39B: 학교(과업)로 묶은 줄*/
+.v39grp{display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid var(--rule)}.v39grp .btn{flex:none}
+.v39row.v39sub{padding-left:20px}.v39row.v39sub .v39open b{font-weight:500}
+@media (max-width:620px){.v39grp{flex-wrap:wrap}.v39grp .v39open{flex-basis:100%}.v39grp .btn{flex:1}.v39row.v39sub{padding-left:10px}}
 @media (max-width:620px){.v39row{flex-wrap:wrap}.v39open{flex-basis:100%}.v39row .ago{flex:1}.v39bar{flex-wrap:wrap}.v39bar .in{flex-basis:100%}.v39bar .btn{flex:1}}
 /*V39-NEW: 과업 만들기*/
 #v39New{position:fixed;inset:0;z-index:45;background:rgba(15,20,25,.45);display:flex;padding:20px 16px;overflow-y:auto}
@@ -2054,8 +2058,9 @@ function v31Go(did,defId){const f=F(),d=f&&f.drawings.find(x=>x.id===did);if(!d)
 document.addEventListener('click',e=>{const p=$('#v31Pop');if(p&&e.target===p)p.hidden=true;}); // 검사 화면 바깥(어두운 곳)을 누르면 닫힘
 /*V31-END*/
 /*V35-START: 화면 정리(V35-UI는 스타일만), 바로 저장(V35-SAVE), Esc(V35-ESC), 업데이트 안내(V35-NEWS), 파일 끌어다 놓기(V35-DROP). 저장 값은 바뀌지 않는다*/
-const V35={dirty:false},V35_VER='v39'; /*V39: 버전 표시*/
+const V35={dirty:false},V35_VER='v39b'; /*V39B: 버전 표시*/
 const V35_NEWS=[
+ {v:'v39b',d:'2026-11-24',items:['과업 목록을 학교 단위로 묶었어요. 학교·연도·시기·구분이 같은 건물이 한 과업 아래에 모여요','과업 줄의 \"건물 추가\"를 누르면 학교와 회차가 채워진 만들기 창이 열려요','\"과업 삭제\"는 그 과업의 건물을 모두 지운 과업으로 옮겨요. 건물마다 되살릴 수 있어요']},
  {v:'v39',d:'2026-11-23',items:['앱을 열면 과업 목록이 먼저 떠요. 찾기, 최근 접속, 과업 만들기, 삭제가 여기 있어요. 위 막대 왼쪽의 \"과업 목록\"으로 언제든 돌아와요','과업 만들기: 과업 정보를 넣고, 이전에 했던 과업이면 전회(전차) 회사 엑셀을 끌어다 놓으세요. 결함은 확인 전(보라색)으로, 체크리스트·결론·등급은 전회 보고서 값으로 들어와요','위치도 CAD(DXF·ZIP)나 도면 그림도 끌어다 놓으면 돼요','지운 과업은 30일 동안 되살릴 수 있어요']},
  {v:'v38c',d:'2026-11-23',items:['보고서 출력 탭에서 회사 엑셀을 넣으면 값을 가져와요: 과업·건물 값, 전차 등급·점수, 기술자 명단, 내진·치장벽돌·설계도서·보수이력, 전차점검','전회(전차) 엑셀을 넣어도 돼요. 회차를 보고 가려서, 그 엑셀의 결론은 전차점검(1)로 넣고 용역명·기간·금액은 참고로만 보여 줘요','직접 넣은 값은 덮어쓰지 않아요','전회 값이 그대로 들어가는 표(치장벽돌·내진·기술자 명단)는 "확인할 것"에 알려 줘요']},
  {v:'v38b',d:'2026-11-23',items:['새 빈 양식에 맞췄어요: 기술자 10명, 요약표 7줄씩, 공정표 그림 칸. 전에 쓰던 양식도 그대로 돼요','새 양식을 쓰려면 보고서 출력 탭에서 "다른 양식 불러오기"로 한 번 다시 불러오세요']},
@@ -4275,14 +4280,31 @@ function v39StatText(f){const s=v39Stat(f);return [`층 ${s.fl}개`,`결함 ${s.
 function v39Ago(iso){const t=Date.parse(iso||'');if(!t)return '';const m=Math.floor((Date.now()-t)/60000);if(m<1)return '방금';if(m<60)return m+'분 전';const h=Math.floor(m/60);if(h<24)return h+'시간 전';const d=Math.floor(h/24);if(d<31)return d+'일 전';const q=new Date(t);return `${q.getFullYear()}.${v38p2(q.getMonth()+1)}.${v38p2(q.getDate())}`;}
 function v39Stamp(iso){const q=new Date(iso);return `${String(q.getFullYear()).slice(2)}.${v38p2(q.getMonth()+1)}.${v38p2(q.getDate())} ${v38p2(q.getHours())}:${v38p2(q.getMinutes())}`;}
 /* ---------- 과업 목록 ---------- */
-function v39List(){const q=V39.q.trim().toLowerCase(),tr=S.trash||[];
-  const rows=S.facilities.map((f,i)=>({f,i,t:Date.parse(f.openedAt||'')||0})).filter(o=>!q||(v39Title(o.f)+' '+(o.f.name||'')).toLowerCase().includes(q)).sort((a,b)=>b.t-a.t||a.i-b.i);
-  $('#v39List').innerHTML=rows.length?rows.map(({f})=>{const tt=v39Title(f),rc=f.openedAt&&Date.now()-Date.parse(f.openedAt)<7*864e5,nm=f.name&&!tt.includes(f.name)?' · '+f.name:'';
-    return `<li class="v39row${f.id===S.curF?' cur':''}"><button type="button" class="v39open" data-v39open="${f.id}"><span class="tt"><b>${esc(tt)}</b>${rc?`<i class="v39rc">최근 접속 ${v39Stamp(f.openedAt)}</i>`:''}</span><small>${esc(v39StatText(f)+nm)}</small></button><span class="ago">${esc(v39Ago(f.openedAt))}</span><button type="button" class="btn" data-v39del="${f.id}" aria-label="${esc(tt)} 삭제">삭제</button></li>`;}).join('')
-    :`<li class="v39none">${S.facilities.length?'찾는 과업이 없어요':'아직 과업이 없어요. <b>과업 만들기</b>를 눌러 시작하세요'}</li>`;
+/*V39B: 과업 = 학교 + 연도 + 시기 + 구분이 같은 건물들*/
+const v39Key=f=>{const k=f.task;return k&&v38s(k.school)?[v38s(k.school),k.year||'',k.half==='2'?'2':'1',k.kind||''].join('|'):'';};
+const v39Bld=f=>(f.task&&v38s(f.task.building))||f.name||'건물';
+function v39GroupTitle(f){const k=f.task||{};return [k.year?`${k.year} ${v39Half(k.half)}`:'',k.school,k.kind].filter(Boolean).join(' ');}
+function v39Groups(){const m=new Map(),out=[];
+  S.facilities.forEach((f,i)=>{const key=v39Key(f)||'#'+f.id;let g=m.get(key);if(!g){g={key,school:!!v39Key(f),items:[]};m.set(key,g);out.push(g);}g.items.push({f,i,t:Date.parse(f.openedAt||'')||0});});
+  for(const g of out){g.items.sort((a,b)=>b.t-a.t||a.i-b.i);g.t=g.items[0].t;g.i=Math.min(...g.items.map(o=>o.i));}
+  return out.sort((a,b)=>b.t-a.t||a.i-b.i);} // 최근에 연 과업이 위, 과업 안에서도 최근에 연 건물이 위
+function v39List(){const q=V39.q.trim().toLowerCase(),tr=S.trash||[],hit=s=>s.toLowerCase().includes(q),html=[];
+  const row=(f,inG)=>{const full=v39Title(f),tt=inG?v39Bld(f):full,rc=f.openedAt&&Date.now()-Date.parse(f.openedAt)<7*864e5,nm=f.name&&!full.includes(f.name)?' · '+f.name:'';
+    return `<li class="v39row${inG?' v39sub':''}${f.id===S.curF?' cur':''}"><button type="button" class="v39open" data-v39open="${f.id}"><span class="tt"><b>${esc(tt)}</b>${rc?`<i class="v39rc">최근 접속 ${v39Stamp(f.openedAt)}</i>`:''}</span><small>${esc(v39StatText(f)+nm)}</small></button><span class="ago">${esc(v39Ago(f.openedAt))}</span>${!inG&&v39Key(f)?`<button type="button" class="btn" data-v39add="${f.id}">건물 추가</button>`:''}<button type="button" class="btn" data-v39del="${f.id}" aria-label="${esc(full)} 삭제">삭제</button></li>`;};
+  for(const g of v39Groups()){const f0=g.items[0].f,gt=g.school?v39GroupTitle(f0):'',all=!q||(g.school&&hit(gt)),its=g.items.filter(o=>all||hit(v39Title(o.f)+' '+(o.f.name||'')));if(!its.length)continue;
+    if(g.items.length>1){const nd=g.items.reduce((s,o)=>s+v39Stat(o.f).nd,0);
+      html.push(`<li class="v39grp"><button type="button" class="v39open" data-v39openg="${f0.id}"><span class="tt"><b>${esc(gt)}</b></span><small>건물 ${g.items.length}개 · 결함 ${nd}개</small></button><button type="button" class="btn" data-v39add="${f0.id}">건물 추가</button><button type="button" class="btn" data-v39delg="${f0.id}" aria-label="${esc(gt)} 과업 삭제">과업 삭제</button></li>`);
+      for(const o of its)html.push(row(o.f,true));}
+    else html.push(row(f0,false));}
+  $('#v39List').innerHTML=html.length?html.join(''):`<li class="v39none">${S.facilities.length?'찾는 과업이 없어요':'아직 과업이 없어요. <b>과업 만들기</b>를 눌러 시작하세요'}</li>`;
   $('#v39Trash').innerHTML=tr.length?`<button type="button" class="v39link" data-v39="trash" aria-expanded="${V39.trash}">지운 과업 ${tr.length}개 ${V39.trash?'접기':'보기'}</button>`+(V39.trash?`<ul class="v39tl">${tr.map((t,i)=>{const left=Math.max(0,V39.DAYS-Math.floor((Date.now()-(Date.parse(t.at)||0))/864e5));
       return `<li class="v39row"><span class="v39open"><span class="tt"><b>${esc(v39Title(t.f))}</b></span><small>${esc(`${left}일 뒤에 이 기기에서 지워져요 · `+v39StatText(t.f))}</small></span><button type="button" class="btn" data-v39undel="${i}">되살리기</button><button type="button" class="btn" data-v39kill="${i}">완전히 지우기</button></li>`;}).join('')}</ul>`:''):'';
   $('#v39Back').hidden=!F();}
+async function v39DelGroup(id){const g=v39Groups().find(g=>g.items.some(o=>o.f.id===id));if(!g)return;const fs=g.items.map(o=>o.f),nd=fs.reduce((s,f)=>s+v39Stat(f).nd,0);
+  const ok=await confirmBox('과업 삭제',`"${v39GroupTitle(fs[0])}"의 건물 ${fs.length}개(${fs.map(v39Bld).join(', ')})를 지운 과업으로 옮겨요. 결함 ${nd}개가 들어 있어요. ${V39.DAYS}일 동안 건물마다 되살릴 수 있고 그 뒤에는 이 기기에서 지워져요.`,'삭제');if(!ok)return;
+  const at=new Date().toISOString();S.facilities=S.facilities.filter(x=>!fs.includes(x));S.trash=S.trash||[];for(const f of fs)S.trash.push({f,at});
+  if(!F()){const n=S.facilities[0];S.curF=n?n.id:null;S.curD=n&&n.drawings.length?sortFloors(n.drawings)[0].id:null;sel=null;undoStack=[];}
+  save();renderAll();requestAnimationFrame(fit);toast(`건물 ${fs.length}개를 지운 과업으로 옮겼어요`);}
 function v39Show(){V39.q='';$('#v39Q').value='';$('#v39Home').hidden=false;v39List();}
 function v39Hide(){$('#v39Home').hidden=true;}
 function v39Enter(id){const f=S.facilities.find(x=>x.id===id);if(!f)return;
@@ -4313,7 +4335,7 @@ async function v39Kill(i){const t=(S.trash||[])[i];if(!t)return;
 const v39BackRound=t=>/^\d{4}$/.test(t.year||'')?(t.half==='2'?{year:t.year,half:'1'}:{year:String(+t.year-1),half:'2'}):{};
 function v39T(){const o={};document.querySelectorAll('#v39Card [data-v39f]').forEach(el=>{o[el.dataset.v39f]=String(el.value||'').trim();});
   return {school:o.school||'',building:o.building||'',region:o.region||'',year:o.year||'',half:o.half==='2'?'2':'1',kind:V31_KINDS.includes(o.kind)?o.kind:V31_KINDS[0]};}
-function v39NewOpen(files){const now=new Date(),dir='webkitdirectory' in HTMLInputElement.prototype;
+function v39NewOpen(files,preset){ /*V39B: preset = 건물 추가에서 넘긴 과업 정보*/const now=new Date(),dir='webkitdirectory' in HTMLInputElement.prototype;
   V39.nw={mode:'new',prev:null,draw:null,dirty:{},busy:false,step:'',err:'',dir};
   $('#v39Card').innerHTML=`<h3>과업 만들기</h3>
   <h4>1. 과업 정보</h4>
@@ -4331,8 +4353,10 @@ function v39NewOpen(files){const now=new Date(),dir='webkitdirectory' in HTMLInp
   <p class="v39msg" id="v39Msg" role="status"></p>
   <div class="btnrow"><button type="button" class="btn" data-v39="cancel" id="v39No">취소</button><button type="button" class="btn primary" data-v39="create" id="v39Go">만들기</button></div>
   <input type="file" id="v39InXl" accept=".xlsm,.xlsx,.xls,.xml" hidden><input type="file" id="v39InDir" webkitdirectory multiple hidden><input type="file" id="v39InDraw" accept=".dxf,.zip,image/*" multiple hidden>`;
-  $('#v39half').value=now.getMonth()<6?'1':'2';$('#v39New').hidden=false;v39NewUpd();
-  if(files&&files.length)v39Take(files,'');else setTimeout(()=>{const el=$('#v39school');if(el)el.focus();},30);}
+  $('#v39half').value=now.getMonth()<6?'1':'2';
+  if(preset)for(const k of ['school','region','year','half','kind']){const el=$('#v39'+k);if(el&&preset[k]){el.value=preset[k];V39.nw.dirty[k]=true;}} /*V39B: 넣어 준 값은 엑셀을 놓아도 바뀌지 않는다*/
+  $('#v39New').hidden=false;v39NewUpd();
+  if(files&&files.length)v39Take(files,'');else{const el=$(preset?'#v39building':'#v39school');if(el)el.focus();}} /*V39B: 조금 뒤에 초점을 옮기면 그 사이에 넣던 글자가 다른 칸으로 간다(시험에서 한 번 나옴). 바로 옮긴다*/
 function v39NewClose(){if(V39.nw&&V39.nw.busy)return;$('#v39New').hidden=true;$('#v39Card').innerHTML='';V39.nw=null;}
 function v39Plan(){const w=V39.nw,t=v39T(),p=w.mode==='prev'?w.prev:null,mine=/^\d{4}$/.test(t.year)?`${t.year}_${t.half}`:'',seq=(p&&p.seq||'').slice(0,6);
   return {t,p,mine,seq,asPrev:!!p&&p.kind!=='xml'&&!(seq&&mine&&seq>=mine)};} // 엑셀 회차가 과업 회차보다 앞이거나 회차를 모르면 전회 자료로 넣는다
@@ -4408,6 +4432,9 @@ async function v39DropFiles(dt){const ents=[...(dt.items||[])].map(it=>it.kind==
 document.addEventListener('click',e=>{const t=e.target;if(!t.closest)return;
   if(t.closest('[data-act="v39home"]')){v39Show();return;}
   if($('#v39Home').hidden&&$('#v39New').hidden)return;let b;
+  if((b=t.closest('[data-v39add]'))){const f=S.facilities.find(x=>x.id===b.dataset.v39add);v39NewOpen(null,f&&f.task);return;} /*V39B*/
+  if((b=t.closest('[data-v39delg]'))){v39DelGroup(b.dataset.v39delg);return;}
+  if((b=t.closest('[data-v39openg]'))){v39Enter(b.dataset.v39openg);return;}
   if((b=t.closest('[data-v39del]'))){v39Del(b.dataset.v39del);return;}
   if((b=t.closest('[data-v39open]'))){v39Enter(b.dataset.v39open);return;}
   if((b=t.closest('[data-v39undel]'))){v39Undel(+b.dataset.v39undel);return;}
