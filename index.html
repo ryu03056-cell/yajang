@@ -329,7 +329,7 @@ main{display:flex;position:relative;min-height:0}
 <body>
 <div id="app">
   <header class="top"><!--V28-UI: 왼쪽 저장 상태, 가운데 동·층 알약, 오른쪽 목록·출력·파일·설정-->
-    <div class="l"><button class="tbtn" id="v33SideBtn" data-act="v33side" aria-pressed="false" title="왼쪽 층·결함 창 열고 닫기">층·결함 창</button><!--V33-WIDE--><span class="save"><i aria-hidden="true"></i><span id="status"></span></span><span id="srcBadge" hidden title="불러온 원본 DXF를 바탕으로 결함만 바꿔 내보내요">원본 보존</span><!--V21-SRC--><button id="v35Ver" data-act="v35news" title="업데이트 안내"></button><!--V35-NEWS--></div>
+    <div class="l"><button class="tbtn" id="v39HomeBtn" data-act="v39home" title="과업 목록" aria-label="과업 목록"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg><span>과업 목록</span></button><!--V39-HOME--><button class="tbtn" id="v33SideBtn" data-act="v33side" aria-pressed="false" title="왼쪽 층·결함 창 열고 닫기">층·결함 창</button><!--V33-WIDE--><span class="save"><i aria-hidden="true"></i><span id="status"></span></span><span id="srcBadge" hidden title="불러온 원본 DXF를 바탕으로 결함만 바꿔 내보내요">원본 보존</span><!--V21-SRC--><button id="v35Ver" data-act="v35news" title="업데이트 안내"></button><!--V35-NEWS--></div>
     <div class="c">
       <button class="pill" data-act="floorpop" aria-expanded="false" aria-haspopup="true" aria-label="동·층 고르기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="1"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></svg><span class="pf" id="pillFac">시설물 없음</span><span class="sep"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 4l9 5-9 5-9-5z"/><path d="M3 14l9 5 9-5"/></svg><b id="pillFl">도면 없음</b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg></button>
       <div class="fpop" id="floorPop" hidden><section><h5>동 (시설물)</h5><div id="facList"></div></section><section><h5>층</h5><div id="flList"></div></section></div>
@@ -792,6 +792,38 @@ body.v35drag::after{content:'여기에 놓으면 열어요 · 위치도(zip, dxf
 .v38src.no{background:#FFE9C2;color:#7A4B00}
 .v38nm{font-size:var(--f-s);color:#555;white-space:normal}
 .v38hintv{display:block;margin-top:2px;color:#7A4B00} /*V38C: 전회 엑셀의 과업 값(참고)*/
+/*V39-HOME: 시작 화면(과업 목록). 색·글자 크기는 v35 값 그대로*/
+#v39HomeBtn{display:inline-flex;align-items:center;gap:6px;flex:none}#v39HomeBtn svg{width:18px;height:18px;flex:none}
+@media (max-width:760px){#v39HomeBtn span{display:none}#v39HomeBtn{padding:0;justify-content:center}}
+#v39Home{position:fixed;inset:0;z-index:44;background:var(--bg);overflow-y:auto;padding:calc(env(safe-area-inset-top,0px) + 20px) 16px calc(env(safe-area-inset-bottom,0px) + 28px)}
+.v39wrap{max-width:860px;margin:0 auto}
+.v39hd{display:flex;align-items:center;gap:8px;margin-bottom:16px}.v39hd h2{margin:0;font-size:var(--f-xl);font-weight:700}.v39hd .sp{flex:1}
+.v39bar{display:flex;gap:10px;margin-bottom:12px}.v39bar .in{flex:1;min-width:0;height:44px;background:var(--chrome)}.v39bar .btn{flex:none;height:44px}
+#v39List,.v39tl{list-style:none;margin:0;padding:6px 16px;background:var(--chrome);border:1px solid var(--rule);border-radius:12px}
+.v39row{display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid var(--rule)}.v39row:last-child{border-bottom:0}
+.v39open{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-height:44px;padding:10px 6px;border:0;border-radius:8px;background:transparent;color:inherit;text-align:left}
+button.v39open{cursor:pointer}button.v39open:hover{background:var(--soft)}
+.v39open .tt{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}.v39open b{font-size:var(--f-m);font-weight:600;overflow-wrap:anywhere}
+.v39open small{font-size:var(--f-s);color:var(--muted);overflow-wrap:anywhere}
+.v39rc{font-style:normal;font-size:var(--f-s);padding:2px 8px;border-radius:6px;background:var(--softsel);color:var(--accent);white-space:nowrap}
+.v39row .ago{flex:none;font-size:var(--f-s);color:var(--muted);white-space:nowrap}.v39row .btn{flex:none}
+.v39none{padding:28px 4px;text-align:center;color:var(--muted);font-size:var(--f-m)}
+.v39link{min-height:44px;padding:10px 4px;border:0;background:transparent;color:var(--accent);font-size:var(--f-s);text-decoration:underline;cursor:pointer}
+#v39Trash{margin-top:8px}.v39foot{margin:14px 4px 0;font-size:var(--f-s);color:var(--muted)}
+@media (max-width:620px){.v39row{flex-wrap:wrap}.v39open{flex-basis:100%}.v39row .ago{flex:1}.v39bar{flex-wrap:wrap}.v39bar .in{flex-basis:100%}.v39bar .btn{flex:1}}
+/*V39-NEW: 과업 만들기*/
+#v39New{position:fixed;inset:0;z-index:45;background:rgba(15,20,25,.45);display:flex;padding:20px 16px;overflow-y:auto}
+#v39New .card{width:min(640px,100%);margin:auto;background:var(--chrome);border-radius:12px;padding:20px 22px}
+#v39New h3{margin:0 0 14px;font-size:var(--f-xl)}#v39New h4{margin:18px 0 10px;font-size:var(--f-m)}
+#v39New .field label{display:block;font-size:var(--f-s);color:var(--muted);margin-bottom:4px}#v39New select.in{appearance:auto}
+.v39seg{display:flex;gap:8px}.v39seg button{flex:1;min-height:44px;border:1px solid var(--rule);border-radius:8px;background:var(--chrome);font-size:var(--f-m)}
+.v39seg button[aria-pressed="true"]{background:var(--softsel);border-color:var(--accent);color:var(--accent);font-weight:600}
+.v39drop{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:10px;padding:18px 14px;border:2px dashed var(--rule);border-radius:12px;background:var(--bg);text-align:center}
+.v39drop.over{border-color:var(--accent);background:var(--softsel)}.v39drop.has{border-style:solid}
+.v39drop b{font-size:var(--f-m)}.v39drop small{font-size:var(--f-s);color:var(--muted)}.v39drop .acts{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:6px}
+.v39got{margin:8px 2px 0;font-size:var(--f-s);overflow-wrap:anywhere}.v39got .v39link{min-height:0;padding:0 4px}.v39hint{margin:10px 2px 0;font-size:var(--f-s);color:var(--muted)}
+.v39msg{min-height:20px;margin:14px 2px 0;font-size:var(--f-s);color:var(--muted)}.v39msg.bad,.v39bad{color:var(--unrep)}
+#v39New .btnrow{margin-top:14px}
 .v38tech td.in:first-child{width:150px}
 .v38okbox{margin:14px 0 0;padding:10px 14px;border:1px solid #2E7D4F;background:#EAF6EE;border-radius:6px;color:#14532D;font-size:var(--f-s)}
 .v38go{margin-top:14px}
@@ -807,6 +839,14 @@ body.v35drag::after{content:'여기에 놓으면 열어요 · 위치도(zip, dxf
 <div id="v29View" hidden><img alt="결함 사진"><div class="cap"></div><div class="row"><button data-act="pvfirst">대표 사진으로</button><button class="dg" data-act="pvdel">이 사진 빼기</button><button data-act="pvclose">닫기</button></div></div><!--V29-PHOTO-->
 <div id="modal" hidden><div class="card" role="dialog" aria-modal="true"></div></div>
 <div id="toast" role="status" aria-live="polite"></div>
+<div id="v39Home" hidden role="dialog" aria-modal="true" aria-label="과업 목록"><div class="v39wrap"><!--V39-HOME-->
+  <header class="v39hd"><h2>과업 목록</h2><span class="sp"></span><button type="button" class="tbtn" data-v39="restore">백업 불러오기</button><button type="button" class="tbtn" data-v39="back" id="v39Back">돌아가기</button></header>
+  <div class="v39bar"><input class="in" id="v39Q" type="search" placeholder="학교나 건물 이름으로 찾기" aria-label="과업 찾기" autocomplete="off"><button type="button" class="btn primary" data-v39="new">과업 만들기</button></div>
+  <ul id="v39List"></ul>
+  <div id="v39Trash"></div>
+  <p class="v39foot">과업은 이 기기에만 저장됩니다. 엑셀·위치도·백업 파일을 이 화면에 끌어다 놓아도 됩니다.</p>
+</div></div>
+<div id="v39New" hidden role="dialog" aria-modal="true" aria-label="과업 만들기"><div class="card" id="v39Card"></div></div><!--V39-NEW-->
 <input type="file" id="fileImg" accept="image/*" multiple hidden>
 <input type="file" id="fileLogo" accept="image/*" hidden>
 <input type="file" id="fileCad" accept=".zip,.dxf,application/zip" hidden>
@@ -1017,6 +1057,7 @@ function toast(t){const el=$('#toast');el.textContent=t;const hb=$('#hint').getB
 
 /* ---------- modal ---------- */
 function modal(html){
+  if(V39.quiet)return Promise.resolve(true); /*V39-NEW: 과업 만들기가 불러오기를 잇는 동안에는 안내 창을 띄우지 않고 넘어간다*/
   return new Promise(res=>{
     const m=$('#modal'),card=m.querySelector('.card');card.innerHTML=html;m.hidden=false;
     const inp=card.querySelector('input');if(inp)setTimeout(()=>{inp.focus();inp.select&&inp.select();},30);
@@ -1084,7 +1125,7 @@ function zoomAt(cx,cy,ns){
 function centerOn(p){const r=stage.getBoundingClientRect();view.tx=r.width/2-p[0]*view.s;view.ty=r.height/2-p[1]*view.s;applyView();}
 
 /* ---------- rendering ---------- */
-function renderAll(){renderTop();renderStage();renderPanel();renderTool();}
+function renderAll(){renderTop();renderStage();renderPanel();renderTool();{const h=$('#v39Home');if(h&&!h.hidden)v39List();} /*V39-HOME*/}
 function renderTop(){
   const fs=$('#facSel');
   fs.innerHTML=S.facilities.length?S.facilities.map(f=>`<option value="${f.id}"${f.id===S.curF?' selected':''}>${esc(f.name)}</option>`).join(''):'<option>시설물 없음</option>';
@@ -1900,13 +1941,13 @@ async function v32ImportRound(files){const f=F();
 /* 다음 회차 시작: 번호마다 금회 대표 사진을 전회 사진으로 넘기고, 금회 사진과 처리 상태를 비운다. 값(부재·유형·폭·수량)은 그대로 둔다.
    넘기기 전에 백업 파일을 내려받는다(되돌리려면 그 백업을 불러온다). */
 function v32Advance(k){const o=Object.assign({},k);if(/^\d{4}$/.test(o.year||'')){if(o.half==='2'){o.year=String(+o.year+1);o.half='1';}else o.half='2';}return o;}
-async function v32NextRound(){const f=F();if(!f||!f.drawings.some(d=>d.defects.length)){toast('넘길 결함이 없어요');return;}
+async function v32NextRound(opt){const quiet=!!(opt&&opt.quiet) /*V39-NEW: 과업 만들기에서 전회 엑셀을 넘길 때. 묻지 않고, 백업과 안내 없이*/,f=F();if(!f||(!quiet&&!f.drawings.some(d=>d.defects.length))){toast('넘길 결함이 없어요');return;}
   const base=Object.assign(v31TaskGuess(f),f.task||{}),next=v32Advance(base),lab=k=>k.year?`${k.year}년 ${k.half==='2'?'하반기':'상반기'}`:'다음 회차';
   let nNo=0,nPh=0;for(const d of f.drawings){const s=new Set(d.defects.map(x=>x.no));nNo+=s.size;for(const no of s)if(v29PhotosOf(d,no).length)nPh++;}
-  const ok=await confirmBox('다음 회차 시작',`${lab(base)} 자료를 ${lab(next)} 점검용으로 넘겨요. 결함 번호 ${nNo}개 중 ${nPh}개는 금회 대표 사진이 전회 사진이 되고, 모든 결함이 '확인 전'(보라색)으로 돌아가요. 부재·유형·폭·수량은 그대로예요. 먼저 지금 상태의 백업 파일을 내려받아요.`,'백업 받고 넘기기');
+  const ok=quiet||await confirmBox('다음 회차 시작',`${lab(base)} 자료를 ${lab(next)} 점검용으로 넘겨요. 결함 번호 ${nNo}개 중 ${nPh}개는 금회 대표 사진이 전회 사진이 되고, 모든 결함이 '확인 전'(보라색)으로 돌아가요. 부재·유형·폭·수량은 그대로예요. 먼저 지금 상태의 백업 파일을 내려받아요.`,'백업 받고 넘기기');
   if(!ok)return;
-  try{await exportBackup();}catch(e){console.error(e);toast('백업을 받지 못해서 넘기지 않았어요');return;}
-  await v32Wait(400);
+  if(!quiet){try{await exportBackup();}catch(e){console.error(e);toast('백업을 받지 못해서 넘기지 않았어요');return;}
+  await v32Wait(400);}
   for(const d of f.drawings){pushUndo(d);const by=new Map();
     for(const def of [...d.defects].sort((a,b)=>a.no-b.no||(a.hideLabel?1:0)-(b.hideLabel?1:0))){if(!by.has(def.no))by.set(def.no,[]);by.get(def.no).push(def);}
     for(const [no,defs] of by){const ph=v29PhotosOf(d,no)[0],code=v29Code(d,no);
@@ -1915,7 +1956,7 @@ async function v32NextRound(){const f=F();if(!f||!f.drawings.some(d=>d.defects.l
         def.prev=ph?{photo:code+'.jpg',no:code,pid:ph.id}:{photo:'',no:''};delete def.photos;delete def.xlPhoto;}}}
   f.prev=Object.assign({},f.prev||{},{file:'앱에서 넘김',at:new Date().toISOString(),seq:base.year?base.year+'_'+(base.half==='2'?'2':'1'):((f.prev||{}).seq||''),from:'app'});
   if(!f.prev.doc)f.prev.doc={};try{v38Roll(f,base);}catch(e){console.error(e);} /*V38: 금회 결론을 전차점검(1)로*/v37Roll(f); /*V37: 체크리스트를 넘기기 전에*/v34Roll(f); /*V34-DOC*/
-  f.task=next;sel=null;save();renderAll();
+  f.task=next;sel=null;save();renderAll();if(quiet)return;
   await modal(`<h4>${esc(lab(next))} 점검을 시작해요</h4>
     <p>결함 번호 ${nNo}개가 전회 결함이 됐어요. 그중 <b>${nPh}개</b>에 전회 사진이 있어요.</p>
     <p class="muted">현장에서 결함을 누르고 그대로 있음, 보수 완료, 못 찾음 중 하나를 누른 뒤 사진을 찍으세요. 되돌리려면 방금 받은 백업 파일을 불러오세요.</p>
@@ -2013,8 +2054,9 @@ function v31Go(did,defId){const f=F(),d=f&&f.drawings.find(x=>x.id===did);if(!d)
 document.addEventListener('click',e=>{const p=$('#v31Pop');if(p&&e.target===p)p.hidden=true;}); // 검사 화면 바깥(어두운 곳)을 누르면 닫힘
 /*V31-END*/
 /*V35-START: 화면 정리(V35-UI는 스타일만), 바로 저장(V35-SAVE), Esc(V35-ESC), 업데이트 안내(V35-NEWS), 파일 끌어다 놓기(V35-DROP). 저장 값은 바뀌지 않는다*/
-const V35={dirty:false},V35_VER='v38c'; /*V38C: 버전 표시*/
+const V35={dirty:false},V35_VER='v39'; /*V39: 버전 표시*/
 const V35_NEWS=[
+ {v:'v39',d:'2026-11-23',items:['앱을 열면 과업 목록이 먼저 떠요. 찾기, 최근 접속, 과업 만들기, 삭제가 여기 있어요. 위 막대 왼쪽의 \"과업 목록\"으로 언제든 돌아와요','과업 만들기: 과업 정보를 넣고, 이전에 했던 과업이면 전회(전차) 회사 엑셀을 끌어다 놓으세요. 결함은 확인 전(보라색)으로, 체크리스트·결론·등급은 전회 보고서 값으로 들어와요','위치도 CAD(DXF·ZIP)나 도면 그림도 끌어다 놓으면 돼요','지운 과업은 30일 동안 되살릴 수 있어요']},
  {v:'v38c',d:'2026-11-23',items:['보고서 출력 탭에서 회사 엑셀을 넣으면 값을 가져와요: 과업·건물 값, 전차 등급·점수, 기술자 명단, 내진·치장벽돌·설계도서·보수이력, 전차점검','전회(전차) 엑셀을 넣어도 돼요. 회차를 보고 가려서, 그 엑셀의 결론은 전차점검(1)로 넣고 용역명·기간·금액은 참고로만 보여 줘요','직접 넣은 값은 덮어쓰지 않아요','전회 값이 그대로 들어가는 표(치장벽돌·내진·기술자 명단)는 "확인할 것"에 알려 줘요']},
  {v:'v38b',d:'2026-11-23',items:['새 빈 양식에 맞췄어요: 기술자 10명, 요약표 7줄씩, 공정표 그림 칸. 전에 쓰던 양식도 그대로 돼요','새 양식을 쓰려면 보고서 출력 탭에서 "다른 양식 불러오기"로 한 번 다시 불러오세요']},
  {v:'v38',d:'2026-11-23',items:['문서 작성에 보고서 출력 탭이 생겼어요. 회사 빈 양식(_빈워드.docx)을 불러오면 워드 보고서 본문을 만들어요','양식은 이 기기에만 저장돼요. 한 번 불러오면 다음부터는 그대로 써요','회사 엑셀을 불러오면 용역명·점검기간·금액·기술자, 내진·치장벽돌·설계도서, 전차점검 내용도 같이 가져와요','문서용 사진(과업지시서, 위치도, 부위별·체크리스트 사진 등)은 폴더나 여러 장을 고르면 파일 이름으로 자리를 찾아요','값이 없는 자리는 [확인필요]로 남고, 만들기 전에 목록으로 보여 줘요']},
@@ -4219,13 +4261,185 @@ async function importCadFile(file){
   }catch(err){console.error(err);v28Fail(file.name,'위치도를 읽지 못했어요: '+(err&&err.message||err)); /*V28-UI*/}
 }
 /*IMPORT-END*/
+/*V39-START: 시작 화면(과업 목록, V39-HOME), 과업 만들기(V39-NEW), 과업 삭제와 지운 과업(V39-TRASH).
+   한상오 2026-11-23: "필요 없는 현장을 지우는 방법, 젠트릭스처럼 들어가기 전에 과업을 만드는 첫 화면, 튜토리얼 1:20~3:17의 흐름, 전차 엑셀을 끌어다 놓아 전회차 보고서 가져오기"
+   새 저장 항목: 시설물의 openedAt(시작 화면에서 연 시각), S.trash=[{f,at}](지운 과업. 30일 뒤 기기에서 지움). 쓰지 않으면 생기지 않는다.
+   과업 하나 = 시설물(동) 하나. 과업 정보는 v31의 f.task 그대로다.
+   자동 시험(navigator.webdriver)에서는 시작 화면을 저절로 띄우지 않는다: 옛 시험이 화면을 바로 누르기 때문. 새 시험은 window.__v39Home=true로 켠다 */
+const V39={q:'',trash:false,quiet:false,nw:null,DAYS:30};
+const v39Auto=()=>!navigator.webdriver||window.__v39Home===true;
+const v39Half=h=>h==='2'?'하반기':'상반기';
+function v39Title(f){const k=f.task;if(k&&(k.school||k.building))return [k.year?`${k.year} ${v39Half(k.half)}`:'',k.school,k.building,k.kind].filter(Boolean).join(' ');return f.name||'이름 없는 시설물';}
+function v39Stat(f){let nd=0,nv=0,nph=0,npp=0;for(const d of f.drawings||[])for(const x of d.defects||[]){nd++;nph+=(x.photos||[]).length;if(x.prev){if(!x.prev.state)nv++;if(x.prev.pid)npp++;}}return {fl:(f.drawings||[]).length,nd,nv,nph,npp};}
+function v39StatText(f){const s=v39Stat(f);return [`층 ${s.fl}개`,`결함 ${s.nd}개`,s.nv?`전회 확인 전 ${s.nv}개`:'',s.nph?`사진 ${s.nph}장`:''].filter(Boolean).join(' · ');}
+function v39Ago(iso){const t=Date.parse(iso||'');if(!t)return '';const m=Math.floor((Date.now()-t)/60000);if(m<1)return '방금';if(m<60)return m+'분 전';const h=Math.floor(m/60);if(h<24)return h+'시간 전';const d=Math.floor(h/24);if(d<31)return d+'일 전';const q=new Date(t);return `${q.getFullYear()}.${v38p2(q.getMonth()+1)}.${v38p2(q.getDate())}`;}
+function v39Stamp(iso){const q=new Date(iso);return `${String(q.getFullYear()).slice(2)}.${v38p2(q.getMonth()+1)}.${v38p2(q.getDate())} ${v38p2(q.getHours())}:${v38p2(q.getMinutes())}`;}
+/* ---------- 과업 목록 ---------- */
+function v39List(){const q=V39.q.trim().toLowerCase(),tr=S.trash||[];
+  const rows=S.facilities.map((f,i)=>({f,i,t:Date.parse(f.openedAt||'')||0})).filter(o=>!q||(v39Title(o.f)+' '+(o.f.name||'')).toLowerCase().includes(q)).sort((a,b)=>b.t-a.t||a.i-b.i);
+  $('#v39List').innerHTML=rows.length?rows.map(({f})=>{const tt=v39Title(f),rc=f.openedAt&&Date.now()-Date.parse(f.openedAt)<7*864e5,nm=f.name&&!tt.includes(f.name)?' · '+f.name:'';
+    return `<li class="v39row${f.id===S.curF?' cur':''}"><button type="button" class="v39open" data-v39open="${f.id}"><span class="tt"><b>${esc(tt)}</b>${rc?`<i class="v39rc">최근 접속 ${v39Stamp(f.openedAt)}</i>`:''}</span><small>${esc(v39StatText(f)+nm)}</small></button><span class="ago">${esc(v39Ago(f.openedAt))}</span><button type="button" class="btn" data-v39del="${f.id}" aria-label="${esc(tt)} 삭제">삭제</button></li>`;}).join('')
+    :`<li class="v39none">${S.facilities.length?'찾는 과업이 없어요':'아직 과업이 없어요. <b>과업 만들기</b>를 눌러 시작하세요'}</li>`;
+  $('#v39Trash').innerHTML=tr.length?`<button type="button" class="v39link" data-v39="trash" aria-expanded="${V39.trash}">지운 과업 ${tr.length}개 ${V39.trash?'접기':'보기'}</button>`+(V39.trash?`<ul class="v39tl">${tr.map((t,i)=>{const left=Math.max(0,V39.DAYS-Math.floor((Date.now()-(Date.parse(t.at)||0))/864e5));
+      return `<li class="v39row"><span class="v39open"><span class="tt"><b>${esc(v39Title(t.f))}</b></span><small>${esc(`${left}일 뒤에 이 기기에서 지워져요 · `+v39StatText(t.f))}</small></span><button type="button" class="btn" data-v39undel="${i}">되살리기</button><button type="button" class="btn" data-v39kill="${i}">완전히 지우기</button></li>`;}).join('')}</ul>`:''):'';
+  $('#v39Back').hidden=!F();}
+function v39Show(){V39.q='';$('#v39Q').value='';$('#v39Home').hidden=false;v39List();}
+function v39Hide(){$('#v39Home').hidden=true;}
+function v39Enter(id){const f=S.facilities.find(x=>x.id===id);if(!f)return;
+  if(S.curF!==f.id||!D()){S.curF=f.id;S.curD=f.drawings.length?sortFloors(f.drawings)[0].id:null;sel=null;undoStack=[];}
+  f.openedAt=new Date().toISOString();save();renderAll();v39Hide();requestAnimationFrame(fit);}
+/* ---------- 삭제, 지운 과업 ---------- */
+function v39Keys(f){const ks=new Set();if(f.srcDxf)ks.add('srcdxf:'+f.id);
+  for(const d of f.drawings||[]){ks.add('img:'+d.id);for(const x of d.defects||[]){for(const p of x.photos||[])if(p&&p.id)ks.add('photo:'+p.id);if(x.prev&&x.prev.pid)ks.add('photo:'+x.prev.pid);}}return ks;}
+async function v39Wipe(list){ // 지운 과업의 도면 그림·사진·원본 DXF를 기기에서 지운다. 남아 있는 과업(지운 과업 포함)이 같이 쓰는 것은 둔다
+  const keep=new Set();for(const f of S.facilities)for(const k of v39Keys(f))keep.add(k);for(const t of S.trash||[])for(const k of v39Keys(t.f))keep.add(k);
+  for(const f of list)for(const k of v39Keys(f)){if(keep.has(k))continue;await DB.del(k);
+    if(k.startsWith('img:')){const id=k.slice(4);if(imgURL[id]){URL.revokeObjectURL(imgURL[id]);delete imgURL[id];}delete imgData[id];delete imgTried[id];}}}
+async function v39Purge(){const tr=S.trash||[];if(!tr.length)return 0;const lim=Date.now()-V39.DAYS*864e5,old=tr.filter(t=>(Date.parse(t.at)||0)<lim);if(!old.length)return 0;
+  S.trash=tr.filter(t=>!old.includes(t));if(!S.trash.length)delete S.trash;await v39Wipe(old.map(t=>t.f));save();return old.length;}
+async function v39Del(id){const f=S.facilities.find(x=>x.id===id);if(!f)return;const s=v39Stat(f);
+  const ok=await confirmBox('과업 삭제',`"${v39Title(f)}"을 지운 과업으로 옮겨요. 층 ${s.fl}개, 결함 ${s.nd}개, 사진 ${s.nph}장이 들어 있어요. ${V39.DAYS}일 동안 되살릴 수 있고 그 뒤에는 이 기기에서 지워져요.`,'삭제');if(!ok)return;
+  S.facilities=S.facilities.filter(x=>x!==f);(S.trash=S.trash||[]).push({f,at:new Date().toISOString()});
+  if(S.curF===id){const n=S.facilities[0];S.curF=n?n.id:null;S.curD=n&&n.drawings.length?sortFloors(n.drawings)[0].id:null;sel=null;undoStack=[];}
+  save();renderAll();requestAnimationFrame(fit);toast('지운 과업으로 옮겼어요');}
+function v39Undel(i){const t=(S.trash||[])[i];if(!t)return;if(S.facilities.some(x=>x.id===t.f.id)){toast('같은 과업이 이미 목록에 있어요');return;}
+  S.trash.splice(i,1);if(!S.trash.length)delete S.trash;S.facilities.push(t.f);
+  if(!F()){S.curF=t.f.id;S.curD=t.f.drawings.length?sortFloors(t.f.drawings)[0].id:null;sel=null;undoStack=[];}
+  save();renderAll();requestAnimationFrame(fit);toast('되살렸어요');}
+async function v39Kill(i){const t=(S.trash||[])[i];if(!t)return;
+  const ok=await confirmBox('완전히 지우기',`"${v39Title(t.f)}"의 도면·결함·사진을 이 기기에서 지워요. 되돌릴 수 없어요.`,'완전히 지우기');if(!ok)return;
+  const j=(S.trash||[]).indexOf(t);if(j<0)return;S.trash.splice(j,1);if(!S.trash.length)delete S.trash;await v39Wipe([t.f]);save();v39List();toast('이 기기에서 지웠어요');}
+/* ---------- 과업 만들기 ---------- */
+const v39BackRound=t=>/^\d{4}$/.test(t.year||'')?(t.half==='2'?{year:t.year,half:'1'}:{year:String(+t.year-1),half:'2'}):{};
+function v39T(){const o={};document.querySelectorAll('#v39Card [data-v39f]').forEach(el=>{o[el.dataset.v39f]=String(el.value||'').trim();});
+  return {school:o.school||'',building:o.building||'',region:o.region||'',year:o.year||'',half:o.half==='2'?'2':'1',kind:V31_KINDS.includes(o.kind)?o.kind:V31_KINDS[0]};}
+function v39NewOpen(files){const now=new Date(),dir='webkitdirectory' in HTMLInputElement.prototype;
+  V39.nw={mode:'new',prev:null,draw:null,dirty:{},busy:false,step:'',err:'',dir};
+  $('#v39Card').innerHTML=`<h3>과업 만들기</h3>
+  <h4>1. 과업 정보</h4>
+  <div class="field"><label for="v39school">학교(시설물) 이름</label><input class="in" id="v39school" data-v39f="school" autocomplete="off"></div>
+  <div class="v31two"><div class="field"><label for="v39building">건물(동)</label><input class="in" id="v39building" data-v39f="building" autocomplete="off"></div>
+    <div class="field"><label for="v39region">지역</label><input class="in" id="v39region" data-v39f="region" autocomplete="off"></div></div>
+  <div class="v31two"><div class="field"><label for="v39year">점검 연도</label><input class="in" id="v39year" data-v39f="year" inputmode="numeric" maxlength="4" value="${now.getFullYear()}"></div>
+    <div class="field"><label for="v39half">시기</label><select class="in" id="v39half" data-v39f="half"><option value="1">상반기</option><option value="2">하반기</option></select></div></div>
+  <div class="field"><label for="v39kind">점검 구분</label><select class="in" id="v39kind" data-v39f="kind">${V31_KINDS.map(x=>`<option>${x}</option>`).join('')}</select></div>
+  <h4>2. 전에 점검한 건물인가요?</h4>
+  <div class="v39seg" role="group" aria-label="이전 과업 여부"><button type="button" data-v39mode="new">처음 하는 과업</button><button type="button" data-v39mode="prev">이전에 했던 과업</button></div>
+  <div id="v39PrevBox"></div>
+  <h4>3. 도면</h4>
+  <div id="v39DrawBox"></div>
+  <p class="v39msg" id="v39Msg" role="status"></p>
+  <div class="btnrow"><button type="button" class="btn" data-v39="cancel" id="v39No">취소</button><button type="button" class="btn primary" data-v39="create" id="v39Go">만들기</button></div>
+  <input type="file" id="v39InXl" accept=".xlsm,.xlsx,.xls,.xml" hidden><input type="file" id="v39InDir" webkitdirectory multiple hidden><input type="file" id="v39InDraw" accept=".dxf,.zip,image/*" multiple hidden>`;
+  $('#v39half').value=now.getMonth()<6?'1':'2';$('#v39New').hidden=false;v39NewUpd();
+  if(files&&files.length)v39Take(files,'');else setTimeout(()=>{const el=$('#v39school');if(el)el.focus();},30);}
+function v39NewClose(){if(V39.nw&&V39.nw.busy)return;$('#v39New').hidden=true;$('#v39Card').innerHTML='';V39.nw=null;}
+function v39Plan(){const w=V39.nw,t=v39T(),p=w.mode==='prev'?w.prev:null,mine=/^\d{4}$/.test(t.year)?`${t.year}_${t.half}`:'',seq=(p&&p.seq||'').slice(0,6);
+  return {t,p,mine,seq,asPrev:!!p&&p.kind!=='xml'&&!(seq&&mine&&seq>=mine)};} // 엑셀 회차가 과업 회차보다 앞이거나 회차를 모르면 전회 자료로 넣는다
+function v39NewUpd(){const w=V39.nw;if(!w)return;const {p,mine,seq,asPrev}=v39Plan(),d=w.draw;
+  document.querySelectorAll('#v39Card [data-v39mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v39mode===w.mode)));
+  $('#v39PrevBox').innerHTML=w.mode!=='prev'?'<p class="v39hint">전회 자료 없이 시작합니다.</p>'
+    :`<div class="v39drop${w.prev?' has':''}" data-v39zone="prev"><b>전회(전차) 회사 엑셀을 여기에 끌어다 놓으세요</b><small>건물 폴더째 넣으면 그 안의 현장사진이 전회 사진으로 들어가요. 엑셀이 만든 인수 파일(XML)도 됩니다.</small><span class="acts"><button type="button" class="btn" data-v39="pickxl">엑셀·XML 고르기</button>${w.dir?'<button type="button" class="btn" data-v39="pickdir">건물 폴더 고르기</button>':''}</span></div>`
+     +(w.prev?`<p class="v39got" id="v39PrevGot"><b>${esc(w.prev.name)}</b> ${esc(w.prev.note)} <button type="button" class="v39link" data-v39="dropprev">빼기</button></p>`:'');
+  $('#v39DrawBox').innerHTML=`<div class="v39drop${d?' has':''}" data-v39zone="draw"><b>위치도 CAD(DXF·ZIP)나 도면 그림을 여기에 끌어다 놓으세요</b><small>위치도 CAD를 넣으면 층과 결함 위치가 같이 들어와요. 도면은 나중에 올려도 됩니다.</small><span class="acts"><button type="button" class="btn" data-v39="pickdraw">파일 고르기</button></span></div>`
+     +(d?`<p class="v39got" id="v39DrawGot"><b>${esc(d.name)}</b> ${esc(d.note)} <button type="button" class="v39link" data-v39="dropdraw">빼기</button></p>`:'');
+  let msg='',bad=false;
+  if(p){if(!d){msg='전회 자료를 넣으려면 3번에 위치도 CAD나 도면 그림이 있어야 해요';bad=true;}
+    else if(p.kind==='xml')msg='인수 파일의 결함 값과 전회 보고서 내용을 전회 자료로 넣어요';
+    else if(asPrev)msg=(seq?`${seq} 엑셀을 전회 자료로 넣어요.`:'엑셀에서 회차를 읽지 못해 전회 자료로 넣어요.')+" 결함은 '확인 전'(보라색)으로, 체크리스트·결론·등급은 전회 보고서 값으로 들어가요";
+    else msg=seq===mine?`엑셀 회차(${seq})가 과업 회차와 같아요. 금회 자료로 넣어요`:`엑셀 회차(${seq})가 과업 회차(${mine})보다 뒤예요. 금회 자료로 넣어요. 회차를 확인하세요`;
+    if(d&&d.kind==='img'&&p.kind!=='xml')msg+='. 도면 그림만 있으면 결함 위치는 들어오지 않아요. 위치까지 가져오려면 위치도 CAD를 넣으세요';}
+  const m=$('#v39Msg');m.textContent=w.busy?w.step:(w.err||msg);m.className='v39msg'+(!w.busy&&(w.err||bad)?' bad':'');
+  $('#v39Go').disabled=w.busy||bad;$('#v39Go').textContent=w.busy?'만드는 중…':'만들기';$('#v39No').disabled=w.busy;}
+async function v39ReadXl(file){try{const u8=new Uint8Array(await file.arrayBuffer()),tmp={doc:{}};let n=0;try{n=v38FromXl(tmp,u8);}catch(e){console.error(e);}return n?tmp.doc.rp.xl:null;}catch(e){console.error(e);return null;}}
+/* 끌어다 놓거나 고른 파일을 자리에 나눈다: 엑셀·XML·건물 폴더 → 전회 자료, DXF·ZIP·그림 → 도면 */
+async function v39Take(list,hint){const w=V39.nw;if(!w||w.busy)return;const fs=[...list].filter(x=>x&&x.name&&!/^~\$/.test(x.name)),rel=x=>x.webkitRelativePath||x.name;
+  const ext=x=>(x.name.toLowerCase().match(/\.([a-z0-9]+)$/)||[])[1]||'',depth=x=>rel(x).split('/').length,isImg=x=>/^(jpe?g|png|gif|bmp|webp)$/.test(ext(x));
+  const xls=fs.filter(x=>/^xls[xm]?$/.test(ext(x))&&!x.name.includes('작성기록')&&depth(x)<=2).sort((a,b)=>a.name.localeCompare(b.name,'ko',{numeric:true})),
+    xml=fs.filter(x=>ext(x)==='xml'),cad=fs.filter(x=>/^(dxf|zip)$/.test(ext(x))&&depth(x)<=2),imgs=fs.filter(isImg),inDir=fs.some(x=>rel(x).includes('/'));
+  w.err='';let did=false;
+  const setPrev=async(kind,main,files,extra)=>{const c=kind==='xml'?null:await v39ReadXl(main),me=c&&c.me||{};
+    const note=kind==='xml'?'· 인수 파일':c?['· 회차 '+(v38s(c.seq)||'모름'),me.grade?`안전등급 ${me.grade}${me.score!=null?`(${me.score.toFixed(2)})`:''}`:'',c.tech&&c.tech.length?`기술자 ${c.tech.length}명`:''].filter(Boolean).join(' · '):'· 개요 시트를 읽지 못했어요. 결함표만 가져와요';
+    w.prev={kind,main,files,name:main.name,note:note+(extra||''),seq:c?v38s(c.seq):''};w.mode='prev';did=true;
+    if(c){const set=(k,v)=>{const el=$('#v39'+k);if(el&&v&&!w.dirty[k])el.value=v;};set('school',v38s(c.school));set('building',v38s(c.building));
+      const m=/^(\d{4})_([12])/.exec(v38s(c.seq));if(m&&!w.dirty.year&&!w.dirty.half){const nx=v32Advance({year:m[1],half:m[2]});$('#v39year').value=nx.year;$('#v39half').value=nx.half;}}};
+  const photo=x=>/(^|\/)(전회차)?현장사진\//.test(rel(x)),plans=imgs.filter(x=>!photo(x)); // 현장사진 폴더의 그림은 도면이 아니다
+  if(inDir&&hint!=='draw'&&xls.length){const cur=fs.filter(x=>isImg(x)&&/(^|\/)현장사진\//.test(rel(x))).length;await setPrev('dir',xls[xls.length-1],fs,cur?` · 현장사진 ${cur}장`:'');}
+  else if(!inDir){if(xls.length)await setPrev('xl',xls[xls.length-1],[xls[xls.length-1]]);else if(xml.length)await setPrev('xml',xml[0],[xml[0]]);}
+  if(cad.length&&(!inDir||!w.draw)){const c=cad.find(x=>x.name.includes('위치도'))||cad[0];w.draw={kind:'cad',files:[c],name:c.name,note:'· 위치도 CAD'};did=true;}
+  else if(plans.length&&(!inDir||hint==='draw'||!xls.length)){const im=plans.sort((a,b)=>a.name.localeCompare(b.name,'ko',{numeric:true}));w.draw={kind:'img',files:im,name:im[0].name+(im.length>1?` 외 ${im.length-1}장`:''),note:`· 도면 그림 ${im.length}장`};did=true;}
+  if(!did)w.err=inDir&&hint==='prev'?'고른 폴더에서 회사 엑셀을 찾지 못했어요. 건물 폴더(예: 관리동)를 고르세요':'여기에 넣을 수 없는 파일이에요: '+(fs[0]?fs[0].name:'');
+  if(V39.nw===w)v39NewUpd();}
+async function v39Create(){const w=V39.nw;if(!w||w.busy)return;const {t,p,seq,asPrev}=v39Plan(),d=w.draw;
+  if(t.year&&!/^\d{4}$/.test(t.year)){w.err='점검 연도는 숫자 네 자리로 넣어 주세요';v39NewUpd();return;}
+  const step=s=>{w.step=s;v39NewUpd();};w.err='';w.busy=true;V39.quiet=true;const n0=S.facilities.length;let f=null,fail='';
+  try{
+    if(d&&d.kind==='cad'){step('위치도를 읽는 중이에요…');await importCadFile(d.files[0]);
+      if(S.facilities.length>n0)f=F();else{fail=(($('#sState p')||{}).textContent||'위치도를 읽지 못했어요').trim();v28State(null);}}
+    else{f={id:uid(),name:[t.school,t.building].filter(Boolean).join(' ')||'새 시설물',drawings:[]};S.facilities.push(f);S.curF=f.id;S.curD=null;sel=null;undoStack=[];
+      if(d&&d.files.length){step('도면을 올리는 중이에요…');await addDrawingFiles(d.files);}}
+    if(f&&p&&f.drawings.length){
+      if(p.kind==='xml'){f.task=t;step('전회 자료를 읽는 중이에요…');await v30ImportXml(p.main);}
+      else{const sq=/^(\d{4})_([12])/.exec(seq);f.task=asPrev?Object.assign({},t,sq?{year:sq[1],half:sq[2]}:v39BackRound(t)):t; // 전회 엑셀은 그 엑셀의 회차로 읽은 뒤 다음 회차로 넘긴다
+        step(asPrev?'전회 엑셀을 읽는 중이에요…':'엑셀을 읽는 중이에요…');
+        if(p.kind==='dir')await v32ImportRound(p.files);else await v24ImportXls(p.main);
+        if(asPrev){const c=f.doc&&f.doc.rp&&f.doc.rp.xl;step('전회 자료로 넘기는 중이에요…');await v32NextRound({quiet:true});
+          if(c){f.doc=f.doc||{};f.doc.rp={xp:v38XlAsPrev(c),xpFile:{name:p.main.name,seq:v38s(c.seq),at:new Date().toISOString()}};}}} // 보고서 값은 v38c의 "전회 엑셀"과 같은 방식으로 둔다
+    }
+  }catch(e){console.error(e);fail=fail||'만드는 중에 문제가 생겼어요: '+(e&&e.message||e);}
+  V39.quiet=false;w.busy=false;w.step='';
+  if(!f){w.err=fail||'과업을 만들지 못했어요';v39NewUpd();return;}
+  f.task=t;f.openedAt=new Date().toISOString();save();renderAll();v39NewClose();v39Hide();requestAnimationFrame(fit);
+  const s=v39Stat(f),xp=f.doc&&f.doc.rp&&f.doc.rp.xp,ck=((((f.prev||{}).doc||{}).inspectionResult||{}).checklists||{}).checklist,orph=(f.xlOrphans||[]).length;
+  const got=!p?'':p.kind==='xml'||asPrev?`<p>전회 보고서${seq?` (${esc(seq)})`:''}: ${[Array.isArray(ck)&&ck.length?`체크리스트 ${ck.length}항목`:'',xp&&xp.pgrade?`안전등급 ${esc(xp.pgrade)}${xp.pscore?`(${esc(xp.pscore)})`:''}`:'',xp&&xp.p1&&xp.p1.lines&&xp.p1.lines.length?'종합결론':'',xp&&xp.tech&&xp.tech.length?`기술자 ${xp.tech.length}명`:''].filter(Boolean).join(', ')||'가져온 값이 없어요'}</p>`:`<p>금회 엑셀(${esc(seq)})의 값을 넣었어요.</p>`;
+  await modal(`<h4>과업을 만들었어요</h4><p><b>${esc(v39Title(f))}</b></p>
+    <p>층 ${s.fl}개, 결함 ${s.nd}개${s.nv?` (전회 결함 ${s.nv}개는 '확인 전'${s.npp?`, 전회 사진 ${s.npp}곳`:''})`:''}</p>${got}
+    ${orph?`<p class="muted">엑셀에만 있고 도면에 번호가 없는 결함 ${orph}개가 있어요.</p>`:''}${fail?`<p class="v39bad">${esc(fail)}</p>`:''}
+    <p class="muted">${!f.drawings.length?'도면을 올려서 시작하세요.':s.nv?'결함을 누르고 그대로 있음, 보수 완료, 못 찾음 중 하나를 고른 뒤 사진을 찍으세요. 문서 작성의 체크리스트는 전회 값으로 시작해요.':'도구로 결함을 표시하세요.'}</p>
+    <div class="btnrow"><button class="btn primary" data-m="ok">확인</button></div>`);}
+/* 끌어다 놓은 것에서 파일 꺼내기. 폴더면 안의 파일을 경로와 함께 꺼낸다 */
+async function v39DropFiles(dt){const ents=[...(dt.items||[])].map(it=>it.kind==='file'&&it.webkitGetAsEntry?it.webkitGetAsEntry():null),flat=[...dt.files];
+  if(!ents.some(en=>en&&en.isDirectory))return flat;
+  const out=[],walk=async(en,path)=>{
+    if(en.isFile){const f=await new Promise(r=>en.file(r,()=>r(null)));if(f){try{Object.defineProperty(f,'webkitRelativePath',{value:path+f.name,configurable:true});}catch(_){}out.push(f);}}
+    else if(en.isDirectory){const rd=en.createReader();for(;;){const es=await new Promise(r=>rd.readEntries(r,()=>r([])));if(!es.length)break;for(const x of es)await walk(x,path+en.name+'/');}}};
+  for(const en of ents)if(en)await walk(en,'');return out;}
+/* ---------- 이벤트 ---------- */
+document.addEventListener('click',e=>{const t=e.target;if(!t.closest)return;
+  if(t.closest('[data-act="v39home"]')){v39Show();return;}
+  if($('#v39Home').hidden&&$('#v39New').hidden)return;let b;
+  if((b=t.closest('[data-v39del]'))){v39Del(b.dataset.v39del);return;}
+  if((b=t.closest('[data-v39open]'))){v39Enter(b.dataset.v39open);return;}
+  if((b=t.closest('[data-v39undel]'))){v39Undel(+b.dataset.v39undel);return;}
+  if((b=t.closest('[data-v39kill]'))){v39Kill(+b.dataset.v39kill);return;}
+  if((b=t.closest('[data-v39mode]'))){const w=V39.nw;if(w&&!w.busy){w.mode=b.dataset.v39mode;w.err='';v39NewUpd();}return;}
+  if(!(b=t.closest('[data-v39]')))return;const w=V39.nw;
+  switch(b.dataset.v39){
+    case 'new':v39NewOpen();break;case 'back':v39Hide();break;case 'restore':$('#fileJson').click();break;case 'trash':V39.trash=!V39.trash;v39List();break;
+    case 'cancel':v39NewClose();break;case 'create':v39Create();break;
+    case 'pickxl':$('#v39InXl').click();break;case 'pickdir':$('#v39InDir').click();break;case 'pickdraw':$('#v39InDraw').click();break;
+    case 'dropprev':if(w&&!w.busy){w.prev=null;w.err='';v39NewUpd();}break;case 'dropdraw':if(w&&!w.busy){w.draw=null;w.err='';v39NewUpd();}break;}});
+$('#v39Home').addEventListener('input',e=>{if(e.target.id==='v39Q'){V39.q=e.target.value;v39List();}});
+$('#v39New').addEventListener('input',e=>{const k=e.target.dataset&&e.target.dataset.v39f,w=V39.nw;if(k&&w){w.dirty[k]=true;w.err='';v39NewUpd();}});
+$('#v39New').addEventListener('change',e=>{const el=e.target,w=V39.nw;if(!w)return;
+  if(el.id==='v39InXl'||el.id==='v39InDir'||el.id==='v39InDraw'){const fs=[...el.files];el.value='';if(fs.length)v39Take(fs,el.id==='v39InDraw'?'draw':'prev');return;}
+  if(el.dataset&&el.dataset.v39f){w.dirty[el.dataset.v39f]=true;w.err='';v39NewUpd();}});
+for(const id of ['v39Home','v39New']){const el=$('#'+id),clr=z=>document.querySelectorAll('.v39drop.over').forEach(x=>{if(x!==z)x.classList.remove('over');});
+  el.addEventListener('dragover',e=>{if(!v35HasFiles(e))return;e.preventDefault();e.stopPropagation();const z=e.target.closest('.v39drop');clr(z);if(z)z.classList.add('over');}); // 문서 전체의 끌어다 놓기(V35-DROP)로 넘어가지 않게 여기서 멈춘다
+  el.addEventListener('dragleave',e=>{if(!e.relatedTarget)clr(null);});
+  el.addEventListener('drop',async e=>{if(!v35HasFiles(e))return;e.preventDefault();e.stopPropagation();document.body.classList.remove('v35drag');clr(null);
+    const z=e.target.closest('.v39drop'),hint=z?z.dataset.v39zone:'',fs=await v39DropFiles(e.dataTransfer);if(!fs.length)return;
+    if($('#v39New').hidden){if(fs.length===1&&/\.json$/i.test(fs[0].name)){restoreBackup(fs[0]);return;}v39NewOpen(fs);}else v39Take(fs,hint);});}
+document.addEventListener('keydown',e=>{if(e.key!=='Escape'||!$('#modal').hidden)return;
+  if(!$('#v39New').hidden){v39NewClose();return;}if(!$('#v39Home').hidden&&F())v39Hide();});
+/*V39-END*/
 /* ---------- init ---------- */
 (async function init(){
   await DB.open();
   try{const lr=await DB.get('logo');if(lr){logoRec=lr;logoImg=await loadImage(URL.createObjectURL(new Blob([lr.buf],{type:lr.type})));}}catch(e){}
   let raw=await DB.get('state');{const pj=v35Pend();if(pj){raw=pj;DB.set('state',pj).then(ok=>{if(ok)v35PendClear();});}} /*V35-SAVE*/
   if(raw){try{const st=JSON.parse(raw);
-    S.facilities=Array.isArray(st.facilities)?st.facilities:[];S.curF=st.curF||null;S.curD=st.curD||null;
+    S.facilities=Array.isArray(st.facilities)?st.facilities:[];if(Array.isArray(st.trash)&&st.trash.length)S.trash=st.trash; /*V39-TRASH*/S.curF=st.curF||null;S.curD=st.curD||null;
     S.prefs.penOnly=!!(st.prefs&&st.prefs.penOnly);
     S.prefs.diag=!!(st.prefs&&st.prefs.diag);
     S.prefs.free=!!(st.prefs&&st.prefs.free); /*V25-FREE*/
@@ -4238,6 +4452,7 @@ async function importCadFile(file){
   if(!DB.db)setStatus('기기 저장 안 됨, 백업 파일로 보관하세요');else setStatus(S.facilities.length?'이 기기에 저장됨':'');
   renderAll();
   const d=D();if(d){await ensureImg(d);renderStage();requestAnimationFrame(fit);}
+  try{await v39Purge();}catch(e){console.error(e);}if(v39Auto())v39Show(); /*V39-HOME: 앱을 열면 과업 목록부터*/
 })();
 })();
 </script>
