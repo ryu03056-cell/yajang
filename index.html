@@ -336,32 +336,19 @@ main{display:flex;position:relative;min-height:0}
       <select id="facSel" aria-label="시설물 선택" hidden></select>
     </div>
     <div class="r">
-      <button class="tbtn" id="v33TableBtn" data-act="v33table" aria-haspopup="dialog">결함 표</button><!--V33-TABLE-->
       <button class="tbtn" data-act="list" aria-expanded="false">목록</button>
-      <button class="tbtn" data-act="export" aria-haspopup="dialog">출력</button>
-      <button class="tbtn" data-act="menu" aria-expanded="false" aria-haspopup="true">파일·설정</button>
+      <button class="tbtn" data-act="menu" aria-expanded="false" aria-haspopup="true">시설물·설정</button><!--V36-MENU-->
       <div class="menu" id="menuPop" hidden>
-        <h5>가져오기</h5>
-        <button data-act="importcad">기존 위치도 불러오기 (DXF·ZIP)<small>zip 안의 DXF와 평면도 이미지를 읽어요</small></button>
-        <button data-act="xlsximp">결함표 엑셀 불러오기<small>회사 결함리스트로 (층, 번호)마다 결함 정보를 채워요</small></button><!--V24-XLS-->
-        <button data-act="xmlimp">전회 자료 불러오기 (XML)<small>회사 엑셀의 인수 파일로 결함 정보와 전회 보고서 내용을 채워요</small></button><!--V30-PREV-->
-        <button data-act="prevphotoimp">전회 사진 불러오기<small>전회차현장사진 폴더의 사진을 파일 이름으로 결함에 붙여요</small></button><!--V30-PREV-->
-        <button data-act="curphotoimp">금회 사진 불러오기<small>현장사진 폴더의 사진을 사진번호(4F002.jpg)로 결함에 붙여요</small></button><!--V32-ROUND-->
-        <button data-act="roundimp">회차 폴더 불러오기 (PC)<small>건물 폴더를 통째로 골라 엑셀, 전회 사진, 금회 사진을 한 번에 넣어요</small></button><!--V32-ROUND-->
-        <button data-act="restore">백업 불러오기<small>다른 기기에서 저장한 백업 파일</small></button>
-        <button data-act="adddraw">도면 이미지 올리기<small>평면도·입면도 JPG, PNG</small></button>
-        <hr><h5>시설물</h5>
+        <h5>시설물</h5><!--V36-MENU: 불러오기·전회 자료·검사·결함 표·문서 작성·출력은 도면 아래 작업 띠로 옮김-->
         <button data-act="newfac">새 시설물</button>
         <button data-act="renfac">시설물 이름 바꾸기</button>
         <button data-act="taskinfo">과업 정보<small>학교·건물, 점검 연도·시기·구분</small></button><!--V31-TASK-->
-        <button data-act="v34open">체크리스트·안전등급<small>평가항목 18개의 의견과 등급을 넣으면 상태점수와 안전등급이 계산돼요</small></button><!--V34-DOC-->
-        <button data-act="v33table">결함 표<small>모든 층의 결함을 한 표에서 보고 고쳐요. 검사에 걸린 칸을 표시해요</small></button><!--V33-TABLE-->
-        <button data-act="precheck">내보내기 전 검사<small>빈칸, 번호, 확인하지 않은 전회 결함을 찾아요</small></button><!--V31-CHECK-->
         <button data-act="nextround">다음 회차 시작<small>금회 사진을 전회 사진으로 넘기고 모든 결함을 다시 확인하게 해요</small></button><!--V32-ROUND-->
         <hr><h5>설정</h5>
         <button data-act="settings">도면 설정·도곽<small>도면 이름·종류·회전·축척, CAD 크기, 현장명·로고</small></button>
         <button data-act="v33size">번호·점 크기<small>번호 원과 점 크기를 이 층만 또는 모든 층에 맞춰요</small></button><!--V33-SIZE-->
         <button data-act="v35news">업데이트 안내<small>버전마다 추가된 것과 바뀐 것</small></button><!--V35-NEWS-->
+        <hr><div class="v36also"><small>아래 작업 띠와 같은 기능</small><span><button data-act="precheck">검사</button><button data-act="v33table">결함 표</button><button data-act="v34open">문서 작성</button></span></div><!--V36-MENU: 띠가 좁아져 단추가 줄었을 때도 여기서 열 수 있음-->
       </div>
     </div>
   </header>
@@ -404,6 +391,33 @@ main{display:flex;position:relative;min-height:0}
       <div id="hint"></div>
       <button id="scaleBadge" data-tool="scale" hidden title="눌러서 축척 지정"></button>
       <button class="fitbtn" id="fitBtn" data-act="fit" title="도면 전체 보기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>화면 맞춤</button>
+      <div id="v36Bar" role="toolbar" aria-label="작업"><!--V36-BAR: 작업 띠. 왼쪽에서 오른쪽이 일하는 순서-->
+        <button class="tbtn" data-act="v36imp" aria-expanded="false" aria-haspopup="true" aria-controls="v36ImpPop" title="위치도, 도면, 결함표 엑셀, 사진, 백업을 불러와요"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v10M8 10l4 4 4-4"/><path d="M4 16v3h16v-3"/></svg><span>불러오기</span></button>
+        <button class="tbtn" data-act="v36prev" aria-expanded="false" aria-haspopup="true" aria-controls="v36PrevPop" title="전회 보고서 자료와 전회 사진을 넣어요"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12a7.5 7.5 0 1 0 2.4-5.5"/><path d="M4.5 4.5v3.6h3.6"/><path d="M12 8v4l2.8 1.8"/></svg><span>전회 자료</span></button>
+        <i class="sp" aria-hidden="true"></i>
+        <button class="tbtn" data-act="precheck" id="v36Chk" aria-haspopup="dialog" title="빈칸, 번호, 확인하지 않은 전회 결함을 찾아요"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="5" width="14" height="16" rx="2"/><path d="M9 5V3.5h6V5"/><path d="M9 13.2l2.2 2.2 4.2-4.4"/></svg><span>검사</span><b id="v36N" hidden></b></button>
+        <button class="tbtn" id="v33TableBtn" data-act="v33table" aria-haspopup="dialog" title="모든 층의 결함을 한 표에서 보고 고쳐요"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="14" rx="1.5"/><path d="M4 10h16M4 14.5h16M10 5v14"/></svg><span>결함 표</span></button><!--V33-TABLE: 위 막대에서 옮김-->
+        <button class="tbtn" data-act="v34open" aria-haspopup="dialog" title="체크리스트와 안전등급"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/></svg><span>문서 작성</span></button>
+        <i class="sp" aria-hidden="true"></i>
+        <button class="tbtn" data-act="export" aria-haspopup="dialog" title="CAD, 결함표, 사진, 백업을 내보내요"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V5M8 9l4-4 4 4"/><path d="M4 16v3h16v-3"/></svg><span>출력</span></button><!--위 막대에서 옮김-->
+      </div>
+      <div class="v36pop" id="v36ImpPop" role="menu" aria-label="불러오기" hidden><!--V36-BAR: 메뉴의 가져오기를 옮김-->
+        <h5>도면</h5>
+        <button data-act="importcad">기존 위치도 불러오기 (DXF·ZIP)<small>zip 안의 DXF와 평면도 이미지를 읽어요</small></button>
+        <button data-act="adddraw">도면 이미지 올리기<small>평면도·입면도 JPG, PNG</small></button>
+        <h5>결함·사진</h5>
+        <button data-act="roundimp">회차 폴더 불러오기 (PC)<small>건물 폴더를 통째로 골라 엑셀, 전회 사진, 금회 사진을 한 번에 넣어요</small></button><!--V32-ROUND-->
+        <button data-act="xlsximp">결함표 엑셀 불러오기<small>회사 결함리스트로 (층, 번호)마다 결함 정보를 채워요</small></button><!--V24-XLS-->
+        <button data-act="curphotoimp">금회 사진 불러오기<small>현장사진 폴더의 사진을 사진번호(4F002.jpg)로 결함에 붙여요</small></button><!--V32-ROUND-->
+        <hr>
+        <button data-act="restore">백업 불러오기<small>다른 기기에서 저장한 백업 파일</small></button>
+        <p class="drop">PC에서는 파일을 화면에 끌어다 놓아도 열려요.</p>
+      </div>
+      <div class="v36pop" id="v36PrevPop" role="menu" aria-label="전회 자료" hidden><!--V36-BAR-->
+        <button data-act="xmlimp">전회 자료 불러오기 (XML)<small>회사 엑셀의 인수 파일로 결함 정보와 전회 보고서 내용을 채워요</small></button><!--V30-PREV-->
+        <button data-act="prevphotoimp">전회 사진 불러오기<small>전회차현장사진 폴더의 사진을 파일 이름으로 결함에 붙여요</small></button><!--V30-PREV-->
+        <p>회사 엑셀(.xlsm)이나 회차 폴더는 불러오기에 있어요. 전회 자료도 같이 들어와요.</p>
+      </div>
       <div id="v33Size" role="group" aria-label="번호·점 크기" hidden></div><!--V33-SIZE-->
       <nav id="tabs" aria-label="도면"></nav>
     </div>
@@ -670,6 +684,51 @@ body.v35drag::after{content:'여기에 놓으면 열어요 · 위치도(zip, dxf
   <div class="bd" id="v35Body"></div>
   <div class="ft"><span class="note">새 버전은 인터넷이 될 때 앱을 열면 받아 와요. 처음 한 번은 다시 열어야 바뀐 화면이 보여요.</span><button class="btn primary" data-act="v35close">닫기</button></div>
 </div></div>
+<style>/*V36-BAR: 작업 띠. 단추는 위 막대와 같은 .tbtn (PC 38px, 터치 44px)*/
+#stage{--v36h:54px}
+#v36Bar{position:absolute;left:8px;right:8px;bottom:12px;margin:0 auto;width:fit-content;max-width:calc(100% - 16px);z-index:6;display:flex;align-items:center;gap:4px;padding:4px;background:var(--chrome);border:1px solid var(--rule);border-radius:12px;box-shadow:var(--shadow)}
+#v36Bar .tbtn{flex:none;align-items:center;justify-content:center;gap:6px;border-color:transparent;background:transparent}
+#v36Bar .tbtn:not(#v33TableBtn){display:inline-flex}
+@media (min-width:1100px){#v36Bar #v33TableBtn{display:inline-flex}}
+#v36Bar .tbtn:hover{background:var(--soft)}
+#v36Bar .tbtn[aria-expanded="true"]{background:var(--softsel);color:var(--accent);border-color:var(--accent)}
+#v36Bar .tbtn svg{width:18px;height:18px;flex:none}
+#v36Bar .sp{flex:none;width:1px;height:22px;margin:0 2px;background:var(--rule)}
+#v36N{min-width:20px;height:20px;padding:0 6px;border-radius:10px;font-size:var(--f-s);font-weight:700;line-height:1;display:inline-flex;align-items:center;justify-content:center}
+#v36N[hidden]{display:none}
+#v36N.must{background:var(--ink);color:var(--chrome)}
+#v36N.see{box-shadow:inset 0 0 0 1px var(--muted);color:var(--muted)}
+#v36Bar.nofac .tbtn:not([aria-controls]){opacity:.45}
+#v36Bar.t1 .tbtn svg{display:none} /*좁으면 글자만*/
+#v36Bar.t2 .tbtn{padding:0 8px} /*더 좁으면 단추 사이를 줄임*/
+#v36Bar.t2 .sp{display:none}
+#v36Bar.t3{flex-wrap:wrap;justify-content:center} /*그래도 넘치면 두 줄*/
+#v36Bar.away{visibility:hidden} /*도면 영역이 도구 섬보다 낮아 겹칠 때(폰에서 결함 시트를 연 때)는 잠시 숨김*/
+.v36pop{position:absolute;left:8px;bottom:74px;z-index:8;width:min(340px,calc(100% - 16px));max-height:calc(100% - var(--v36h) - 40px);overflow-y:auto;background:var(--chrome);border:1px solid var(--rule);border-radius:12px;padding:6px;box-shadow:0 0 16px rgba(0,0,0,.12)}
+.v36pop[hidden]{display:none}
+.v36pop h5{margin:10px 12px 4px;font-size:var(--f-s);color:var(--muted);font-weight:600}
+.v36pop h5:first-child{margin-top:6px}
+.v36pop button{display:block;width:100%;min-height:48px;text-align:left;border:0;border-radius:8px;background:transparent;padding:8px 12px}
+.v36pop button:hover{background:var(--hover)}
+.v36pop small{display:block;font-size:var(--f-s);color:var(--muted)}
+.v36pop hr{border:0;border-top:1px solid var(--rule);margin:6px 8px}
+.v36pop p{margin:6px 12px 8px;font-size:var(--f-s);color:var(--muted)}
+.v36pop p.drop{display:none}
+#scaleBadge,.fitbtn{bottom:calc(20px + var(--v36h))} /*작업 띠 바로 위로*/
+@media (min-width:1200px){#tabs{bottom:calc(20px + var(--v36h))}}
+.v36also{padding:4px 12px 8px}
+.v36also small{margin-bottom:6px}
+.v36also span{display:flex;gap:6px;flex-wrap:wrap}
+.menu .v36also button{display:inline-flex;align-items:center;width:auto;min-height:40px;padding:0 12px;border-radius:6px;background:var(--soft);color:var(--ink);font-size:var(--f-m)}
+.menu .v36also button:hover{background:var(--hover)}
+@media (hover:hover) and (pointer:fine){
+  #stage{--v36h:48px}
+  .v36pop button{min-height:40px}
+  .v36pop p.drop{display:block}
+  .menu .v36also button{min-height:34px}
+}
+#v33Side .ft .btn{flex:1}
+</style>
 <div id="v31Pop" hidden><div class="dlg" role="dialog" aria-modal="true" aria-labelledby="v31T"><!--V31-CHECK: 내보내기 전 검사-->
   <div class="hd"><h2 id="v31T">내보내기 전 검사</h2><button class="x" data-act="v31close" aria-label="닫기">×</button></div>
   <div class="bd" id="v31Body"></div>
@@ -1062,7 +1121,7 @@ function setTool(t){tool=t;scaleTmp=null;gesture=null;bendId=null;renderDraft();
 
 function chips(arr,cur,field){return arr.map(v=>`<button class="chip${v===cur?' on':''}" data-set="${field}" data-v="${esc(v)}">${esc(v)}</button>`).join('');}
 function renderPanel(){ /*V28-UI: 시트형. 결함을 고르면 결함 시트, '목록'을 누르면 목록·도면 설정 시트, 둘 다 아니면 닫힘(도면을 넓게)*/
-  const d=D(),def=d&&selDef();v33Side(); /*V33-WIDE*/
+  const d=D(),def=d&&selDef();v33Side(); /*V33-WIDE*/v36Later(); /*V36-BAR*/
   panel.hidden=!(def||d&&V28.list);
   {const lb=document.querySelector('.tbtn[data-act="list"]');if(lb)lb.setAttribute('aria-expanded',d&&V28.list&&!def?'true':'false');}
   if(panel.hidden){panel.innerHTML='';delete panel.dataset.sel;return;}
@@ -1208,7 +1267,7 @@ function startPinch(){
   gesture={kind:'pinch',d0:Math.hypot(a.x-b.x,a.y-b.y)||1,m0:[(a.x+b.x)/2,(a.y+b.y)/2],s0:view.s,tx0:view.tx,ty0:view.ty};
 }
 stage.addEventListener('pointerdown',e=>{
-  if(e.target.closest('#empty,#sState,#diagBtn,#freeBtn,.island,#lineOpt,#fitBtn,#scaleBadge,#tabs,#v33Size'))return; /*V28-UI: 도구 섬·화면 맞춤·축척·층 띠도 도면 위에 있음*/ /*V25-FREE: 도면 위 단추는 그리기·포인터 붙잡기에서 뺌(붙잡으면 click이 stage로 가서 단추가 안 눌림)*/
+  if(e.target.closest('#empty,#sState,#diagBtn,#freeBtn,.island,#lineOpt,#fitBtn,#scaleBadge,#tabs,#v33Size,#v36Bar,.v36pop'))return; /*V28-UI: 도구 섬·화면 맞춤·축척·층 띠도 도면 위에 있음*/ /*V25-FREE: 도면 위 단추는 그리기·포인터 붙잡기에서 뺌(붙잡으면 click이 stage로 가서 단추가 안 눌림)*/
   const d=D();if(!d)return;
   try{stage.setPointerCapture(e.pointerId);}catch(_){}
   ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY,type:e.pointerType});
@@ -1764,7 +1823,7 @@ async function v32ImportRound(files){const f=F();
   await modal(`<h4>회차 폴더를 불러왔어요</h4>
     <p>${xls?`엑셀: <b>${esc(xls.x.name)}</b>`:'엑셀: 찾지 못했어요'}</p>
     <p>전회 사진이 붙은 결함 <b>${nP}곳</b>, 금회 사진이 붙은 결함 <b>${nC}곳</b> (결함 ${nD}곳 중)${c&&c.miss?`. 맞는 결함이 없는 금회 사진 ${c.miss}장`:''}</p>
-    <p class="muted">결함을 누르면 결함 시트에 금회 사진과 전회 사진이 같이 보여요. 이 자료로 다음 점검을 하려면 파일·설정 메뉴의 '다음 회차 시작'을 누르세요.</p>
+    <p class="muted">결함을 누르면 결함 시트에 금회 사진과 전회 사진이 같이 보여요. 이 자료로 다음 점검을 하려면 시설물·설정 메뉴의 '다음 회차 시작'을 누르세요.</p>
     <div class="btnrow"><button class="btn primary" data-m="ok">확인</button></div>`);}
 /* 다음 회차 시작: 번호마다 금회 대표 사진을 전회 사진으로 넘기고, 금회 사진과 처리 상태를 비운다. 값(부재·유형·폭·수량)은 그대로 둔다.
    넘기기 전에 백업 파일을 내려받는다(되돌리려면 그 백업을 불러온다). */
@@ -1827,7 +1886,7 @@ function v31Check(f){const must=[],see=[],G={},grp=(arr,k,t,h)=>G[k]||(arr.push(
   const M=(k,t,h)=>grp(must,k,t,h),W=(k,t,h)=>grp(see,k,t,h),blank=v=>!String(v==null?'':v).trim();
   if(!f)return {must,see};
   const fls=sortFloors(f.drawings),anyPhoto=fls.some(d=>d.defects.some(x=>(x.photos||[]).length));
-  if(!f.task)W('task','과업 정보가 없어요','보고서 표지와 문서에 쓰는 값이에요. 파일·설정 메뉴의 과업 정보에서 넣어요.').items.push({lab:'과업 정보 넣기'});
+  if(!f.task)W('task','과업 정보가 없어요','보고서 표지와 문서에 쓰는 값이에요. 시설물·설정 메뉴의 과업 정보에서 넣어요.').items.push({lab:'과업 정보 넣기'});
   else{const miss=[['school','학교 이름'],['building','건물(동)'],['year','점검 연도']].filter(([k])=>blank(f.task[k])).map(x=>x[1]);
     if(miss.length)W('task','과업 정보에 빈칸이 있어요','').items.push({lab:miss.join(', ')});}
   for(const d of fls){const defs=[...d.defects].sort((a,b)=>a.no-b.no||(a.hideLabel?1:0)-(b.hideLabel?1:0)),lab=x=>({did:d.id,def:x.id,lab:String(x.no)});
@@ -1879,10 +1938,11 @@ function v31Go(did,defId){const f=F(),d=f&&f.drawings.find(x=>x.id===did);if(!d)
 document.addEventListener('click',e=>{const p=$('#v31Pop');if(p&&e.target===p)p.hidden=true;}); // 검사 화면 바깥(어두운 곳)을 누르면 닫힘
 /*V31-END*/
 /*V35-START: 화면 정리(V35-UI는 스타일만), 바로 저장(V35-SAVE), Esc(V35-ESC), 업데이트 안내(V35-NEWS), 파일 끌어다 놓기(V35-DROP). 저장 값은 바뀌지 않는다*/
-const V35={dirty:false},V35_VER='v35';
+const V35={dirty:false},V35_VER='v36'; /*V36: 버전 표시*/
 const V35_NEWS=[
+ {v:'v36',d:'2026-11-23',items:['도면 아래에 작업 띠가 생겼어요: 불러오기, 전회 자료, 검사, 결함 표, 문서 작성, 출력. 메뉴에 들어가지 않아도 보여요','검사 단추에 걸린 건수가 보여요','위 막대의 결함 표와 출력은 작업 띠로 옮겼어요','파일·설정 메뉴는 시설물·설정으로 바뀌었고, 시설물과 설정만 남겼어요','축척 표시와 화면 맞춤은 작업 띠 바로 위로 올렸어요']},
  {v:'v35',d:'2026-11-22',items:['화면을 젠트릭스 웹 방식으로 정리했어요: 흰 바탕에 파란 강조, 글자 크기 네 단계. PC에서는 촘촘하게, 아이패드에서는 누르기 쉬운 크기 그대로예요','화면을 떠나거나 앱을 내릴 때 바로 저장해요','출력, 검사, 메뉴도 Esc로 닫혀요','PC에서 위치도(zip, dxf), 엑셀, 전회 자료(xml), 백업(json) 파일을 끌어다 놓으면 열려요','위 막대의 버전 표시를 누르면 이 안내가 열려요']},
- {v:'v34',d:'2026-11-22',items:['글꼴을 프리텐다드로 바꿨어요. 인터넷이 없어도 같은 글꼴이에요','체크리스트 / 안전등급: 평가결과를 누르면 상태점수와 안전등급이 계산돼요 (파일·설정 메뉴)','회사 엑셀을 불러오면 점검결과 시트의 체크리스트도 들어오고, 엑셀에 붙여 넣을 수 있게 복사해요']},
+ {v:'v34',d:'2026-11-22',items:['글꼴을 프리텐다드로 바꿨어요. 인터넷이 없어도 같은 글꼴이에요','체크리스트 / 안전등급: 평가결과를 누르면 상태점수와 안전등급이 계산돼요 (도면 아래 작업 띠의 문서 작성)','회사 엑셀을 불러오면 점검결과 시트의 체크리스트도 들어오고, 엑셀에 붙여 넣을 수 있게 복사해요']},
  {v:'v33',d:'2026-11-22',items:['PC 넓은 화면: 왼쪽에 층과 결함 목록이 늘 보여요','결함 표: 모든 층의 결함을 한 표에서 고치고, 검사에 걸린 칸을 표시해요','번호·점 크기: 이 층만 또는 모든 층에 맞춰요','위치도에 번호 원만 있는 번호도 불러와요']},
  {v:'v32',d:'2026-11-21',items:['회사 엑셀(.xlsm)을 그대로 불러와요','금회 사진, 회차 폴더를 한 번에 불러와요','다음 회차 시작: 금회 사진이 전회 사진으로 넘어가요','선으로 그려진 평면도 층도 읽어요']},
  {v:'v31',d:'2026-11-20',items:['과업 정보(학교, 건물, 연도, 시기)','내보내기 전 검사: 빈칸, 번호 문제, 확인하지 않은 전회 결함을 찾아요']},
@@ -1924,6 +1984,38 @@ document.addEventListener('keydown',e=>{if(e.key!=='Escape'||!$('#modal').hidden
   if(!fp.hidden){fp.hidden=true;$('.pill').setAttribute('aria-expanded','false');}});
 v35Ver();
 /*V35-END*/
+/*V36-START: 작업 띠(V36-BAR). 단추가 하는 일은 전과 같고(같은 data-act), 놓인 자리만 바뀐다. 저장 값은 바뀌지 않는다*/
+const V36={t:0};
+function v36Fit(){const bar=$('#v36Bar');if(!bar)return;bar.classList.remove('t1','t2','t3','away');
+  const over=()=>bar.scrollWidth>bar.clientWidth+1;
+  if(over()){bar.classList.add('t1');if(over()){bar.classList.add('t2');if(over())bar.classList.add('t3');}}
+  stage.style.setProperty('--v36h',bar.offsetHeight+'px');
+  const is=document.querySelector('.island');
+  if(is&&!is.hidden){const a=bar.getBoundingClientRect(),b=is.getBoundingClientRect();if(b.width&&a.left<b.right&&b.left<a.right&&a.top<b.bottom&&b.top<a.bottom)bar.classList.add('away');}}
+function v36Badge(){const b=$('#v36N');if(!b)return;let n={must:0,see:0};
+  let f=null;try{f=F();if(f)n=v31Count(v31Check(f));}catch(e){console.error(e);}
+  $('#v36Bar').classList.toggle('nofac',!f); // 시설물이 없으면 검사·결함 표·문서 작성·출력을 흐리게 (누르면 안내가 나옴)
+  const k=n.must?'must':n.see?'see':'';
+  b.hidden=!k;b.className=k;b.textContent=k?String(n.must||n.see):'';
+  $('#v36Chk').setAttribute('aria-label',k?`검사, 고칠 것 ${n.must}건, 확인할 것 ${n.see}건`:'검사, 걸린 것이 없어요');
+  v36Fit();}
+function v36Later(){clearTimeout(V36.t);V36.t=setTimeout(v36Badge,200);}
+function v36CloseAll(){for(const p of document.querySelectorAll('.v36pop'))p.hidden=true;
+  for(const b of document.querySelectorAll('#v36Bar [aria-expanded]'))b.setAttribute('aria-expanded','false');}
+function v36Pop(id,btn){const p=$('#'+id),was=p.hidden;v36CloseAll();if(!was)return;
+  p.hidden=false;btn.setAttribute('aria-expanded','true');
+  const sr=stage.getBoundingClientRect(),br=btn.getBoundingClientRect(),bb=$('#v36Bar').getBoundingClientRect();
+  p.style.bottom=Math.round(sr.bottom-bb.top+8)+'px';
+  p.style.left=Math.round(Math.max(8,Math.min(br.left-sr.left,sr.width-p.offsetWidth-8)))+'px';}
+document.addEventListener('click',e=>{const a=e.target.closest('[data-act]');
+  if(a&&a.dataset.act==='v36imp'){v36Pop('v36ImpPop',a);return;}
+  if(a&&a.dataset.act==='v36prev'){v36Pop('v36PrevPop',a);return;}
+  if(!e.target.closest('.v36pop')||e.target.closest('.v36pop button'))v36CloseAll();}); // 바깥을 누르거나 항목을 고르면 닫힘
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#modal').hidden)v36CloseAll();});
+if(window.ResizeObserver)new ResizeObserver(()=>{v36CloseAll();v36Fit();}).observe(stage);else window.addEventListener('resize',v36Fit);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(v36Fit);
+requestAnimationFrame(v36Fit);
+/*V36-END*/
 /*V34-START: 문서 화면 1 = 체크리스트 / 안전등급 (V34-DOC).
   시설물에 새 항목 doc={ck:{items:[{op,need,gr,pv?}×18], emg, msr, major, pvx?, src}}.
     op 점검자 의견, need 보수필요 유무, gr 평가결과('a'~'e', '-' = 해당 없음, '' = 아직 안 넣음), pv = 전회 보고서에서 온 값이고 아직 확인 안 함(보라색)
@@ -2069,7 +2161,7 @@ function v33Side(){const el=$('#v33Side');if(!el)return;const f=F(),d=D(),on=v33
     <div class="dl">${show.length?`<ul class="list">${show.map(x=>`<li><button data-pick="${x.id}" aria-current="${x.id===sel}"><span class="badge" style="--c:${v30Ink(x,x.color||HEX[x.type])}">${x.no}</span>
       <span class="t"><b>${esc([x.member,x.name].filter(Boolean).join(' ')||TYPE_LABEL[x.type])}</b><span>${esc([x.hideLabel?'추가 위치':'',x.noGeom?'번호 원만':qtyText(d,x),isRepaired(x)?'보수 완료':''].filter(Boolean).join(' · '))}</span></span>${flag(x)}</button></li>`).join('')}</ul>`
       :`<p class="muted" style="padding:10px 4px">${d?(defs.length?'여기에 해당하는 결함이 없어요.':'이 층에는 아직 결함이 없어요.'):'도면이 없어요.'}</p>`}</div>
-    <div class="ft"><button class="btn" data-act="v33table">결함 표</button><button class="btn" data-act="v34open">체크리스트</button><button class="btn" data-act="v33size">번호 크기</button></div>`;
+    <div class="ft"><button class="btn" data-act="v33size">번호·점 크기</button></div>`;
   const dl=el.querySelector('.dl');dl.scrollTop=top;
   if(sel&&V33.last!==sel){const b=dl.querySelector('[aria-current="true"]');if(b&&b.scrollIntoView)b.scrollIntoView({block:'nearest'});}
   V33.last=sel;}
