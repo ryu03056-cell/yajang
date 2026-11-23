@@ -791,6 +791,7 @@ body.v35drag::after{content:'여기에 놓으면 열어요 · 위치도(zip, dxf
 .v38src.own{background:#DCEBFA;color:#0B4F8A}
 .v38src.no{background:#FFE9C2;color:#7A4B00}
 .v38nm{font-size:var(--f-s);color:#555;white-space:normal}
+.v38hintv{display:block;margin-top:2px;color:#7A4B00} /*V38C: 전회 엑셀의 과업 값(참고)*/
 .v38tech td.in:first-child{width:150px}
 .v38okbox{margin:14px 0 0;padding:10px 14px;border:1px solid #2E7D4F;background:#EAF6EE;border-radius:6px;color:#14532D;font-size:var(--f-s)}
 .v38go{margin-top:14px}
@@ -2012,8 +2013,9 @@ function v31Go(did,defId){const f=F(),d=f&&f.drawings.find(x=>x.id===did);if(!d)
 document.addEventListener('click',e=>{const p=$('#v31Pop');if(p&&e.target===p)p.hidden=true;}); // 검사 화면 바깥(어두운 곳)을 누르면 닫힘
 /*V31-END*/
 /*V35-START: 화면 정리(V35-UI는 스타일만), 바로 저장(V35-SAVE), Esc(V35-ESC), 업데이트 안내(V35-NEWS), 파일 끌어다 놓기(V35-DROP). 저장 값은 바뀌지 않는다*/
-const V35={dirty:false},V35_VER='v38b'; /*V38B: 버전 표시*/
+const V35={dirty:false},V35_VER='v38c'; /*V38C: 버전 표시*/
 const V35_NEWS=[
+ {v:'v38c',d:'2026-11-23',items:['보고서 출력 탭에서 회사 엑셀을 넣으면 값을 가져와요: 과업·건물 값, 전차 등급·점수, 기술자 명단, 내진·치장벽돌·설계도서·보수이력, 전차점검','전회(전차) 엑셀을 넣어도 돼요. 회차를 보고 가려서, 그 엑셀의 결론은 전차점검(1)로 넣고 용역명·기간·금액은 참고로만 보여 줘요','직접 넣은 값은 덮어쓰지 않아요','전회 값이 그대로 들어가는 표(치장벽돌·내진·기술자 명단)는 "확인할 것"에 알려 줘요']},
  {v:'v38b',d:'2026-11-23',items:['새 빈 양식에 맞췄어요: 기술자 10명, 요약표 7줄씩, 공정표 그림 칸. 전에 쓰던 양식도 그대로 돼요','새 양식을 쓰려면 보고서 출력 탭에서 "다른 양식 불러오기"로 한 번 다시 불러오세요']},
  {v:'v38',d:'2026-11-23',items:['문서 작성에 보고서 출력 탭이 생겼어요. 회사 빈 양식(_빈워드.docx)을 불러오면 워드 보고서 본문을 만들어요','양식은 이 기기에만 저장돼요. 한 번 불러오면 다음부터는 그대로 써요','회사 엑셀을 불러오면 용역명·점검기간·금액·기술자, 내진·치장벽돌·설계도서, 전차점검 내용도 같이 가져와요','문서용 사진(과업지시서, 위치도, 부위별·체크리스트 사진 등)은 폴더나 여러 장을 고르면 파일 이름으로 자리를 찾아요','값이 없는 자리는 [확인필요]로 남고, 만들기 전에 목록으로 보여 줘요']},
  {v:'v37',d:'2026-11-23',items:['문서 작성에 탭이 생겼어요: 체크리스트·안전등급, 실시결과 요약표, 종합결론','실시결과 요약표를 결함에서 자동으로 만들어요. 회사 엑셀 점검표에 붙여 넣을 수 있어요','종합결론 초안을 체크리스트 의견과 결함에서 만들어요. 줄마다 고칠 수 있고, 근거가 없는 자리는 [확인필요]로 남아요','고친 뒤에 결함이 바뀌면 주황색으로 알려 줘요','회사 엑셀을 불러오면 준공연도·용도·층수도 가져와요']},
@@ -2429,7 +2431,7 @@ const V38_F=[ // [열쇠, 이름, 묶음, 종류(t 글, d 날짜, n 숫자)]
   ['svc','용역명','과업','t'],['d0','점검 시작일','과업','d'],['d1','점검 끝 날','과업','d'],['amt','점검금액 (이 동, 천원)','과업','n'],['tot','전체금액 (천원)','과업','n'],['contract','계약방법','과업','t'],['joint','공동수급','과업','t'],
   ['addr','주소','건물','t'],['area','연면적 (㎡)','건물','n'],['cat','종별','건물','t'],['fclass','시설물 구분','건물','t'],['struct','구조형식','건물','t'],['anc','부대시설','건물','t'],['fid','시설물번호','건물','t'],['builtd','준공일','건물','d'],
   ['pgrade','전차 안전등급','전차','t'],['pscore','전차 상태점수','전차','n']];
-const V38_SRC={own:'직접 넣음',app:'앱',xl:'회사 엑셀',pv:'전회 자료','':'없음'};
+const V38_SRC={own:'직접 넣음',app:'앱',xl:'회사 엑셀',xp:'전회 엑셀',pv:'전회 자료','':'없음'}; /*V38C: xp = 전회(전차) 엑셀에서 가져온 값*/
 const V38_SUMLAB=['구조체\n(천장 보, 기둥, 슬래브)','비구조체\n(비내력벽, 마감재, 바닥 등)'];
 const v38s=v=>String(v==null?'':v).trim(),v38need=l=>`[확인필요: ${l}]`;
 function v38Iso(v){if(v==null||v==='')return '';if(v instanceof Date)return v.toISOString().slice(0,10);
@@ -2473,12 +2475,15 @@ function v38FromXl(f,u8){if(typeof XLSX==='undefined'||!f||!u8)return 0;
   for(let r=1;r<=60;r++){const k=v38s(O('B'+r)).replace(/\s/g,'');if(k&&!(k in lab))lab[k]=r;}
   const put=(k,v)=>{const s=typeof v==='number'?String(v):v38s(v);if(s)x[k]=s;},at=(n,c)=>lab[n]?O((c||'C')+lab[n]):null;
   put('school',at('학교명'));put('building',at('동명'));put('svc',at('용역명'));put('addr',at('주소'));put('area',at('연면적'));put('up',at('층수'));put('down',at('층수','D'));put('use',at('용도'));put('cat',at('종별'));put('struct',at('구조형식'));put('fclass',at('시설물구분'));put('anc',at('부대시설'));
-  put('fid',at('시설물번호(FMS)'));put('builtd',v38Iso(at('준공연월일')));put('d0',v38Iso(at('점검기간')));put('d1',v38Iso(at('점검기간','D')));put('tot',at('전체계약액'));put('amt',at('동계약액'));put('contract',at('계약방법'));put('joint',at('공동수급'));
+  put('seq',at('연도(학기)폴더명')); /*V38C: 회차*/put('fid',at('시설물번호(FMS)'));put('builtd',v38Iso(at('준공연월일')));put('d0',v38Iso(at('점검기간')));put('d1',v38Iso(at('점검기간','D')));put('tot',at('전체계약액'));put('amt',at('동계약액'));put('contract',at('계약방법'));put('joint',at('공동수급'));
   x.tech=[];for(let r=1;r<=60;r++){const b=v38s(O('B'+r)),nm=v38s(O('C'+r));if(/기술자/.test(b)&&nm)x.tech.push({role:/책임/.test(b)?'책임기술자':'참여기술자',name:nm,qual:v38s(O('D'+r)),part:v38s(O('E'+r))});}
   if(find('점검결과')){const bases=[];for(let r=60;r<=260&&bases.length<2;r++)if(/^\d{4}년.*점검$/.test(v38s(R('B'+r))))bases.push(r);
     bases.forEach((b0,i)=>{const end=bases[i+1]||b0+80,p={title:v38s(R('B'+b0)),date:v38s(R('D'+b0)),org:v38s(R('E'+b0)),grade:'',lines:[]},list=[];let sc=null;
       for(let r=b0+1;r<end;r++){const c=v38s(R('C'+r));if(c==='안전등급'&&!p.grade)p.grade=v38s(R('D'+r)).toUpperCase();if(c.replace(/\s/g,'')==='종합상태점수'&&sc==null)sc=v38Num(R('D'+r));list.push([R('B'+r),R('C'+r)]);}
-      p.lines=v38Lines(list);x['p'+(i+1)]=p;if(i===0){if(p.grade)x.pgrade=p.grade;if(sc!=null)x.pscore=sc.toFixed(2);}});}
+      p.lines=v38Lines(list);x['p'+(i+1)]=p;if(i===0){if(p.grade)x.pgrade=p.grade;if(sc!=null)x.pscore=sc.toFixed(2);}});
+    {const me={grade:'',score:null,lines:[]},list=[],b0=bases[0]||72; /*V38C: 이 엑셀 자신의 등급·점수·결론. 전회 엑셀로 읽을 때 전차점검(1)이 된다*/
+      for(let r=1;r<b0;r++){const c=v38s(R('C'+r));if(c==='안전등급'&&!me.grade)me.grade=v38s(R('D'+r)).toUpperCase();if(c.replace(/\s/g,'')==='종합상태점수'&&me.score==null)me.score=v38Num(R('D'+r));list.push([R('B'+r),R('C'+r)]);}
+      me.lines=v38Lines(list);x.me=me;}}
   if(find('점검표')&&/구조체/.test(v38s(P('B4')))){x.sumLab=[v38s(P('B4')),v38s(P('B9'))];
     x.seis=[];for(let r=17;r<=22;r++)x.seis.push(['C','D','E'].map(c=>v38s(P(c+r))));x.seisOp=v38s(P('C23'));
     x.brick=['F25','C26','C27','C28','C29','C30','F26','F27','F28','F29','F30'].map(a=>{const v=P(a);return v==null?'':String(v).trim();});
@@ -2488,17 +2493,34 @@ function v38FromXl(f,u8){if(typeof XLSX==='undefined'||!f||!u8)return 0;
     for(let r=5;r<=60;r++){const n=v38Num(A('B'+r)),c=v38s(A('D'+r));if(n!=null&&c)x.ckCap[String(n)]=c;const pf=v38s(A('F'+r));if(pf)x.partFiles.push(pf);const mf=v38s(A('K'+r));if(mf)x.mapFiles.push(mf);}}
   if(find('결함데이터')){put('ptag',G('N2'));}
   const rp=v38Rp(f,true);rp.xl=x;return Object.keys(x).length;}
-function v38TechOf(f){const rp=v38Rp(f);if(Array.isArray(rp.tech))return {rows:rp.tech,src:'own'};const x=rp.xl||{};if(x.tech&&x.tech.length)return {rows:x.tech,src:'xl'};const p=v38Pv(f);if(p.tech&&p.tech.length)return {rows:p.tech,src:'pv'};return {rows:[],src:''};}
+function v38TechOf(f){const rp=v38Rp(f);if(Array.isArray(rp.tech))return {rows:rp.tech,src:'own'};const x=rp.xl||{};if(x.tech&&x.tech.length)return {rows:x.tech,src:'xl'};const q=rp.xp||{};if(q.tech&&q.tech.length)return {rows:q.tech,src:'xp'}; /*V38C*/const p=v38Pv(f);if(p.tech&&p.tech.length)return {rows:p.tech,src:'pv'};return {rows:[],src:''};}
+/*V38C: 전회 엑셀을 금회 보고서의 값으로 옮긴다. c = 그 엑셀을 금회 엑셀처럼 읽은 것 */
+function v38XlAsPrev(c){const x={from:'prev',seq:v38s(c.seq),hint:{}},d0=v38D(c.d0),d1=v38D(c.d1),sq=v38s(c.seq).match(/^(\d{4})_(\d)/),fd=q=>`${q.y}. ${v38p2(q.m)}. ${v38p2(q.d)}.`,me=c.me||{};
+  for(const k of ['school','building','addr','area','up','down','use','cat','struct','fclass','anc','fid','builtd','contract','joint','sumLab','seis','seisOp','brick','dd','ddEtc','ddLedger','ddFms','rep','rep2'])if(c[k]!=null&&c[k]!=='')x[k]=c[k];
+  if(c.tech&&c.tech.length)x.tech=c.tech;for(const k of ['svc','d0','d1','amt','tot'])if(c[k])x.hint[k]=c[k]; // 지난 회차의 과업 값은 참고로만
+  x.p1={title:sq?`${sq[1]}년 ${sq[2]==='1'?'상반기':'하반기'} 정기안전점검`:'',date:d0&&d1?`${fd(d0)} ~ ${fd(d1)}`:'',org:(c.p1&&c.p1.org)||'',grade:me.grade||'',lines:me.lines||[]};
+  if(c.p1)x.p2=c.p1;if(me.grade)x.pgrade=me.grade;if(me.score!=null)x.pscore=me.score.toFixed(2);if(d1)x.ptag=`${d1.y}년${d1.m}월`;return x;}
+async function v38LoadXl(file,flip){const f=F();if(!f)return;
+  try{if(file)V38.xlBuf={u8:new Uint8Array(await file.arrayBuffer()),name:file.name};const B=V38.xlBuf;if(!B)return;
+    const tmp={doc:{}};let n=0;try{n=v38FromXl(tmp,B.u8);}catch(e){console.error(e);}if(!n){toast('회사 엑셀이 아니에요. 개요 시트가 있는 파일을 고르세요');return;}
+    const c=tmp.doc.rp.xl,tk=v38Task(f),mine=`${v38s(tk.year)}_${tk.half==='2'?'2':'1'}`,seq=v38s(c.seq),rp=v38Rp(f,true),meta={name:B.name,seq,at:new Date().toISOString()};
+    let prev=/^\d{4}_\d/.test(seq)&&/^\d{4}_\d$/.test(mine)&&seq.slice(0,6)<mine;if(flip)prev=V38.xlMode!=='prev';V38.xlMode=prev?'prev':'cur';
+    if(prev){if(flip&&rp.xlFile&&rp.xlFile.name===B.name){delete rp.xl;delete rp.xlFile;}rp.xp=v38XlAsPrev(c);rp.xpFile=meta;}
+    else{if(flip&&rp.xpFile&&rp.xpFile.name===B.name){delete rp.xp;delete rp.xpFile;}rp.xl=c;rp.xlFile=meta;try{v37FromXl(f,B.u8);}catch(e){console.error(e);}}
+    save();toast(prev?`전회(${seq||'회차 모름'}) 엑셀로 읽었어요. 용역명·기간·금액은 채우지 않았어요`:`금회(${seq||'회차 모름'}) 엑셀에서 값을 가져왔어요`);}
+  catch(e){console.error(e);toast('엑셀을 읽지 못했어요');}
+  v38Draw();}
 /* 보고서에 들어갈 모든 값. miss = 비어 있는 것의 이름, src = 값마다 출처 */
 function v38Task(f){return Object.assign(v31TaskGuess(f),f.task||{});} // 과업 정보를 넣지 않았으면 시설물 이름에서 짐작한 값
-function v38Data(f){const rp=v38Rp(f),own=rp.own||{},xl=rp.xl||{},pv=v38Pv(f),ov=v37Ov(f)||{},t=v38Task(f),miss=[],src={},val={};
+function v38Data(f){const rp=v38Rp(f),own=rp.own||{},xl=rp.xl||{},xp=rp.xp||{},pv=v38Pv(f),ov=v37Ov(f)||{},t=v38Task(f),miss=[],src={},val={};
   if(!pv.school)pv.school=v38s(t.school);if(!pv.building)pv.building=v38s(t.building); // 과업 정보도 엑셀도 없으면 전회 자료나 시설물 이름에서 짐작한 값
   const app={school:v38s((f.task||{}).school),building:v38s((f.task||{}).building),use:v38s(ov.use),up:v38s(ov.up).replace(/\D/g,''),down:v38s(ov.down).replace(/\D/g,'')};
-  const get=k=>{let v=v38s(own[k]),s='own';if(!v){v=app[k]||'';s='app';}if(!v){v=typeof xl[k]==='string'?xl[k]:'';s='xl';}if(!v){v=typeof pv[k]==='string'?pv[k]:'';s='pv';}if(!v)s='';src[k]=s;val[k]=v;return v;};
+  const get=k=>{let v=v38s(own[k]),s='own';if(!v){v=app[k]||'';s='app';}if(!v){v=typeof xl[k]==='string'?xl[k]:'';s='xl';}if(!v){v=typeof xp[k]==='string'?xp[k]:'';s='xp';} /*V38C*/if(!v){v=typeof pv[k]==='string'?pv[k]:'';s='pv';}if(!v)s='';src[k]=s;val[k]=v;return v;};
   for(const k of ['school','building','use','up','down'])get(k);for(const [k] of V38_F)get(k);
-  const arr=k=>{const a=xl[k]&&(Array.isArray(xl[k])?xl[k].length:Object.keys(xl[k]).length)?xl[k]:null;if(a){src[k]='xl';return a;}const b=pv[k]&&(Array.isArray(pv[k])?pv[k].length:Object.keys(pv[k]).length)?pv[k]:null;if(b){src[k]='pv';return b;}src[k]='';return null;};
-  const strx=k=>{if(v38s(xl[k])){src[k]='xl';return xl[k];}if(v38s(pv[k])){src[k]='pv';return pv[k];}src[k]='';return '';};
-  const obj=k=>{const a=xl[k],b=pv[k],ok=p=>p&&(p.title||p.lines.length);if(ok(a)){src[k]='xl';return a;}if(ok(b)){src[k]='pv';return b;}src[k]='';return null;};
+  const bags=[['xl',xl],['xp',xp],['pv',pv]],pick=(k,ok)=>{for(const [s,b] of bags)if(ok(b[k])){src[k]=s;return b[k];}src[k]='';return null;}; /*V38C: 금회 엑셀 → 전회 엑셀 → 전회 자료*/
+  const arr=k=>pick(k,a=>a&&(Array.isArray(a)?a.length:Object.keys(a).length));
+  const strx=k=>pick(k,a=>v38s(a))||'';
+  const obj=k=>pick(k,p=>p&&(p.title||(p.lines&&p.lines.length)));
   const d0=v38D(val.d0),d1=v38D(val.d1),bd=v38D(val.builtd),ck=v34Ck(f,false),calc=ck?v34Calc(ck):null,grade=(calc&&calc.grade)||'',tech=v38TechOf(f);
   const need=(v,l)=>{if(v38s(v))return v;if(!miss.includes(l))miss.push(l);return v38need(l);};
   const n0=(k,l,dec)=>{const n=v38Num(val[k]);return n==null?need('',l):n.toLocaleString('en-US',{minimumFractionDigits:dec||0,maximumFractionDigits:dec||0});};
@@ -2513,16 +2535,17 @@ function v38Data(f){const rp=v38Rp(f),own=rp.own||{},xl=rp.xl||{},pv=v38Pv(f),ov
     '일정월':'','일정1':'','일정2':'','일정3':'','일정4':'','일정5':''};
   const o={PH,miss,src,val,tech,ck,calc,grade,d0,d1,warn:[]};
   o.period2=d0&&d1?`${d0.y}.${v38p2(d0.m)}.${v38p2(d0.d)}. ~ ${d1.y}.${v38p2(d1.m)}.${v38p2(d1.d)}.`:need('','점검기간');
-  o.sum=v37SumNow(f).rows;o.sumLab=xl.sumLab&&xl.sumLab[0]?xl.sumLab:V38_SUMLAB;
-  o.seis=arr('seis');o.seisOp=strx('seisOp');o.brick=arr('brick');o.dd=arr('dd');o.ddEtc=strx('ddEtc');o.ddLedger=strx('ddLedger');o.ddFms=strx('ddFms');o.rep=arr('rep');o.rep2=xl.rep2||pv.rep2||null;
+  o.sum=v37SumNow(f).rows;o.sumLab=xl.sumLab&&xl.sumLab[0]?xl.sumLab:(xp.sumLab&&xp.sumLab[0]?xp.sumLab:V38_SUMLAB);o.hint=xp.hint||{};
+  o.seis=arr('seis');o.seisOp=strx('seisOp');o.brick=arr('brick');o.dd=arr('dd');o.ddEtc=strx('ddEtc');o.ddLedger=strx('ddLedger');o.ddFms=strx('ddFms');o.rep=arr('rep');o.rep2=xl.rep2||xp.rep2||pv.rep2||null;
   o.p1=obj('p1');o.p2=obj('p2');o.ckCap=Object.assign({},pv.ckCap||{},xl.ckCap||{});o.partFiles=xl.partFiles||[];o.mapFiles=xl.mapFiles||[];
-  o.ctag=d1?`${d1.y}년${d1.m}월`:need('','점검 끝 날');o.ptag=v38s(xl.ptag)||v38s(pv.ptag)||'';
+  o.ctag=d1?`${d1.y}년${d1.m}월`:need('','점검 끝 날');o.ptag=v38s(xl.ptag)||v38s(xp.ptag)||v38s(pv.ptag)||'';
   const c=v37ConNow(f).t;o.con=c;if(V37_KEYS.some(k=>v38s(c[k]).includes('[확인필요')))o.warn.push('종합결론에 [확인필요]가 남아 있어요');
   if(!ck)o.warn.push('체크리스트가 비어 있어요');if(!o.seis)miss.push('내진보강시설 점검표');if(!o.brick)miss.push('외부 치장벽돌 점검표');if(!o.dd)miss.push('설계도서 현황');if(!o.p1)miss.push('전차점검(1)');if(!o.p2||!o.p2.lines.length)miss.push('전차점검(2)의 결함 내용');if(!tech.rows.length)miss.push('기술자 명단');
+  {const old=[],was=s=>s==='xp'||s==='pv';if(was(src.brick))old.push('외부 치장벽돌 점검표');if(was(src.seis))old.push('내진보강시설 점검표');if(was(tech.src))old.push('기술자 명단');if(old.length)o.warn.push('전회 값이 그대로 들어가요. 금회에 맞는지 확인하세요: '+old.join(', '));} /*V38C: 실제 자료에서 치장벽돌 조사 결과와 점검자가 회차마다 달랐다*/
   return o;}
 
 /* 다음 회차 시작: 건물 값과 점검표는 그대로 두고, 금회 결론은 전차점검(1)로, 전차(1)은 전차(2)로 넘긴다. 과업 값(용역명·기간·금액)은 비운다 */
-function v38Roll(f,base){const rp=v38Rp(f);if(!f.doc||(!rp.xl&&!rp.own&&!rp.tech))return;const D=v38Data(f),x=rp.xl||{},keep={},nx={},fd=q=>`${q.y}. ${v38p2(q.m)}. ${v38p2(q.d)}.`;
+function v38Roll(f,base){const rp=v38Rp(f);if(!f.doc||(!rp.xl&&!rp.xp&&!rp.own&&!rp.tech))return;const D=v38Data(f),x=Object.assign({},rp.xp||{},rp.xl||{}),keep={},nx={},fd=q=>`${q.y}. ${v38p2(q.m)}. ${v38p2(q.d)}.`;
   for(const k of ['addr','area','cat','fclass','struct','anc','fid','builtd','contract','joint'])if(D.val[k]&&D.src[k]!=='pv')keep[k]=D.val[k];
   for(const k of ['sumLab','seis','seisOp','brick','dd','ddEtc','ddLedger','ddFms','rep','rep2'])if(x[k])nx[k]=x[k];
   const lines=[];let head=null;for(const [kind,k] of V37_SEC){if(kind==='h'){if(/^3\./.test(k))break;continue;}if(kind==='s'){head=k;continue;}if(!/^[abc]\d$/.test(k))continue;const v=v38s(D.con[k]);if(!v||v.includes('[확인필요'))continue;if(head){lines.push({h:head});head=null;}lines.push({l:v});}
@@ -2744,9 +2767,9 @@ async function v38Go(){const f=F();if(!f||V38.busy)return;if(!(await v38Tpl())){
   finally{V38.busy=false;v38Draw();}}
 
 /* ---------- 화면: 문서 작성의 '보고서 출력' 탭 ---------- */
-function v38Draw(){const f=F(),b=$('#v37Body');if(!f||!b||V37.tab!=='out')return;const D=v38Data(f),tp=V38.tpl,sl=v38Slots(f,D),defs=v38Defs(f,sl),al=defs.filter(q=>q.ph),P=v38Pics(f);
+function v38Draw(){const f=F(),b=$('#v37Body');if(!f||!b||V37.tab!=='out')return;const rp=v38Rp(f),D=v38Data(f),tp=V38.tpl,sl=v38Slots(f,D),defs=v38Defs(f,sl),al=defs.filter(q=>q.ph),P=v38Pics(f);
   const badge=s=>`<span class="v38src ${s||'no'}">${V38_SRC[s||'']}</span>`,inp=(k,kind)=>{const v=D.val[k]||'';return `<input data-v38k="${k}" type="${kind==='d'?'date':'text'}" ${kind==='n'?'inputmode="decimal"':''} value="${esc(v)}" class="${D.src[k]==='own'?'own':''}${v?'':' no'}" aria-label="${k}">`;};
-  const grp=g=>V38_F.filter(x=>x[2]===g).map(([k,l,,kind])=>`<tr><th scope="row">${l}</th><td class="in">${inp(k,kind)}</td><td class="sr">${badge(D.src[k])}</td></tr>`).join('');
+  const grp=g=>V38_F.filter(x=>x[2]===g).map(([k,l,,kind])=>`<tr><th scope="row">${l}</th><td class="in">${inp(k,kind)}</td><td class="sr">${badge(D.src[k])}${!D.val[k]&&D.hint[k]?`<span class="v38nm v38hintv">전회: ${esc(D.hint[k])}</span>`:''}</td></tr>`).join('');
   const fixed=[['학교명',D.val.school,'과업 정보'],['동명',D.val.building,'과업 정보'],['회차',`${v38s(v38Task(f).year)}년 ${D.PH['반기']}`,'과업 정보'],['용도',D.val.use,'종합결론 탭'],['층수',D.PH['층수'].startsWith('[')?'':D.PH['층수'],'종합결론 탭'],['안전등급',D.grade?`${D.grade}등급 (${D.PH['상태점수']}점)`:'','체크리스트 탭']];
   const tr=D.tech.rows.concat(Array.from({length:Math.max(0,6-D.tech.rows.length)},()=>({role:'',name:'',qual:'',part:''}))).slice(0,6);
   const ro=[['실시결과 요약표',`${D.sum.filter(q=>v38s(q.t)).length}줄`,'app'],['종합결론',`${V37_KEYS.filter(k=>v38s(D.con[k])).length}줄`,'app'],['결함조사 결과표',`${defs.length}줄`,'app'],['내진보강시설 점검표',D.seis?'6줄':'',D.src.seis],['외부 치장벽돌 점검표',D.brick?'있음':'',D.src.brick],['설계도서 현황',D.dd?'있음':'',D.src.dd],['보수·보강 이력',D.rep?'있음':'없으면 "-"',D.src.rep||''],['전차점검(1)',D.p1?D.p1.title:'',D.src.p1],['전차점검(2)',D.p2?D.p2.title+(D.p2.lines.length?'':' · 결함 내용 없음'):'',D.src.p2]];
@@ -2763,6 +2786,9 @@ function v38Draw(){const f=F(),b=$('#v37Body');if(!f||!b||V37.tab!=='out')return
   <div class="v38row"><div class="v38st ${tp?(tp.bad&&tp.bad.length?'bad':'ok'):'no'}" id="v38TplSt">${tp?`${esc(tp.name)} · ${tp.bad&&tp.bad.length?'모양이 달라요':'표 107개 확인'}`:'아직 불러오지 않았어요'}</div>
     <button class="btn" data-v38="tpl">${tp?'다른 양식 불러오기':'빈 양식 불러오기'}</button><input type="file" id="v38TplIn" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden></div>
   <p class="v38hint">회사의 <b>_빈워드.docx</b>를 고르세요. 이 기기에만 저장되고 백업 파일에는 들어가지 않습니다.</p>
+  <div class="v38row"><div class="v38st ${rp.xl||rp.xp?'ok':'no'}" id="v38XlSt">${[rp.xl?`금회 엑셀: ${esc(rp.xlFile?rp.xlFile.name+(rp.xlFile.seq?' ('+rp.xlFile.seq+')':''):'불러오기에서 읽음')}`:'',rp.xp?`전회 엑셀: ${esc(rp.xpFile?rp.xpFile.name+(rp.xpFile.seq?' ('+rp.xpFile.seq+')':''):'')}`:''].filter(Boolean).join(' · ')||'회사 엑셀에서 가져온 값이 없어요'}</div>
+    <button class="btn" data-v38="xl">회사 엑셀에서 값 가져오기</button>${V38.xlBuf?`<button class="btn" data-v38="xlflip">${V38.xlMode==='prev'?'금회':'전회'} 엑셀로 바꿔 읽기</button>`:''}${rp.xl||rp.xp?`<button class="btn" data-v38="xlclr">엑셀 값 비우기</button>`:''}<input type="file" id="v38XlIn" accept=".xlsm,.xlsx" hidden></div><!--V38C-->
+  <p class="v38hint">금회 엑셀이든 전회(전차) 엑셀이든 넣으면 회차를 보고 가립니다. 전회 엑셀이면 건물 값·기술자 명단·점검표와 전차점검 (1)(2)·전차 등급·점수를 가져오고, 용역명·점검기간·금액은 "전회: …"로만 보여 줍니다. 직접 넣은 값은 덮어쓰지 않습니다. 결함과 체크리스트는 여기서 가져오지 않습니다(작업 띠의 불러오기).</p>
   <h4>2. 보고서에 들어갈 값</h4>
   <div class="v34key"><span><i class="in"></i>직접 넣은 값</span><span><i class="au"></i>가져온 값 (칸을 고치면 직접 넣은 값이 됩니다)</span></div>
   <div class="v34wrap"><table class="v34t v38t"><tbody>
@@ -2791,8 +2817,10 @@ function v38Edit(t){const f=F();if(!f)return;const rp=v38Rp(f,true);
   if(t.dataset.v38t){const cur=v38TechOf(f).rows.map(q=>Object.assign({},q));while(cur.length<6)cur.push({role:'',name:'',qual:'',part:''});const [i,k]=t.dataset.v38t.split(':');cur[+i][k]=t.value.trim();
     rp.tech=cur.filter(q=>q.name||q.qual||q.part).map(q=>({role:q.role||'참여기술자',name:q.name,qual:q.qual,part:q.part}));save();v38Draw();}}
 $('#v34Pop').addEventListener('click',e=>{const t=e.target.closest('[data-v38]');if(!t)return;const k=t.dataset.v38;
-  if(k==='tpl')$('#v38TplIn').click();else if(k==='dir')$('#v38DirIn').click();else if(k==='pic')$('#v38PicIn').click();else if(k==='clr'){const f=F();if(f){V38.pics.delete(f.id);v38Draw();}}else if(k==='go')v38Go();});
+  if(k==='tpl')$('#v38TplIn').click();else if(k==='dir')$('#v38DirIn').click();else if(k==='pic')$('#v38PicIn').click();else if(k==='clr'){const f=F();if(f){V38.pics.delete(f.id);v38Draw();}}else if(k==='go')v38Go();
+  else if(k==='xl')$('#v38XlIn').click();else if(k==='xlflip')v38LoadXl(null,true);else if(k==='xlclr'){const f=F();if(f){const rp=v38Rp(f,true);delete rp.xl;delete rp.xp;delete rp.xlFile;delete rp.xpFile;V38.xlBuf=null;save();v38Draw();}} /*V38C*/});
 $('#v34Pop').addEventListener('change',e=>{const t=e.target;if(!t||!t.dataset)return;
+  if(t.id==='v38XlIn'){if(t.files[0])v38LoadXl(t.files[0]);t.value='';return;} /*V38C*/
   if(t.id==='v38TplIn'){if(t.files[0])v38LoadTpl(t.files[0]);t.value='';return;}if(t.id==='v38DirIn'||t.id==='v38PicIn'){if(t.files.length)v38AddPics([...t.files]);t.value='';return;}
   if(t.dataset.v38k||t.dataset.v38t)v38Edit(t);});
 /*V38-END*/
